@@ -16,6 +16,26 @@
 } from "@/lib/planner/enums";
 import type { RuralSpotSeed } from "@/types";
 
+export interface PlannerRouteStep {
+  mode: "walk" | "bus" | "subway" | "drive" | "taxi" | "railway";
+  title: string;
+  detail: string;
+  durationMinutes?: number | null;
+  distanceKm?: number | null;
+  stops?: number | null;
+}
+
+export interface PlannerRoutePlan {
+  mode: "self_drive" | "public_transit";
+  summary: string;
+  durationMinutes: number;
+  distanceKm: number;
+  walkingDistanceKm?: number | null;
+  cost?: number | null;
+  caution?: string | null;
+  steps: PlannerRouteStep[];
+}
+
 export interface PlannerDestination {
   id: string;
   name: string;
@@ -76,6 +96,15 @@ export interface PlannerDestination {
   cautionNotes: string[];
   seasonalWarnings: string[];
   closureRiskNotes: string[];
+  openStatus?: "open" | "closed" | "unknown";
+  openingHoursText?: string | null;
+  openingSourceUrl?: string | null;
+  openingVerifiedAt?: string | null;
+  openingVerificationNote?: string | null;
+  liveTravelMinutes?: number | null;
+  liveDistanceKm?: number | null;
+  liveTrafficStatus?: string | null;
+  routePlans?: PlannerRoutePlan[];
   transportLinks?: {
     ticketBookingUrl?: string | null;
     hotelBookingUrl?: string | null;
@@ -240,6 +269,7 @@ export interface PlannerEngineOutput {
 
 export interface PlannerProviderOptions {
   forceMock?: boolean;
+  origin?: string;
 }
 
 export interface LegacyPlannerInput {

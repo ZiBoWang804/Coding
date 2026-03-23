@@ -62,6 +62,10 @@ export function isLikelyImageUrl(url?: string | null) {
   return [".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"].some((ext) => normalized.includes(ext));
 }
 
+export function isRemoteHttpUrl(url?: string | null) {
+  return Boolean(url && /^https?:\/\//i.test(url));
+}
+
 export function buildAmapNavigationUrl(name: string, city: string, address?: string | null) {
   const keyword = encodeURIComponent(address || `${city}${name}`);
   return `https://uri.amap.com/search?keyword=${keyword}&city=${encodeURIComponent(city)}`;

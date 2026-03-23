@@ -19,7 +19,7 @@ function toLegacySpot(raw: unknown, fallbackId: string, fallbackName: string): R
 }
 
 export async function buildPlannerResult(input: PlannerInput, spots: RuralSpotSeed[]): Promise<PlannerResult> {
-  const output = await runPlannerEngine(normalizeLegacyPlannerInput(input), spots, { forceMock: true });
+  const output = await runPlannerEngine(normalizeLegacyPlannerInput(input), spots);
   const topMatches: RankedSpot[] = output.recommendedPlans.map((plan) => ({
     spot: toLegacySpot(plan.mappedDestination.rawSource, plan.destinationId, plan.destinationName),
     score: plan.totalScore,

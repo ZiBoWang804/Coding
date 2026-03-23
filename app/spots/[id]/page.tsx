@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { CommunityBoard } from "@/components/community-board";
 import { CheckInPanel } from "@/components/checkin-panel";
-import { MapClient } from "@/components/map-client";
+import { CommunityBoard } from "@/components/community-board";
+import { SpotDetailMap } from "@/components/spot-detail-map";
 import { StatusActions } from "@/components/status-actions";
 import { TagBadge } from "@/components/tag-badge";
 import { TransitAssistant } from "@/components/transit-assistant";
@@ -15,7 +15,7 @@ export default async function SpotDetailPage({ params }: { params: Promise<{ id:
   const data = await getSpotDetailData(id, user?.id);
 
   if (!data) {
-    return <div className="mx-auto max-w-4xl px-4 py-16 text-center text-slate-500">未找到该目的地。</div>;
+    return <div className="mx-auto max-w-4xl px-4 py-16 text-center text-slate-500">未找到该景点。</div>;
   }
 
   const { spot, state, posts, checkIns } = data;
@@ -25,13 +25,13 @@ export default async function SpotDetailPage({ params }: { params: Promise<{ id:
       <div className="rounded-[2rem] bg-white p-6 shadow-card md:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <div className="text-sm text-slate-500">{spot.province} · {spot.city}{spot.district ? ` · ${spot.district}` : ""}</div>
+            <div className="text-sm text-slate-500">{spot.province} / {spot.city}{spot.district ? ` / ${spot.district}` : ""}</div>
             <h1 className="mt-2 text-3xl font-semibold text-brand-900">{spot.name}</h1>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">{spot.description}</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href={spot.ticketBookingUrl || "#"} target="_blank" className="rounded-full border border-brand-200 px-5 py-3 text-sm text-brand-700">门票入口</Link>
-            <Link href={spot.hotelBookingUrl || "#"} target="_blank" className="rounded-full border border-brand-200 px-5 py-3 text-sm text-brand-700">酒店入口</Link>
+            <Link href={spot.hotelBookingUrl || "#"} target="_blank" className="rounded-full border border-brand-200 px-5 py-3 text-sm text-brand-700">住宿参考</Link>
             <Link href={spot.gaodeNavigationUrl || "#"} target="_blank" className="rounded-full bg-brand-700 px-5 py-3 text-sm text-white">高德导航</Link>
           </div>
         </div>
@@ -39,9 +39,9 @@ export default async function SpotDetailPage({ params }: { params: Promise<{ id:
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl bg-sand p-4 text-sm">评分：{spot.rating ?? "待补充"}</div>
           <div className="rounded-2xl bg-sand p-4 text-sm">人流：{formatCrowdLevel(spot.crowdLevel)}</div>
-          <div className="rounded-2xl bg-sand p-4 text-sm">价格：{formatCurrency(spot.avgCost)}</div>
+          <div className="rounded-2xl bg-sand p-4 text-sm">费用：{formatCurrency(spot.avgCost)}</div>
           <div className="rounded-2xl bg-sand p-4 text-sm">建议时长：{spot.suggestedDuration ?? "1 天"}</div>
-          <div className="rounded-2xl bg-sand p-4 text-sm">最佳季节：{spot.bestSeason.join("、") || "待补充"}</div>
+          <div className="rounded-2xl bg-sand p-4 text-sm">推荐季节：{spot.bestSeason.join(" / ") || "待补充"}</div>
           <div className="rounded-2xl bg-sand p-4 text-sm">地址：{spot.address || "待补充"}</div>
         </div>
         <div className="mt-6 grid gap-6 xl:grid-cols-[0.78fr,1.22fr]">
@@ -78,13 +78,13 @@ export default async function SpotDetailPage({ params }: { params: Promise<{ id:
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">{(spot.diningTips || []).map((item) => <li key={item.name}>{item.name}</li>)}</ul>
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-brand-900">打卡路线亮点</h2>
+              <h2 className="text-lg font-semibold text-brand-900">玩法亮点</h2>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">{(spot.routeHighlights || []).map((item) => <li key={item}>{item}</li>)}</ul>
             </div>
           </div>
           <div>
             <h2 className="text-lg font-semibold text-brand-900">地图定位</h2>
-            <div className="mt-3"><MapClient spots={[spot]} /></div>
+            <div className="mt-3"><SpotDetailMap spot={spot} /></div>
           </div>
         </div>
       </div>

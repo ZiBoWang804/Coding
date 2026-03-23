@@ -1,33 +1,47 @@
-﻿import type { AlternativeOption, ItineraryItem, PlannerDestination, PlannerRuntimeContext } from "@/lib/planner/types";
+import type { AlternativeOption, ItineraryItem, PlannerDestination, PlannerRuntimeContext } from "@/lib/planner/types";
+
+function formatOrigin(origin: string) {
+  if (/^xi'?an urban area$/i.test(origin.trim())) return "西安市区";
+  return origin;
+}
+
+function formatArrivalWindow(destination: PlannerDestination) {
+  if (destination.liveTravelMinutes != null) {
+    return `预计路程约 ${destination.liveTravelMinutes} 分钟，建议尽量提早出发。`;
+  }
+  return "建议尽量避开上午最晚一波出发高峰。";
+}
 
 function buildDayOne(destination: PlannerDestination, context: PlannerRuntimeContext): ItineraryItem[] {
+  const origin = formatOrigin(context.user.origin);
+
   return [
     {
       day: 1,
       title: "出发与抵达",
       startTime: context.user.days === 1 ? "08:00" : "09:00",
       endTime: "10:00",
-      description: `建议从 ${context.user.origin} 尽早出发，在主要人流到来前抵达 ${destination.name}。`,
-      location: destination.address || `${destination.city}, ${destination.province}`,
-      transportTip: destination.transportSummary || "建议优先走主干道，并提前确认最后一段导航路线。"
+      description: `建议从 ${origin} 尽早出发，在主要人流到来前抵达 ${destination.name}。${formatArrivalWindow(destination)}`,
+      location: destination.address || `${destination.city} ${destination.province}`,
+      transportTip: destination.transportSummary || "出发前再确认导航路线、停车点或末段接驳。"
     },
     {
       day: 1,
       title: "核心游览时段",
       startTime: "10:00",
       endTime: "13:00",
-      description: `以适中节奏游览 ${destination.scenicFeatures.slice(0, 2).join("、") || destination.name} 等核心亮点。`,
-      mealTip: destination.diningSummary || "午餐建议安排在村落核心区域附近，减少来回折返。"
+      description: `优先游览 ${destination.scenicFeatures.slice(0, 2).join("、") || destination.name} 等主要亮点。`,
+      mealTip: destination.diningSummary || "午餐建议尽量安排在核心游览区附近，减少来回折返。"
     },
     {
       day: 1,
-      title: "下午弹性时段",
+      title: "下午弹性安排",
       startTime: "14:00",
       endTime: context.user.days === 1 ? "17:00" : "18:00",
       description: destination.tags.includes("photography")
-        ? "建议把黄金时段留给适合出片的街巷、田野或高点观景位。"
-        : "下午可以安排慢逛、文化体验或亲子互动项目。",
-      stayTip: context.user.days >= 2 ? destination.lodgingSummary || "如需过夜，建议傍晚前完成入住。" : "如果包含山路或环山路线，建议天黑前返程。"
+        ? "下午优先留给适合拍照的街区、田野或观景点，避免把黄金时段浪费在长距离移动上。"
+        : "下午适合慢逛、补体验项目，或者安排一段更轻松的在地休闲时间。",
+      stayTip: context.user.days >= 2 ? destination.lodgingSummary || "如果需要过夜，建议傍晚前完成入住。" : "如果包含山路或远郊返程，建议天黑前离开。"
     }
   ];
 }
@@ -42,9 +56,9 @@ export function generateItinerary(destination: PlannerDestination, context: Plan
       startTime: "09:30",
       endTime: "15:30",
       description: destination.tags.includes("family_interaction")
-        ? "第二天建议走轻松节奏：睡到自然醒，安排一个互动项目，午餐后尽早返程。"
-        : "第二天适合补充第二个景观片区、逛本地市集，再以更轻松的节奏返回。",
-      mealTip: destination.diningSummary || "离开目的地前，优先选择口碑稳定的本地餐饮点。",
+        ? "第二天建议走轻松节奏：睡到自然醒，安排一个互动项目，午餐后再返程。"
+        : "第二天适合补看周边片区、地方集市或留白休息，再以更轻松的节奏返程。",
+      mealTip: destination.diningSummary || "离开前优先选择评价稳定的本地餐饮点。",
       stayTip: "建议早餐后退房，尽量避开返程高峰。"
     });
   }
@@ -55,8 +69,8 @@ export function generateItinerary(destination: PlannerDestination, context: Plan
       title: "缓冲与机动日",
       startTime: "10:00",
       endTime: "14:00",
-      description: "第三天可以作为机动时间，用于补看漏掉的亮点、应对天气变化，或顺路停留附近市集与村咖后返程。",
-      transportTip: "建议中午前后出发返程，减少高速拥堵概率。"
+      description: "第三天可作为缓冲时间，用于应对天气变化、补看遗漏亮点或顺路停留附近市集与村咖。",
+      transportTip: "建议中午前后返程，减少高速和城区拥堵概率。"
     });
   }
 
@@ -68,9 +82,9 @@ export function buildAlternativeOptions(destinations: PlannerDestination[]): Alt
     destinationId: destination.id,
     destinationName: destination.name,
     reason: destination.tags.includes("family_interaction")
-      ? "如果更想要结构化的亲子互动体验，这个备选会更合适。"
+      ? "如果更看重亲子互动体验，这个备选会更合适。"
       : destination.tags.includes("local_food")
-        ? "如果你更看重餐饮和成熟服务配套，这个备选更稳妥。"
-        : "如果你更希望人少一些、节奏更轻一点，可以把它作为备选。"
+        ? "如果更看重餐饮和成熟配套，这个备选更稳妥。"
+        : "如果更想要人少一点、节奏更轻一点，可以把它作为备选。"
   }));
 }

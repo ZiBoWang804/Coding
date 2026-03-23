@@ -4,6 +4,7 @@ import { CheckInPanel } from "@/components/checkin-panel";
 import { MapClient } from "@/components/map-client";
 import { StatusActions } from "@/components/status-actions";
 import { TagBadge } from "@/components/tag-badge";
+import { TransitAssistant } from "@/components/transit-assistant";
 import { getCurrentUser } from "@/lib/auth";
 import { getSpotDetailData } from "@/lib/repository";
 import { formatCrowdLevel, formatCurrency } from "@/lib/utils";
@@ -52,6 +53,21 @@ export default async function SpotDetailPage({ params }: { params: Promise<{ id:
             <div>
               <h2 className="text-lg font-semibold text-brand-900">交通方式</h2>
               <p className="mt-2 text-sm leading-7 text-slate-600">{spot.transportInfo || "待补充"}</p>
+              <TransitAssistant
+                className="mt-4"
+                defaultOrigin="西安市区"
+                target={{
+                  name: spot.name,
+                  city: spot.city,
+                  district: spot.district,
+                  address: spot.address,
+                  latitude: spot.latitude,
+                  longitude: spot.longitude,
+                  publicTransitFriendlyScore: spot.publicTransitFriendlyScore,
+                  lastMileDifficulty: spot.lastMileDifficulty,
+                  nearestRailStation: spot.nearestRailStation
+                }}
+              />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-brand-900">周边住宿推荐</h2>

@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { TransitAssistant } from "@/components/transit-assistant";
 import type { PlannerEngineOutput } from "@/lib/planner/types";
 
 const SCORE_LABELS: Record<string, string> = {
@@ -15,7 +16,7 @@ const SCORE_LABELS: Record<string, string> = {
   tagFit: "偏好标签匹配"
 };
 
-export function PlanResults({ result }: { result: PlannerEngineOutput | null }) {
+export function PlanResults({ result, origin }: { result: PlannerEngineOutput | null; origin: string }) {
   if (!result) {
     return <p className="mt-4 text-sm text-slate-500">填写出行条件后，这里会生成一份结构化的乡村出游方案。</p>;
   }
@@ -81,6 +82,21 @@ export function PlanResults({ result }: { result: PlannerEngineOutput | null }) 
                   <div>{plan.transportSummary}</div>
                 </div>
               </div>
+              <TransitAssistant
+                className="mt-3"
+                defaultOrigin={origin || "西安市区"}
+                target={{
+                  name: plan.destinationName,
+                  city: plan.mappedDestination.city,
+                  district: plan.mappedDestination.district,
+                  address: plan.mappedDestination.address,
+                  latitude: plan.mappedDestination.latitude,
+                  longitude: plan.mappedDestination.longitude,
+                  publicTransitFriendlyScore: plan.mappedDestination.publicTransitFriendlyScore,
+                  lastMileDifficulty: plan.mappedDestination.lastMileDifficulty,
+                  nearestRailStation: plan.mappedDestination.nearestRailStation
+                }}
+              />
               <div className="mt-3 grid gap-4 lg:grid-cols-2">
                 <div>
                   <div className="font-medium text-brand-800">上榜原因</div>

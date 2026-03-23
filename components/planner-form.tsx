@@ -87,12 +87,12 @@ export function PlannerForm() {
     <div className="grid gap-6 xl:grid-cols-[0.92fr,1.08fr]">
       <section className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-card">
         <h2 className="text-xl font-semibold text-brand-900">AI 乡村行程规划</h2>
-        <p className="mt-2 text-sm text-slate-600">系统会先做规则过滤，再做评分排序、行程生成和原因解释。即使没有实时天气或路况接口，也能依赖内置 mock 数据完成规划。</p>
+        <p className="mt-2 text-sm text-slate-600">系统会先做规则过滤，再做评分排序、行程生成和原因解释。现在也支持从西安任意出发点出发，补充页面内的公交和地铁换乘建议。</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm">
             <span>出发地</span>
-            <input className="w-full rounded-2xl border border-brand-100 px-4 py-3" value={form.origin} onChange={(e) => setForm({ ...form, origin: e.target.value })} />
+            <input className="w-full rounded-2xl border border-brand-100 px-4 py-3" value={form.origin} onChange={(e) => setForm({ ...form, origin: e.target.value })} placeholder="例如：钟楼、小寨、北客站、曲江" />
           </label>
           <label className="space-y-2 text-sm">
             <span>出行日期</span>
@@ -157,7 +157,7 @@ export function PlannerForm() {
 
       <section className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-card">
         <h3 className="text-lg font-semibold text-brand-900">规划结果</h3>
-        <PlanResults result={result} />
+        <PlanResults result={result} origin={form.origin} />
       </section>
     </div>
   );

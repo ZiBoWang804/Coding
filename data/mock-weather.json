@@ -1,0 +1,37 @@
+﻿{
+  "defaultByDate": {
+    "2026-03-22": {
+      "date": "2026-03-22",
+      "condition": "cloudy",
+      "temperatureHigh": 22,
+      "temperatureLow": 11,
+      "precipitationProbability": 18,
+      "windLevel": 2,
+      "aqi": 72,
+      "severeWeatherAlert": false,
+      "weatherSummary": "Cloudy and comfortable for short outdoor trips."
+    },
+    "2026-07-18": {
+      "date": "2026-07-18",
+      "condition": "heat",
+      "temperatureHigh": 36,
+      "temperatureLow": 25,
+      "precipitationProbability": 12,
+      "windLevel": 2,
+      "aqi": 88,
+      "severeWeatherAlert": false,
+      "weatherSummary": "Hot daytime weather; shaded or water-adjacent stops are preferred."
+    },
+    "2026-04-11": {
+      "date": "2026-04-11",
+      "condition": "light_rain",
+      "temperatureHigh": 18,
+      "temperatureLow": 10,
+      "precipitationProbability": 52,
+      "windLevel": 2,
+      "aqi": 65,
+      "severeWeatherAlert": false,
+      "weatherSummary": "Light rain, suitable for low-intensity cultural and village strolling plans."
+    }
+  }
+}

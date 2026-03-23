@@ -1,0 +1,246 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum SpotActionType {
+  WANT_TO_GO
+  VISITED
+  FAVORITE
+}
+
+enum SpotSubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PostType {
+  STORY
+  GUIDE
+}
+
+model User {
+  id              String          @id @default(cuid())
+  email           String          @unique
+  passwordHash    String
+  nickname        String
+  avatarUrl       String?
+  bio             String?
+  role            UserRole        @default(USER)
+  preferences     String[]        @default([])
+  homeCity        String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  actions         UserSpotAction[]
+  checkIns        CheckIn[]
+  comments        Comment[]
+  likes           PostLike[]
+  posts           Post[]
+  searchHistories SearchHistory[]
+  submissions     SpotSubmission[]
+}
+
+model Spot {
+  id                   String                @id @default(cuid())
+  name                 String
+  province             String
+  city                 String
+  district             String?
+  address              String?
+  description          String
+  tags                 String[]
+  rating               Float?
+  crowdLevel           Int?
+  avgCost              Int?
+  suggestedDuration    String?
+  bestSeason           String[]
+  transportInfo        String?
+  latitude             Float?
+  longitude            Float?
+  imageUrl             String?
+  ticketBookingUrl     String?
+  hotelBookingUrl      String?
+  gaodeNavigationUrl   String?
+  isNationalKeyVillage Boolean               @default(false)
+  batch                String?
+  source               String
+  accommodationTips    Json?
+  diningTips           Json?
+  routeHighlights      Json?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  actions              UserSpotAction[]
+  checkIns             CheckIn[]
+  comments             Comment[]
+  observations         ExternalObservation[]
+  posts                Post[]
+  submissionsApproved  SpotSubmission[]      @relation("ApprovedSpot")
+
+  @@index([province, city])
+  @@unique([name, province, city, district])
+}
+
+model UserSpotAction {
+  id        String         @id @default(cuid())
+  type      SpotActionType
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  userId    String
+  spotId    String
+  spot      Spot           @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, spotId, type])
+  @@index([spotId, type])
+}
+
+model CheckIn {
+  id        String   @id @default(cuid())
+  content   String?
+  imageUrls String[] @default([])
+  visitDate DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  spotId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  spot      Spot     @relation(fields: [spotId], references: [id], onDelete: Cascade)
+
+  @@index([spotId, createdAt])
+}
+
+model SearchHistory {
+  id          String   @id @default(cuid())
+  query       String?
+  province    String?
+  city        String?
+  tag         String?
+  preferences String[] @default([])
+  resultIds   String[] @default([])
+  createdAt   DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model Post {
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  images    String[]  @default([])
+  tags      String[]  @default([])
+  type      PostType  @default(STORY)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  spotId    String
+  userId    String
+  spot      Spot      @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+  likes     PostLike[]
+
+  @@index([spotId, createdAt])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  postId    String
+  userId    String
+  spotId    String?
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  spot      Spot?    @relation(fields: [spotId], references: [id], onDelete: SetNull)
+
+  @@index([postId, createdAt])
+}
+
+model PostLike {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  postId    String
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([userId, createdAt])
+}
+
+model SpotSubmission {
+  id                String               @id @default(cuid())
+  name              String
+  province          String
+  city              String
+  district          String?
+  address           String?
+  description       String
+  tags              String[]
+  suggestedDuration String?
+  transportInfo     String?
+  imageUrl          String?
+  contactName       String?
+  contactPhone      String?
+  reason            String?
+  status            SpotSubmissionStatus @default(PENDING)
+  reviewerNotes     String?
+  source            String               @default("user_submission")
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  reviewedAt        DateTime?
+  approvedSpotId    String?
+  userId            String
+  approvedSpot      Spot?                @relation("ApprovedSpot", fields: [approvedSpotId], references: [id], onDelete: SetNull)
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+}
+
+model ExternalObservation {
+  id               String   @id @default(cuid())
+  platform         String
+  externalId       String?
+  title            String?
+  authorName       String?
+  authorProfileUrl String?
+  postUrl          String?
+  publishedAt      DateTime?
+  contentSummary   String
+  commentsSummary  String?
+  priceInfo        String?
+  estimatedCost    Int?
+  ratingText       String?
+  likeCount        Int?
+  commentCount     Int?
+  collectCount     Int?
+  regionText       String?
+  province         String?
+  city             String?
+  district         String?
+  tags             String[]
+  source           String
+  batch            String?
+  rawPayload       Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  spotId           String?
+
+  spot Spot? @relation(fields: [spotId], references: [id], onDelete: SetNull)
+
+  @@index([platform, publishedAt])
+  @@index([province, city])
+  @@unique([platform, externalId])
+}

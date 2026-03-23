@@ -1,0 +1,28 @@
+﻿{
+  "defaultByDate": {
+    "2026-03-22": {
+      "isWeekend": true,
+      "isHoliday": false,
+      "congestionLevel": 3,
+      "roadClosureRisk": 1,
+      "parkingStress": 3,
+      "nightReturnRisk": 2
+    },
+    "2026-07-18": {
+      "isWeekend": true,
+      "isHoliday": true,
+      "congestionLevel": 4,
+      "roadClosureRisk": 2,
+      "parkingStress": 4,
+      "nightReturnRisk": 3
+    },
+    "2026-04-11": {
+      "isWeekend": true,
+      "isHoliday": false,
+      "congestionLevel": 2,
+      "roadClosureRisk": 2,
+      "parkingStress": 2,
+      "nightReturnRisk": 2
+    }
+  }
+}

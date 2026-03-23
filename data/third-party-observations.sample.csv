@@ -1,0 +1,4 @@
+﻿platform,externalId,title,authorName,postUrl,publishedAt,contentSummary,commentsSummary,priceInfo,estimatedCost,ratingText,likeCount,commentCount,collectCount,regionText,province,city,district,tags,source,batch,spotName
+小红书,xhs_demo_001,周末去安吉余村避暑体验,旅行观察员A,https://example.com/xhs/demo-001,2026-03-15,内容提到竹海民宿和骑行路线很适合周末两日微度假,评论普遍反馈环境清爽 周末人流中等 民宿需提前预订,两人周末总花费约900到1200元,480,口碑较好,128,36,52,安吉余村,浙江省,湖州市,安吉县,避暑|自驾|自然风光,manual_export,third-party-demo,安吉余村
+携程,ctrip_demo_001,肇兴侗寨两日游费用参考,攻略编辑B,https://example.com/ctrip/demo-001,2026-03-10,内容总结高铁接驳方便 适合做民族文化体验路线,评论提到旺季住宿上涨 夜景和演出体验较强,人均约350到500元,420,评分 4.6,86,22,10,肇兴侗寨,贵州省,黔东南苗族侗族自治州,黎平县,非遗民俗|文化体验|摄影,manual_export,third-party-demo,贵州肇兴侗寨
+大众点评,dianping_demo_001,袁家村美食向一日游观察,吃喝玩家C,https://example.com/dp/demo-001,2026-03-18,内容集中在小吃街和关中民俗体验 适合朋友结伴,评论反映节假日较拥挤 建议错峰中午前到达,人均消费约150到260元,220,大众口碑稳定,64,18,7,袁家村,陕西省,咸阳市,礼泉县,美食|自驾|文化体验,manual_export,third-party-demo,陕西袁家村

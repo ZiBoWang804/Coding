@@ -1,0 +1,62 @@
+﻿[
+  {
+    "id": "sample-1",
+    "origin": "Xi'an Urban Area",
+    "travelDate": "2026-03-22",
+    "days": 1,
+    "budgetMin": 300,
+    "budgetMax": 500,
+    "transportMode": "self_drive",
+    "companions": "couple",
+    "preferenceTags": ["拍照", "安静", "特色民宿", "乡村风景"],
+    "crowdPreference": "avoid_crowds",
+    "pacePreference": "slow",
+    "lodgingPreference": "design homestay",
+    "diningPreference": "local_food",
+    "specialConstraints": [],
+    "weather": {
+      "condition": "cloudy",
+      "weatherSummary": "Cloudy"
+    }
+  },
+  {
+    "id": "sample-2",
+    "origin": "Xi'an Urban Area",
+    "travelDate": "2026-07-18",
+    "days": 2,
+    "budgetMin": 800,
+    "budgetMax": 1500,
+    "transportMode": "self_drive",
+    "companions": "family",
+    "preferenceTags": ["自然", "互动体验", "轻松", "餐饮方便"],
+    "crowdPreference": "neutral",
+    "pacePreference": "moderate",
+    "lodgingPreference": "family-friendly hotel",
+    "diningPreference": "easy_meals",
+    "specialConstraints": ["with_child"],
+    "weather": {
+      "condition": "heat",
+      "weatherSummary": "Sunny to hot"
+    }
+  },
+  {
+    "id": "sample-3",
+    "origin": "Xi'an Urban Area",
+    "travelDate": "2026-04-11",
+    "days": 1,
+    "budgetMin": 200,
+    "budgetMax": 400,
+    "transportMode": "public_transit",
+    "companions": "elderly",
+    "preferenceTags": ["轻松", "文化体验", "少爬坡"],
+    "crowdPreference": "avoid_crowds",
+    "pacePreference": "slow",
+    "lodgingPreference": "none",
+    "diningPreference": "simple_local",
+    "specialConstraints": ["avoid_steep_walk", "avoid_mountain_road", "elderly_friendly"],
+    "weather": {
+      "condition": "light_rain",
+      "weatherSummary": "Light rain"
+    }
+  }
+]

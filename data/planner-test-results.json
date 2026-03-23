@@ -1,0 +1,454 @@
+[
+  {
+    "id": "sample-1",
+    "input": {
+      "id": "sample-1",
+      "origin": "Xi'an Urban Area",
+      "travelDate": "2026-03-22",
+      "days": 1,
+      "budgetMin": 300,
+      "budgetMax": 500,
+      "transportMode": "self_drive",
+      "companions": "couple",
+      "preferenceTags": [
+        "",
+        "",
+        "",
+        ""
+      ],
+      "crowdPreference": "avoid_crowds",
+      "pacePreference": "slow",
+      "lodgingPreference": "design homestay",
+      "diningPreference": "local_food",
+      "specialConstraints": [],
+      "weather": {
+        "condition": "cloudy",
+        "weatherSummary": "Cloudy"
+      }
+    },
+    "output": {
+      "readableSummary": {
+        "headline": "Zhanglong Bamboo Trail",
+        "recommendation": [
+          "Zhanglong Bamboo Trail Xi'an Urban Area 1",
+          "",
+          "",
+          ""
+        ],
+        "dynamicImpact": [
+          ""
+        ],
+        "cautions": [],
+        "alternatives": [
+          "Tang Village South Fort",
+          "Yuantian Family Farm"
+        ]
+      },
+      "recommendedPlans": [
+        {
+          "destinationId": "xian-zhanglong",
+          "destinationName": "Zhanglong Bamboo Trail",
+          "totalScore": 79.33,
+          "scoreBreakdown": {
+            "timeFit": 20,
+            "transportFit": 14.67,
+            "companionFit": 10.8,
+            "weatherFit": 10.92,
+            "budgetFit": 10,
+            "seasonFit": 8,
+            "lodgingFit": 4.06,
+            "diningFit": 0.88,
+            "tagFit": 0
+          },
+          "budgetEstimate": {
+            "transport": 120,
+            "lodging": 0,
+            "dining": 90,
+            "activities": 189,
+            "totalMin": 354,
+            "totalMax": 474
+          },
+          "rankingReason": [
+            "",
+            "",
+            ""
+          ],
+          "whyFitUser": [
+            ""
+          ],
+          "weatherAdjustmentReason": [],
+          "crowdAdjustmentReason": [
+            ""
+          ],
+          "risks": [],
+          "itinerary": [
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "description": "Xi'an Urban Area Zhanglong Bamboo Trail",
+              "location": "Zhuyu Town, Zhouzhi, Xi'an",
+              "transportTip": "Best by self-drive. Public transit is weak and not ideal for the last mile."
+            },
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "10:00",
+              "endTime": "13:00",
+              "description": "Bamboo pathSeasonal plum base",
+              "mealTip": "Roadside farmhouse restaurants"
+            },
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "14:00",
+              "endTime": "17:00",
+              "description": "",
+              "stayTip": ""
+            }
+          ],
+          "alternativeOptions": [
+            {
+              "destinationId": "xian-tangcun",
+              "destinationName": "Tang Village South Fort",
+              "reason": ""
+            },
+            {
+              "destinationId": "xian-yuantian",
+              "destinationName": "Yuantian Family Farm",
+              "reason": ""
+            }
+          ]
+        },
+        {
+          "destinationId": "xian-tangcun",
+          "destinationName": "Tang Village South Fort",
+          "totalScore": 75.26,
+          "scoreBreakdown": {
+            "timeFit": 20,
+            "transportFit": 13.32,
+            "companionFit": 10.88,
+            "weatherFit": 10.92,
+            "budgetFit": 7.2,
+            "seasonFit": 8,
+            "lodgingFit": 4.06,
+            "diningFit": 0.88,
+            "tagFit": 0
+          },
+          "budgetEstimate": {
+            "transport": 120,
+            "lodging": 0,
+            "dining": 90,
+            "activities": 231,
+            "totalMin": 386,
+            "totalMax": 526
+          },
+          "rankingReason": [
+            "",
+            "",
+            ""
+          ],
+          "whyFitUser": [
+            ""
+          ],
+          "weatherAdjustmentReason": [],
+          "crowdAdjustmentReason": [
+            ""
+          ],
+          "risks": [],
+          "itinerary": [
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "description": "Xi'an Urban Area Tang Village South Fort",
+              "location": "Wangqu Subdistrict, Chang'an, Xi'an",
+              "transportTip": "Easy self-drive access from southern Xi'an; can be combined with Nanshan attractions."
+            },
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "10:00",
+              "endTime": "13:00",
+              "description": "Tang poetry fieldsOld fort wall",
+              "mealTip": "Farmhouse dishes and tea drinks"
+            },
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "14:00",
+              "endTime": "17:00",
+              "description": "",
+              "stayTip": ""
+            }
+          ],
+          "alternativeOptions": [
+            {
+              "destinationId": "xian-zhanglong",
+              "destinationName": "Zhanglong Bamboo Trail",
+              "reason": ""
+            },
+            {
+              "destinationId": "xian-yuantian",
+              "destinationName": "Yuantian Family Farm",
+              "reason": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "sample-2",
+    "input": {
+      "id": "sample-2",
+      "origin": "Xi'an Urban Area",
+      "travelDate": "2026-07-18",
+      "days": 2,
+      "budgetMin": 800,
+      "budgetMax": 1500,
+      "transportMode": "self_drive",
+      "companions": "family",
+      "preferenceTags": [
+        "",
+        "",
+        "",
+        ""
+      ],
+      "crowdPreference": "neutral",
+      "pacePreference": "moderate",
+      "lodgingPreference": "family-friendly hotel",
+      "diningPreference": "easy_meals",
+      "specialConstraints": [
+        "with_child"
+      ],
+      "weather": {
+        "condition": "heat",
+        "weatherSummary": "Sunny to hot"
+      }
+    },
+    "output": {
+      "readableSummary": {
+        "headline": "",
+        "recommendation": [
+          ""
+        ],
+        "dynamicImpact": [],
+        "cautions": [],
+        "alternatives": []
+      },
+      "recommendedPlans": []
+    }
+  },
+  {
+    "id": "sample-3",
+    "input": {
+      "id": "sample-3",
+      "origin": "Xi'an Urban Area",
+      "travelDate": "2026-04-11",
+      "days": 1,
+      "budgetMin": 200,
+      "budgetMax": 400,
+      "transportMode": "public_transit",
+      "companions": "elderly",
+      "preferenceTags": [
+        "",
+        "",
+        ""
+      ],
+      "crowdPreference": "avoid_crowds",
+      "pacePreference": "slow",
+      "lodgingPreference": "none",
+      "diningPreference": "simple_local",
+      "specialConstraints": [
+        "avoid_steep_walk",
+        "avoid_mountain_road",
+        "elderly_friendly"
+      ],
+      "weather": {
+        "condition": "light_rain",
+        "weatherSummary": "Light rain"
+      }
+    },
+    "output": {
+      "readableSummary": {
+        "headline": "Yuanjia Village",
+        "recommendation": [
+          "Yuanjia Village Xi'an Urban Area 1",
+          "",
+          "",
+          ""
+        ],
+        "dynamicImpact": [
+          "",
+          "",
+          ""
+        ],
+        "cautions": [],
+        "alternatives": [
+          "Tang Village South Fort",
+          "Laoxiancheng Ancient Route Village"
+        ]
+      },
+      "recommendedPlans": [
+        {
+          "destinationId": "xian-yuanjiacun",
+          "destinationName": "Yuanjia Village",
+          "totalScore": 66.35,
+          "scoreBreakdown": {
+            "timeFit": 20,
+            "transportFit": 6.41,
+            "companionFit": 10.03,
+            "weatherFit": 10.35,
+            "budgetFit": 7.2,
+            "seasonFit": 8,
+            "lodgingFit": 3.48,
+            "diningFit": 0.88,
+            "tagFit": 0
+          },
+          "budgetEstimate": {
+            "transport": 80,
+            "lodging": 0,
+            "dining": 90,
+            "activities": 273,
+            "totalMin": 378,
+            "totalMax": 538
+          },
+          "rankingReason": [
+            "",
+            "",
+            ""
+          ],
+          "whyFitUser": [
+            ""
+          ],
+          "weatherAdjustmentReason": [
+            ""
+          ],
+          "crowdAdjustmentReason": [
+            "",
+            ""
+          ],
+          "risks": [],
+          "itinerary": [
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "description": "Xi'an Urban Area Yuanjia Village",
+              "location": "Yanxia Town, Liquan, Xianyang",
+              "transportTip": "Self-drive is easy and there are coach transfer options. Holiday congestion is obvious."
+            },
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "10:00",
+              "endTime": "13:00",
+              "description": "Snack streetFolk custom blocks",
+              "mealTip": "Guanzhong snack streets"
+            },
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "14:00",
+              "endTime": "17:00",
+              "description": "",
+              "stayTip": ""
+            }
+          ],
+          "alternativeOptions": [
+            {
+              "destinationId": "xian-tangcun",
+              "destinationName": "Tang Village South Fort",
+              "reason": ""
+            },
+            {
+              "destinationId": "xian-laoxiancheng",
+              "destinationName": "Laoxiancheng Ancient Route Village",
+              "reason": ""
+            }
+          ]
+        },
+        {
+          "destinationId": "xian-tangcun",
+          "destinationName": "Tang Village South Fort",
+          "totalScore": 66.24,
+          "scoreBreakdown": {
+            "timeFit": 20,
+            "transportFit": 6.3,
+            "companionFit": 10.03,
+            "weatherFit": 10.35,
+            "budgetFit": 7.2,
+            "seasonFit": 8,
+            "lodgingFit": 3.48,
+            "diningFit": 0.88,
+            "tagFit": 0
+          },
+          "budgetEstimate": {
+            "transport": 80,
+            "lodging": 0,
+            "dining": 90,
+            "activities": 231,
+            "totalMin": 346,
+            "totalMax": 486
+          },
+          "rankingReason": [
+            "",
+            "",
+            ""
+          ],
+          "whyFitUser": [],
+          "weatherAdjustmentReason": [
+            ""
+          ],
+          "crowdAdjustmentReason": [
+            ""
+          ],
+          "risks": [],
+          "itinerary": [
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "08:00",
+              "endTime": "10:00",
+              "description": "Xi'an Urban Area Tang Village South Fort",
+              "location": "Wangqu Subdistrict, Chang'an, Xi'an",
+              "transportTip": "Easy self-drive access from southern Xi'an; can be combined with Nanshan attractions."
+            },
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "10:00",
+              "endTime": "13:00",
+              "description": "Tang poetry fieldsOld fort wall",
+              "mealTip": "Farmhouse dishes and tea drinks"
+            },
+            {
+              "day": 1,
+              "title": "",
+              "startTime": "14:00",
+              "endTime": "17:00",
+              "description": "",
+              "stayTip": ""
+            }
+          ],
+          "alternativeOptions": [
+            {
+              "destinationId": "xian-yuanjiacun",
+              "destinationName": "Yuanjia Village",
+              "reason": ""
+            },
+            {
+              "destinationId": "xian-laoxiancheng",
+              "destinationName": "Laoxiancheng Ancient Route Village",
+              "reason": ""
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

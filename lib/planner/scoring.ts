@@ -1,4 +1,4 @@
-﻿import { BASE_SCORE_WEIGHTS, COST_DEFAULTS, PROFILE_WEIGHT_OVERRIDES, XIAN_CITY_CENTER } from "@/lib/planner/config";
+import { BASE_SCORE_WEIGHTS, COST_DEFAULTS, PROFILE_WEIGHT_OVERRIDES, XIAN_CITY_CENTER } from "@/lib/planner/config";
 import { normalizeTags } from "@/lib/planner/normalizers";
 import { getSeasonalAdjustment } from "@/lib/planner/seasonal-adjuster";
 import { getTrafficAdjustment } from "@/lib/planner/traffic-adjuster";
@@ -8,6 +8,18 @@ import type { PlannerProfileKey } from "@/lib/planner/enums";
 
 function clamp01(value: number) {
   return Math.max(0, Math.min(1, value));
+}
+
+function isXianLike(text: string) {
+  return /xi'?an|西安/i.test(text);
+}
+
+function isXianyangLike(text: string) {
+  return /xianyang|咸阳/i.test(text);
+}
+
+function isShaanxiLike(text: string) {
+  return /shaanxi|陕西/i.test(text);
 }
 
 function resolveProfileKey(context: PlannerRuntimeContext): PlannerProfileKey {
@@ -27,19 +39,42 @@ function resolveWeights(profileKey: PlannerProfileKey): ScoreWeights {
 
 function approxDistanceKm(context: PlannerRuntimeContext, destination: PlannerDestination) {
   const origin = context.user.origin.toLowerCase();
-  if (origin.includes("xi'an") || origin.includes("xian") || origin.includes("西安")) {
+  const destinationRegion = `${destination.province} ${destination.city}`;
+
+  if (isXianLike(origin)) {
     if (destination.latitude != null && destination.longitude != null) {
       const dx = (destination.longitude - XIAN_CITY_CENTER.longitude) * 92;
       const dy = (destination.latitude - XIAN_CITY_CENTER.latitude) * 111;
       return Math.round(Math.sqrt(dx * dx + dy * dy));
     }
-    if (!/shaanxi|xi'an|xian|xianyang|陕西|西安|咸阳/i.test(`${destination.province} ${destination.city}`)) return 480;
-    return destination.city.toLowerCase().includes("xianyang") ? 78 : destination.city.toLowerCase().includes("xi") ? 65 : 140;
+
+    if (isXianLike(destinationRegion)) return 65;
+    if (isXianyangLike(destinationRegion)) return 78;
+    if (isShaanxiLike(destinationRegion)) return 140;
+    return 480;
   }
+
   return destination.city.toLowerCase().includes(origin) ? 80 : 180;
 }
 
 function scoreTimeFit(context: PlannerRuntimeContext, destination: PlannerDestination) {
+  if (destination.liveTravelMinutes != null) {
+    if (context.user.days === 1) {
+      if (destination.liveTravelMinutes <= 90) return 1;
+      if (destination.liveTravelMinutes <= 150) return 0.78;
+      if (destination.liveTravelMinutes <= 210) return 0.48;
+      return 0.22;
+    }
+    if (context.user.days === 2) {
+      if (destination.liveTravelMinutes <= 180) return 1;
+      if (destination.liveTravelMinutes <= 260) return 0.8;
+      return 0.56;
+    }
+    if (destination.liveTravelMinutes <= 300) return 1;
+    if (destination.liveTravelMinutes <= 420) return 0.82;
+    return 0.66;
+  }
+
   const distance = approxDistanceKm(context, destination);
   const duration = destination.suggestedDuration;
   if (context.user.days === 1) {
@@ -182,7 +217,3 @@ export function scoreDestination(destination: PlannerDestination, context: Plann
     }
   };
 }
-
-
-
-

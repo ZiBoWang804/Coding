@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   try {
     const payload = plannerSchema.parse(await request.json());
     const spots = await listSpots();
-    const result = await runPlannerEngine(payload, spots, { forceMock: true });
+    const result = await runPlannerEngine(payload, spots);
     const user = await getCurrentUser();
 
     if (user) {

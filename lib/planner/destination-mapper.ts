@@ -1,6 +1,88 @@
-﻿import type { RuralSpotSeed } from "@/types";
+import type { RuralSpotSeed } from "@/types";
 import type { PlannerDestination } from "@/lib/planner/types";
 import { clampScore, normalizeBoolean, normalizeSeasonList, normalizeSuggestedDuration, normalizeSuitableCrowds, normalizeTags, splitTextList, toSlugId } from "@/lib/planner/normalizers";
+
+const MOCK_TEXT_MAP: Record<string, string> = {
+  "Caijiapo Art Village": "蔡家坡艺术村",
+  "Tang Village South Fort": "唐村南堡",
+  "Tangzi Hot Spring Village": "汤峪温泉村",
+  "Yuanjia Village": "袁家村",
+  "Zhanglong Bamboo Trail": "张陇竹径",
+  "Laoxiancheng Ancient Route Village": "老县城古道村",
+  "Yuantian Family Farm": "源田亲子农场",
+  "Zhiyang Pomegranate Garden": "栎阳石榴园",
+  "Shaanxi": "陕西",
+  "Xi'an": "西安",
+  "Xianyang": "咸阳",
+  "Huyi": "鄠邑",
+  "Chang'an": "长安",
+  "Lantian": "蓝田",
+  "Liquan": "礼泉",
+  "Zhouzhi": "周至",
+  "Gaoling": "高陵",
+  "Lintong": "临潼",
+  "Art village near the Qinling foothills with wheat-field theatre, village cafe, homestays, and strong photography appeal.": "位于秦岭山脚的艺术村落，拥有麦田剧场、村咖和民宿，整体很适合拍照打卡。",
+  "Revitalized rural destination themed around Tang-style pastoral life, old fort walls, culture displays, and family study tours.": "以唐风田园生活为主题的更新型乡村目的地，融合旧堡墙、文化展示和亲子研学体验。",
+  "Hot spring recovery village at the foot of Zhongnan Mountain, good for couples, elderly travelers, and one-night wellness trips.": "位于终南山脚下的温泉康养村，适合情侣、长辈同行和住一晚的放松疗愈行程。",
+  "High-profile Guanzhong food village with strong dining supply, night ambiance, and mature tourism services.": "关中地区知名美食村，餐饮供给充足，夜间氛围成熟，旅游配套完善。",
+  "Bamboo trail stop with a three-kilometer walking path and seasonal plum blossom views. Better as a self-drive stop on a rural loop.": "拥有约三公里竹林步道和季节性梅花景观，适合作为乡村环线自驾中的轻徒步停靠点。",
+  "Deep Qinling historical village with old route remains, wild scenery, and a long mountain drive. Better for experienced self-drivers.": "位于秦岭腹地的历史村落，保留古道遗迹和原生态山景，更适合有经验的自驾游客。",
+  "Family-oriented rural complex with farm classes, fishing, pet-friendly zones, and flexible half-day to full-day play.": "面向亲子家庭的乡村综合体，包含农事课堂、垂钓、宠物友好区域，半天到一天都能安排。",
+  "Pomegranate-themed orchard with harvest experience and easy family pacing, especially strong in early autumn.": "以石榴主题为核心的果园型村游点，节奏轻松，适合家庭体验，初秋最有特色。",
+  "Best by self-drive via the Qinling ring road. Public transit is weak for the last mile.": "建议经由秦岭环线自驾前往，最后一段公共交通接驳较弱。",
+  "Easy self-drive access from southern Xi'an; can be combined with Nanshan attractions.": "从西安南部自驾前往较方便，可与南山周边景点串联。",
+  "Short self-drive from Xi'an, roads are manageable. Public transit is possible but less direct.": "从西安短途自驾即可到达，路况整体可控；公共交通也能到，但换乘不够直接。",
+  "Self-drive is easy and there are coach transfer options. Holiday congestion is obvious.": "自驾较方便，也有大巴换乘方案，但节假日拥堵会比较明显。",
+  "Best by self-drive. Public transit is weak and not ideal for the last mile.": "更适合作为自驾目的地，公共交通偏弱，最后一段接驳不太理想。",
+  "Mountain drive required, day-return possible but tiring. Public transit is not recommended.": "需要走一段山路，自驾当天往返可以实现但会比较累，不建议依赖公共交通。",
+  "Easy self-drive in Gaoling. Public transit partially works but the last mile is not perfect.": "高陵方向自驾较轻松，公共交通可部分覆盖，但最后一段接驳仍不够顺畅。",
+  "Self-drive is easiest. Can be combined with nearby Lintong attractions.": "自驾最方便，也适合和临潼周边景点联动。",
+  "Village design homestays": "村落设计民宿",
+  "Village cafe and farmhouse meals": "村咖与农家餐食",
+  "Poetry homestay cluster": "诗意民宿群",
+  "Farmhouse dishes and tea drinks": "农家菜与茶饮",
+  "Hot spring hotels": "温泉酒店",
+  "Resort homestays": "度假民宿",
+  "Town restaurants and local dishes": "镇上餐馆与地方菜",
+  "Dense village homestays": "村内集中民宿",
+  "Guanzhong snack streets": "关中小吃街",
+  "Nearby ring-road homestays": "环线周边民宿",
+  "Roadside farmhouse restaurants": "沿线农家乐",
+  "Limited mountain farmhouse stays": "山地农家乐住宿",
+  "Simple farmhouse meals": "简餐型农家饭",
+  "Eco restaurant": "生态餐厅",
+  "Village market snacks": "村集市小吃",
+  "Lintong town stay options": "临潼城区住宿",
+  "Farmhouse dishes and fruit snacks": "农家菜与水果小食",
+  "Wheat-field theatre": "麦田剧场",
+  "Village art museum": "村落艺术馆",
+  "Cafe street": "村咖街",
+  "Tang poetry fields": "唐诗田园",
+  "Old fort wall": "古堡墙",
+  "Rural study experience": "乡村研学体验",
+  "Hot spring soak": "温泉泡汤",
+  "Mountain foothill walk": "山麓散步",
+  "Wellness hotel stay": "康养酒店住宿",
+  "Snack street": "小吃街",
+  "Folk custom blocks": "民俗街区",
+  "Night market": "夜市",
+  "Bamboo path": "竹林步道",
+  "Seasonal plum base": "时令梅花观赏点",
+  "Loop-drive stop": "环线自驾停靠点",
+  "Historic route remains": "古道遗迹",
+  "Stone townscape": "石砌村貌",
+  "Qinling scenery": "秦岭山景",
+  "Farm class": "农事课堂",
+  "Fishing area": "垂钓区",
+  "Pet garden": "宠物乐园",
+  "Pomegranate garden": "石榴园",
+  "Farm activity": "农园体验",
+  "Family fruit picking": "亲子采摘"
+};
+
+function localizeMockText(value: string) {
+  return MOCK_TEXT_MAP[value] ?? value;
+}
 
 function inferKeyVillageLevel(spot: RuralSpotSeed): PlannerDestination["keyVillageLevel"] {
   if (spot.isNationalKeyVillage) return "national";
@@ -138,6 +220,11 @@ export function mapSpotToPlannerDestination(spot: RuralSpotSeed): PlannerDestina
     cautionNotes: /山路较长|白天往返/.test(`${spot.description} ${spot.transportInfo || ""}`) ? ["路线包含山路，建议避免过晚返程。"] : [],
     seasonalWarnings: normalizedTags.includes("flower_sea") ? ["赏花体验受花期影响较大。"] : [],
     closureRiskNotes: [],
+    openStatus: "unknown",
+    openingHoursText: null,
+    liveTravelMinutes: null,
+    liveDistanceKm: null,
+    liveTrafficStatus: null,
     transportLinks: {
       ticketBookingUrl: spot.ticketBookingUrl ?? null,
       hotelBookingUrl: spot.hotelBookingUrl ?? null,
@@ -149,39 +236,53 @@ export function mapSpotToPlannerDestination(spot: RuralSpotSeed): PlannerDestina
 
 export function mapAnyDestination(input: RuralSpotSeed | Record<string, unknown>): PlannerDestination {
   if ("name" in input && "province" in input && "city" in input && "tags" in input) {
-    return mapSpotToPlannerDestination(input as RuralSpotSeed);
+    const direct = input as RuralSpotSeed;
+
+    if (direct.source === "mock_curated") {
+      return mapSpotToPlannerDestination({
+        ...direct,
+        name: localizeMockText(direct.name),
+        province: localizeMockText(direct.province),
+        city: localizeMockText(direct.city),
+        district: direct.district ? localizeMockText(direct.district) : null,
+        address: direct.address ? localizeMockText(direct.address) : null,
+        description: localizeMockText(direct.description),
+        transportInfo: direct.transportInfo ? localizeMockText(direct.transportInfo) : null,
+        accommodationTips: (direct.accommodationTips || []).map((item) => ({ ...item, name: localizeMockText(item.name) })),
+        diningTips: (direct.diningTips || []).map((item) => ({ ...item, name: localizeMockText(item.name) })),
+        routeHighlights: (direct.routeHighlights || []).map(localizeMockText)
+      });
+    }
+
+    return mapSpotToPlannerDestination(direct);
   }
 
   const raw = input as Record<string, unknown>;
   const pseudoSpot: RuralSpotSeed = {
     id: String(raw.id ?? ""),
-    name: String(raw.name ?? "未知目的地"),
-    province: String(raw.province ?? ""),
-    city: String(raw.city ?? ""),
-    district: String(raw.district ?? "") || null,
-    address: String(raw.address ?? "") || null,
-    description: String(raw.description ?? raw.contentSummary ?? ""),
+    name: localizeMockText(String(raw.name ?? "未知目的地")),
+    province: localizeMockText(String(raw.province ?? "")),
+    city: localizeMockText(String(raw.city ?? "")),
+    district: localizeMockText(String(raw.district ?? "")) || null,
+    address: localizeMockText(String(raw.address ?? "")) || null,
+    description: localizeMockText(String(raw.description ?? raw.contentSummary ?? "")),
     tags: splitTextList(raw.tags),
     rating: Number(raw.rating ?? 0) || null,
     crowdLevel: Number(raw.crowdLevel ?? 0) || null,
     avgCost: Number(raw.avgCost ?? raw.estimatedCost ?? 0) || null,
     suggestedDuration: String(raw.suggestedDuration ?? "one_day"),
     bestSeason: splitTextList(raw.bestSeason),
-    transportInfo: String(raw.transportSummary ?? raw.transportInfo ?? "") || null,
+    transportInfo: localizeMockText(String(raw.transportSummary ?? raw.transportInfo ?? "")) || null,
     latitude: Number(raw.latitude ?? 0) || null,
     longitude: Number(raw.longitude ?? 0) || null,
     imageUrl: String(raw.imageUrl ?? "") || null,
     isNationalKeyVillage: Boolean(raw.isNationalKeyVillage),
     batch: String(raw.batch ?? "") || null,
     source: String(raw.source ?? "mapped_raw"),
-    accommodationTips: splitTextList(raw.lodgingSummary).map((name) => ({ name })),
-    diningTips: splitTextList(raw.diningSummary).map((name) => ({ name })),
-    routeHighlights: splitTextList(raw.scenicFeatures)
+    accommodationTips: splitTextList(raw.lodgingSummary).map((name) => ({ name: localizeMockText(name) })),
+    diningTips: splitTextList(raw.diningSummary).map((name) => ({ name: localizeMockText(name) })),
+    routeHighlights: splitTextList(raw.scenicFeatures).map(localizeMockText)
   };
 
   return mapSpotToPlannerDestination(pseudoSpot);
 }
-
-
-
-

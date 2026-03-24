@@ -217,7 +217,7 @@ export async function listSpots(filters?: { province?: string; city?: string; ta
     });
     return spots.map(mapDbSpot);
   } catch {
-    return listDemoSpots(filters);
+    return [];
   }
 }
 
@@ -228,7 +228,7 @@ export async function getSpotById(id: string) {
     const spot = await prisma.spot.findUnique({ where: { id } });
     return spot ? mapDbSpot(spot) : null;
   } catch {
-    return getRuntimeDemoSpotById(id);
+    return null;
   }
 }
 
@@ -331,19 +331,21 @@ export async function deleteSpot(id: string) {
 }
 
 export async function getSpotState(userId: string, spotId: string): Promise<UserSpotState> {
-  if (!hasDatabase()) {
+  if (!hasDatabase()) return { wantToGo: false, visited: false, favorite: false };
+
+  try {
+    const actions = await prisma.userSpotAction.findMany({
+      where: { userId, spotId }
+    });
+
+    return {
+      wantToGo: actions.some((item) => item.type === SpotActionType.WANT_TO_GO),
+      visited: actions.some((item) => item.type === SpotActionType.VISITED),
+      favorite: actions.some((item) => item.type === SpotActionType.FAVORITE)
+    };
+  } catch {
     return { wantToGo: false, visited: false, favorite: false };
   }
-
-  const actions = await prisma.userSpotAction.findMany({
-    where: { userId, spotId }
-  });
-
-  return {
-    wantToGo: actions.some((item) => item.type === SpotActionType.WANT_TO_GO),
-    visited: actions.some((item) => item.type === SpotActionType.VISITED),
-    favorite: actions.some((item) => item.type === SpotActionType.FAVORITE)
-  };
 }
 
 export async function setSpotAction(userId: string, spotId: string, action: keyof UserSpotState, active: boolean) {
@@ -446,7 +448,7 @@ export async function updateUserProfile(userId: string, data: Partial<Pick<UserS
 
 export async function getPersonalizedRecommendations(userId: string, take = 6) {
   if (!hasDatabase()) {
-    return loadSeedSpots().slice(0, take);
+    return [];
   }
 
   const user = await prisma.user.findUnique({
@@ -521,13 +523,17 @@ export async function createCheckIn(userId: string, spotId: string, data: { cont
 export async function listSpotCheckIns(spotId: string, take = 12): Promise<CheckInItem[]> {
   if (!hasDatabase()) return [];
 
-  const items = await prisma.checkIn.findMany({
-    where: { spotId },
-    include: { user: { select: { id: true, nickname: true } } },
-    orderBy: { createdAt: "desc" },
-    take
-  });
-  return items.map(mapCheckIn);
+  try {
+    const items = await prisma.checkIn.findMany({
+      where: { spotId },
+      include: { user: { select: { id: true, nickname: true } } },
+      orderBy: { createdAt: "desc" },
+      take
+    });
+    return items.map(mapCheckIn);
+  } catch {
+    return [];
+  }
 }
 
 export async function createPost(userId: string, spotId: string, data: { title: string; content: string; tags?: string[]; images?: string[]; type?: "STORY" | "GUIDE" }) {
@@ -555,23 +561,27 @@ export async function createPost(userId: string, spotId: string, data: { title: 
 export async function listSpotPosts(spotId: string, currentUserId?: string | null, take = 20): Promise<CommunityPostItem[]> {
   if (!hasDatabase()) return [];
 
-  const posts = await prisma.post.findMany({
-    where: { spotId },
-    include: {
-      user: { select: { id: true, nickname: true, avatarUrl: true } },
-      comments: {
-        include: { user: { select: { id: true, nickname: true } } },
-        orderBy: { createdAt: "asc" },
-        take: 6
+  try {
+    const posts = await prisma.post.findMany({
+      where: { spotId },
+      include: {
+        user: { select: { id: true, nickname: true, avatarUrl: true } },
+        comments: {
+          include: { user: { select: { id: true, nickname: true } } },
+          orderBy: { createdAt: "asc" },
+          take: 6
+        },
+        likes: currentUserId ? { where: { userId: currentUserId } } : true,
+        _count: { select: { comments: true, likes: true } }
       },
-      likes: currentUserId ? { where: { userId: currentUserId } } : true,
-      _count: { select: { comments: true, likes: true } }
-    },
-    orderBy: [{ type: "desc" }, { createdAt: "desc" }],
-    take
-  });
+      orderBy: [{ type: "desc" }, { createdAt: "desc" }],
+      take
+    });
 
-  return posts.map((post) => mapPost(post, currentUserId));
+    return posts.map((post) => mapPost(post, currentUserId));
+  } catch {
+    return [];
+  }
 }
 
 export async function addComment(userId: string, postId: string, content: string) {

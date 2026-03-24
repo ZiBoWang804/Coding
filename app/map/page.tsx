@@ -1,4 +1,4 @@
-﻿import { MapClient } from "@/components/map-client";
+import { LazyMapClient } from "@/components/lazy-map-client";
 import { getFilterOptions, listSpots } from "@/lib/repository";
 
 export default async function MapPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
@@ -31,7 +31,7 @@ export default async function MapPage({ searchParams }: { searchParams: Promise<
         </select>
         <button type="submit" className="rounded-full bg-brand-700 px-4 py-3 text-sm text-white">更新地图</button>
       </form>
-      <MapClient spots={spots} />
+      <LazyMapClient spots={spots} />
     </div>
   );
 }

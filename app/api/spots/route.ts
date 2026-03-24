@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUser } from "@/lib/auth";
-import { createSearchHistory, createSpot, listSpots } from "@/lib/repository";
 import { normalizeSpotInput } from "@/lib/importer";
+import { createSearchHistory, createSpot, listSpots } from "@/lib/repository";
 
 const querySchema = z.object({
   province: z.string().optional(),
@@ -28,16 +28,24 @@ export async function GET(request: Request) {
       province: filters.province,
       city: filters.city,
       tag: filters.tag,
-      resultIds: items.slice(0, 10).map((item) => item.id || "").filter(Boolean)
+      resultIds: items
+        .slice(0, 10)
+        .map((item) => item.id || "")
+        .filter(Boolean)
     });
   }
+
   return NextResponse.json({ items });
 }
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
-  if (user.role !== "ADMIN") return NextResponse.json({ error: "无管理员权限" }, { status: 403 });
+  if (!user) {
+    return NextResponse.json({ error: "请先登录" }, { status: 401 });
+  }
+  if (user.role !== "ADMIN") {
+    return NextResponse.json({ error: "没有管理员权限" }, { status: 403 });
+  }
 
   try {
     const payload = await request.json();
@@ -47,7 +55,7 @@ export async function POST(request: Request) {
       bestSeason: payload.bestSeason || ["春", "秋"]
     });
     const item = await createSpot(data);
-    return NextResponse.json(item);
+    return NextResponse.json({ item });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "创建失败" }, { status: 400 });
   }

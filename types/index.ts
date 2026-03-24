@@ -190,3 +190,71 @@ export interface SpotSubmissionItem {
     email: string;
   };
 }
+
+export interface AdminOverview {
+  spotCount: number;
+  userCount: number;
+  postCount: number;
+  checkInCount: number;
+  pendingCount: number;
+  searchCount: number;
+  approvedCount: number;
+  rejectedCount: number;
+}
+
+export interface AdminMonitorCard {
+  label: string;
+  value: number;
+  hint: string;
+  tone?: "neutral" | "warning" | "good";
+}
+
+export interface AdminDistributionItem {
+  label: string;
+  count: number;
+}
+
+export interface AdminSpotHealth {
+  missingCoordinates: number;
+  missingImages: number;
+  missingTransportInfo: number;
+  missingTicketLinks: number;
+  missingHotelLinks: number;
+}
+
+export interface AdminRecentActivity {
+  id: string;
+  type: "search" | "post" | "checkin";
+  title: string;
+  subtitle: string;
+  createdAt?: string;
+  metric?: string;
+}
+
+export interface AdminHotSpotItem {
+  id: string;
+  name: string;
+  city: string;
+  rating?: number | null;
+  postCount: number;
+  checkInCount: number;
+  favoriteCount: number;
+  missingFields: string[];
+}
+
+export interface AdminMonitoringData {
+  mode: "demo" | "database";
+  health: AdminSpotHealth;
+  cards: AdminMonitorCard[];
+  sourceBreakdown: AdminDistributionItem[];
+  cityBreakdown: AdminDistributionItem[];
+  hotSpots: AdminHotSpotItem[];
+  recentActivities: AdminRecentActivity[];
+}
+
+export interface AdminWorkspaceData {
+  overview: AdminOverview;
+  monitoring: AdminMonitoringData;
+  spots: RuralSpotSeed[];
+  submissions: SpotSubmissionItem[];
+}

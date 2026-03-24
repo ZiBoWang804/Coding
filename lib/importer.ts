@@ -34,6 +34,7 @@ const importSchema = z.object({
 });
 
 export type ImportMapping = Record<string, string>;
+export type NormalizedImportRow = z.infer<typeof importSchema>;
 
 export function defaultFieldMapping(headers: string[]) {
   const aliasMap: Record<string, string[]> = {
@@ -67,7 +68,9 @@ export function defaultFieldMapping(headers: string[]) {
   const mapping: ImportMapping = {};
   for (const [field, aliases] of Object.entries(aliasMap)) {
     const hit = headers.find((header) => aliases.includes(header));
-    if (hit) mapping[field] = hit;
+    if (hit) {
+      mapping[field] = hit;
+    }
   }
   return mapping;
 }
@@ -104,7 +107,11 @@ export function normalizeSpotInput(raw: Record<string, unknown>, fallback?: { so
   return importSchema.parse(normalized);
 }
 
-export function buildImportPreview(rows: Record<string, unknown>[], mapping: ImportMapping, fallback?: { source?: string; batch?: string }) {
+export function buildImportPreview(
+  rows: Record<string, unknown>[],
+  mapping: ImportMapping,
+  fallback?: { source?: string; batch?: string }
+) {
   const previewRows = rows.slice(0, 5).map((row) => {
     const mapped: Record<string, unknown> = {};
     for (const [field, sourceHeader] of Object.entries(mapping)) {
@@ -113,7 +120,7 @@ export function buildImportPreview(rows: Record<string, unknown>[], mapping: Imp
     return mapped;
   });
 
-  const normalizedRows: ReturnType<typeof normalizeSpotInput>[] = [];
+  const normalizedRows: NormalizedImportRow[] = [];
   const errors: Array<{ row: number; message: string }> = [];
 
   rows.forEach((row, index) => {
@@ -124,7 +131,10 @@ export function buildImportPreview(rows: Record<string, unknown>[], mapping: Imp
       }
       normalizedRows.push(normalizeSpotInput(mapped, fallback));
     } catch (error) {
-      errors.push({ row: index + 1, message: error instanceof Error ? error.message : "未知错误" });
+      errors.push({
+        row: index + 1,
+        message: error instanceof Error ? error.message : "未知错误"
+      });
     }
   });
 
@@ -137,7 +147,11 @@ export function buildImportPreview(rows: Record<string, unknown>[], mapping: Imp
   };
 }
 
-export async function commitImportRows(prisma: PrismaClient, rows: ReturnType<typeof normalizeSpotInput>[], fallback?: { source?: string; batch?: string }) {
+export async function commitImportRows(
+  prisma: PrismaClient,
+  rows: NormalizedImportRow[],
+  fallback?: { source?: string; batch?: string }
+) {
   let created = 0;
   let updated = 0;
   const failed: Array<{ name: string; reason: string }> = [];
@@ -152,25 +166,49 @@ export async function commitImportRows(prisma: PrismaClient, rows: ReturnType<ty
           district: row.district ?? null
         }
       };
+
       const existing = await prisma.spot.findUnique({ where });
       if (existing) {
-        await prisma.spot.update({ where, data: { ...row, source: row.source ?? fallback?.source, batch: row.batch ?? fallback?.batch } });
+        await prisma.spot.update({
+          where,
+          data: {
+            ...row,
+            source: row.source ?? fallback?.source,
+            batch: row.batch ?? fallback?.batch
+          }
+        });
         updated += 1;
       } else {
-        await prisma.spot.create({ data: { ...row, source: row.source ?? fallback?.source ?? "admin_import", batch: row.batch ?? fallback?.batch ?? null } });
+        await prisma.spot.create({
+          data: {
+            ...row,
+            source: row.source ?? fallback?.source ?? "admin_import",
+            batch: row.batch ?? fallback?.batch ?? null
+          }
+        });
         created += 1;
       }
     } catch (error) {
-      failed.push({ name: row.name, reason: error instanceof Error ? error.message : "导入失败" });
+      failed.push({
+        name: row.name,
+        reason: error instanceof Error ? error.message : "导入失败"
+      });
     }
   }
 
   return { created, updated, failed };
 }
 
+export function buildSpotLookupKey(spot: { name: string; province: string; city: string; district?: string | null }) {
+  return [spot.name, spot.province, spot.city, spot.district ?? ""].join("::").toLowerCase();
+}
+
 export function loadRowsFromFile(filePath: string) {
   const absolutePath = path.resolve(process.cwd(), filePath);
-  if (!fs.existsSync(absolutePath)) throw new Error(`文件不存在: ${absolutePath}`);
+  if (!fs.existsSync(absolutePath)) {
+    throw new Error(`文件不存在: ${absolutePath}`);
+  }
+
   const workbook = XLSX.readFile(absolutePath);
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
   return XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: "" });

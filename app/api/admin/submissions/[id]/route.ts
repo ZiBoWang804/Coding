@@ -10,8 +10,12 @@ const schema = z.object({
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
-  if (user.role !== "ADMIN") return NextResponse.json({ error: "无管理员权限" }, { status: 403 });
+  if (!user) {
+    return NextResponse.json({ error: "请先登录" }, { status: 401 });
+  }
+  if (user.role !== "ADMIN") {
+    return NextResponse.json({ error: "没有管理员权限" }, { status: 403 });
+  }
 
   try {
     const payload = schema.parse(await request.json());

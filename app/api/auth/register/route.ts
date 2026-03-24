@@ -18,13 +18,14 @@ export async function POST(request: Request) {
 
     if (isDemoDataEnabled()) {
       const user = {
-        id: `demo-${payload.email}`,
+        id: `demo-user-${payload.email}`,
         email: payload.email,
         nickname: payload.nickname,
         role: "USER" as const,
         preferences: [],
         homeCity: payload.homeCity || null
       };
+
       const token = await createSessionToken({
         userId: user.id,
         email: user.email,
@@ -33,6 +34,7 @@ export async function POST(request: Request) {
         preferences: user.preferences,
         homeCity: user.homeCity
       });
+
       const response = NextResponse.json({ user });
       response.cookies.set("yxj_session", token, getSessionCookieOptions());
       return response;
@@ -73,6 +75,7 @@ export async function POST(request: Request) {
         homeCity: user.homeCity
       }
     });
+
     response.cookies.set("yxj_session", token, getSessionCookieOptions());
     return response;
   } catch (error) {

@@ -7,3 +7,5 @@ coverage
 *.log
 *.tsbuildinfo
 tmp
+data/demo-spots.runtime.json
+data/import-ready/

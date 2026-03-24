@@ -1,6 +1,33 @@
-﻿import { prisma } from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 import { isDatabaseEnabled } from "@/lib/database-mode";
+import { prisma } from "@/lib/prisma";
 import type { RuralSpotSeed } from "@/types";
+
+const XIAN_TOPIC_SELECT = {
+  id: true,
+  name: true,
+  province: true,
+  city: true,
+  district: true,
+  address: true,
+  description: true,
+  tags: true,
+  rating: true,
+  crowdLevel: true,
+  avgCost: true,
+  suggestedDuration: true,
+  bestSeason: true,
+  transportInfo: true,
+  latitude: true,
+  longitude: true,
+  imageUrl: true,
+  isNationalKeyVillage: true,
+  batch: true,
+  source: true,
+  accommodationTips: true,
+  diningTips: true,
+  routeHighlights: true
+} as const;
 
 function mapDbSpot(spot: any): RuralSpotSeed {
   return {
@@ -30,18 +57,27 @@ function mapDbSpot(spot: any): RuralSpotSeed {
   };
 }
 
-export async function getXianFeaturedSpots(): Promise<RuralSpotSeed[]> {
-  if (!isDatabaseEnabled()) return [];
-  try {
+const getCachedXianFeaturedSpots = unstable_cache(
+  async () => {
     const spots = await prisma.spot.findMany({
+      select: XIAN_TOPIC_SELECT,
       where: { batch: "xian-rural-import-2026-03" },
       orderBy: [{ rating: "desc" }, { name: "asc" }],
       take: 6
     });
+
     return spots.map(mapDbSpot);
+  },
+  ["xian-topic-featured-spots"],
+  { revalidate: 300 }
+);
+
+export async function getXianFeaturedSpots(): Promise<RuralSpotSeed[]> {
+  if (!isDatabaseEnabled()) return [];
+
+  try {
+    return await getCachedXianFeaturedSpots();
   } catch {
     return [];
   }
 }
-
-

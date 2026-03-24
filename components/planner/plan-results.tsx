@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { TravelServicePanel } from "@/components/travel-service-panel";
 import { TransitAssistant } from "@/components/transit-assistant";
 import type { PlannerEngineOutput } from "@/lib/planner/types";
 
@@ -95,6 +96,24 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
                   publicTransitFriendlyScore: plan.mappedDestination.publicTransitFriendlyScore,
                   lastMileDifficulty: plan.mappedDestination.lastMileDifficulty,
                   nearestRailStation: plan.mappedDestination.nearestRailStation
+                }}
+              />
+              <TravelServicePanel
+                className="mt-3"
+                compact
+                spot={{
+                  name: plan.destinationName,
+                  city: plan.mappedDestination.city,
+                  district: plan.mappedDestination.district,
+                  address: plan.mappedDestination.address,
+                  description: plan.mappedDestination.description,
+                  tags: plan.mappedDestination.originalTags,
+                  lodgingSummary: plan.lodgingSummary || plan.mappedDestination.lodgingSummary,
+                  lodgingPriceMin: plan.mappedDestination.lodgingPriceMin,
+                  lodgingPriceMax: plan.mappedDestination.lodgingPriceMax,
+                  ticketBookingUrl: plan.mappedDestination.transportLinks?.ticketBookingUrl,
+                  hotelBookingUrl: plan.mappedDestination.transportLinks?.hotelBookingUrl,
+                  transportLinks: plan.mappedDestination.transportLinks
                 }}
               />
               <div className="mt-3 grid gap-4 lg:grid-cols-2">

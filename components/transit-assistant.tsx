@@ -50,7 +50,7 @@ export function TransitAssistant({
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-semibold tracking-[0.2em] text-brand-700">ROUTE</span>
+            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-semibold tracking-[0.2em] text-brand-700">路线</span>
             <span className="text-xs text-slate-500">从 {origin} 出发</span>
           </div>
           <h4 className="text-base font-semibold text-brand-900">路线建议</h4>

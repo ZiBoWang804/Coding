@@ -5,17 +5,27 @@ node_modules
 dist
 coverage
 *.log
+.next-dev.session*.log
 *.tsbuildinfo
-tmp
+
 data/demo-spots.runtime.json
 data/import-ready/
 planner-request*.json
 planner-response*.json
+tmp/
+
+# local debug artifacts
+admin.cookies.txt
+admin.page.html
+com-test.xlsx
+tmp_trip_huangshan.html
+
+# local source assets (not part of runtime repo)
 A8全国旅游景点类POI数据/
 中国旅游地图电子版各省景点大全地理可标记自驾攻略高清图片素材/
 西安附近乡村景点图片素材包/
-全国旅游数据集*.csv
+全国旅游数据集.csv
 西安附近乡村旅游_小红书帖子清洗整理.xlsx
 西安附近乡村景点_表格和图片重发版.xlsx
 西安附近乡村景点数据采集表.xlsx
-“游乡记”绘乡旅游，推进乡建现代化.pptx
+“游乡记”绘乡旅画，推进乡建现代化.pptx

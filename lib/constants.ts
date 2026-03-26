@@ -16,10 +16,10 @@ export const PLANNER_WEIGHTS = {
 export const RECOMMENDED_ROUTES = [
   {
     title: "秦岭脚下的一日慢游",
-    summary: "适合自驾出发，上午在村落和古寨里走走，下午找一家山野咖啡馆或民宿院子慢慢坐下来。"
+    summary: "适合自驾出发，上午在村落和古寨里慢慢逛，下午找一家山野咖啡馆或民宿院子坐下来休息。"
   },
   {
-    title: "临潼亲子农园轻假期",
+    title: "临潼亲子农园轻度假",
     summary: "更适合带孩子采摘、看动物、做农事体验，节奏轻松，预算也相对可控。"
   },
   {
@@ -29,7 +29,7 @@ export const RECOMMENDED_ROUTES = [
 ];
 
 export const PACKING_SUGGESTIONS: Record<string, string[]> = {
-  通用: ["身份证", "充电宝", "舒适步行鞋", "饮水", "简单药品"],
+  通用: ["身份证", "充电宝", "舒适步行鞋", "饮用水", "简易药品"],
   亲子: ["儿童湿巾", "轻便推车", "备用零食"],
   摄影: ["备用电池", "防潮袋", "轻便三脚架"],
   自驾: ["ETC", "车载充电器", "晕车药"],
@@ -42,7 +42,7 @@ export const HERO_SLIDES = [
   {
     eyebrow: "周末灵感",
     title: "不用跑太远，也能换一段像样的风景",
-    description: "从西安出发，一小时到两小时内就能遇见竹海、果园、古寨、温泉和能住一晚的小村子。"
+    description: "从西安出发，一小时到两小时内就能遇见竹海、果园、古寨、温泉和适合住一晚的小村子。"
   },
   {
     eyebrow: "路线节奏",
@@ -51,7 +51,7 @@ export const HERO_SLIDES = [
   },
   {
     eyebrow: "出行方式",
-    title: "能当天往返的，和适合住一晚的，完全是两种玩法",
+    title: "能当天往返的，和适合住一晚的，是两种玩法",
     description: "平台会把可一日往返和更适合住一晚的目的地拆开，让选择更清楚，行程也更轻松。"
   }
 ];

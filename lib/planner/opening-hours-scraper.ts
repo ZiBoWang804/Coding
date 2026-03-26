@@ -8,6 +8,8 @@ type OpeningVerification = {
   verifiedAt: string;
 };
 
+const openingVerificationCache = new Map<string, { expiresAt: number; value: OpeningVerification | null }>();
+
 function cleanHtmlToText(html: string) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
@@ -46,30 +48,44 @@ export async function fetchVerifiedOpeningInfo(destination: PlannerDestination):
   const sourceUrl = destination.transportLinks?.ticketBookingUrl ?? null;
   if (!sourceUrl) return null;
 
+  const cached = openingVerificationCache.get(sourceUrl);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.value;
+  }
+
   try {
     const response = await fetch(sourceUrl, {
       cache: "no-store",
-      signal: AbortSignal.timeout(6000),
+      signal: AbortSignal.timeout(4000),
       headers: {
         "user-agent": "Mozilla/5.0 (compatible; YouXiangJiBot/1.0)"
       }
     });
-    if (!response.ok) return null;
+    if (!response.ok) {
+      openingVerificationCache.set(sourceUrl, { expiresAt: Date.now() + 10 * 60 * 1000, value: null });
+      return null;
+    }
 
     const html = await response.text();
     const text = cleanHtmlToText(html);
     const openingHoursText = extractOpeningPhrase(text);
-    if (!openingHoursText) return null;
+    if (!openingHoursText) {
+      openingVerificationCache.set(sourceUrl, { expiresAt: Date.now() + 30 * 60 * 1000, value: null });
+      return null;
+    }
 
     const openStatus = inferOpenStatus(openingHoursText);
-    return {
+    const result = {
       openingHoursText,
       openStatus,
       note: `已从外部页面校验开放信息：${openingHoursText}`,
       sourceUrl,
       verifiedAt: new Date().toISOString()
     };
+    openingVerificationCache.set(sourceUrl, { expiresAt: Date.now() + 2 * 60 * 60 * 1000, value: result });
+    return result;
   } catch {
+    openingVerificationCache.set(sourceUrl, { expiresAt: Date.now() + 10 * 60 * 1000, value: null });
     return null;
   }
 }

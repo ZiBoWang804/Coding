@@ -1,5 +1,7 @@
-﻿import { PostType, SpotActionType, SpotSubmissionStatus } from "@prisma/client";
-import { unstable_cache } from "next/cache";
+import { Prisma, PostType, SpotActionType, SpotSubmissionStatus } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { isDatabaseEnabled } from "@/lib/database-mode";
+import { loadSeedSpots } from "@/lib/demo-data";
 import {
   createRuntimeDemoSpot,
   deleteRuntimeDemoSpot,
@@ -7,18 +9,9 @@ import {
   listRuntimeDemoSpots,
   updateRuntimeDemoSpot
 } from "@/lib/demo-spot-store";
-import { loadSeedSpots } from "@/lib/demo-data";
-import { prisma } from "@/lib/prisma";
-import { isDatabaseEnabled } from "@/lib/database-mode";
 import { buildAmapNavigationUrl, buildGenericHotelUrl, buildGenericTicketUrl } from "@/lib/utils";
+import type { PlannerApiInput } from "@/lib/planner/types";
 import type {
-  AdminWorkspaceData,
-  AdminDistributionItem,
-  AdminHotSpotItem,
-  AdminMonitoringData,
-  AdminOverview,
-  AdminRecentActivity,
-  AdminSpotHealth,
   CheckInItem,
   CommunityPostItem,
   RuralSpotSeed,
@@ -28,37 +21,219 @@ import type {
   UserSummary
 } from "@/types";
 
-const HOME_SPOT_SELECT = {
-  id: true,
-  name: true,
-  province: true,
-  city: true,
-  district: true,
-  address: true,
-  description: true,
-  tags: true,
-  rating: true,
-  crowdLevel: true,
-  avgCost: true,
-  suggestedDuration: true,
-  bestSeason: true,
-  transportInfo: true,
-  latitude: true,
-  longitude: true,
-  imageUrl: true,
-  ticketBookingUrl: true,
-  hotelBookingUrl: true,
-  gaodeNavigationUrl: true,
-  isNationalKeyVillage: true,
-  batch: true,
-  source: true,
-  accommodationTips: true,
-  diningTips: true,
-  routeHighlights: true
-} as const;
+const HOME_FEATURED_LIMIT = 6;
+const HOME_POPULAR_LIMIT = 8;
+const HOME_MAP_LIMIT = 12;
+const MAP_SPOT_LIMIT = 120;
+
+type SpotFilters = {
+  province?: string;
+  city?: string;
+  tag?: string;
+  q?: string;
+  ids?: string[];
+  take?: number;
+  skip?: number;
+  mapReadyOnly?: boolean;
+};
+
+type PaginatedSpots = {
+  items: RuralSpotSeed[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+type HomePlatformStats = {
+  spotCount: number;
+  userCount: number;
+  todayViewCount: number;
+};
+
+export type AdminBrowseTrendPoint = {
+  dateKey: string;
+  label: string;
+  visitorCount: number;
+  browseCount: number;
+};
+
+export type AdminHeatmapSpot = {
+  id: string;
+  name: string;
+  province: string;
+  city: string;
+  district?: string | null;
+  latitude: number;
+  longitude: number;
+  heatScore: number;
+  actionCount: number;
+  checkInCount: number;
+  postCount: number;
+  rating?: number | null;
+};
+
+function buildEmptyBrowseTrend(days: number): AdminBrowseTrendPoint[] {
+  const safeDays = Math.max(3, Math.min(days, 30));
+  const today = new Date();
+  const items: AdminBrowseTrendPoint[] = [];
+
+  for (let offset = safeDays - 1; offset >= 0; offset -= 1) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - offset);
+    items.push({
+      dateKey: formatChinaDayKey(date),
+      label: formatChinaDayLabel(date),
+      visitorCount: 0,
+      browseCount: 0
+    });
+  }
+
+  return items;
+}
+
+function isXiAnSpot(spot: Pick<RuralSpotSeed, "city" | "province" | "batch" | "source">) {
+  return Boolean(
+    spot.city?.includes("西安") ||
+      spot.batch?.toLowerCase().includes("xian") ||
+      spot.source?.toLowerCase().includes("xian")
+  );
+}
+
+function isFiveASpot(spot: Pick<RuralSpotSeed, "tags" | "description">) {
+  return (
+    spot.tags.some((tag) => tag.includes("5A")) ||
+    spot.description.includes("5A景区") ||
+    spot.description.includes("5A级") ||
+    spot.description.includes("常见评级为5A")
+  );
+}
+
+function isAllowedMapSpot(spot: Pick<RuralSpotSeed, "city" | "province" | "batch" | "source" | "tags" | "description">) {
+  return isXiAnSpot(spot) || isFiveASpot(spot);
+}
+
+function buildMapWhere(filters?: SpotFilters): Prisma.SpotWhereInput {
+  return {
+    AND: [
+      buildSpotWhere(filters),
+      {
+        OR: [
+          { city: { contains: "西安" } },
+          { batch: { contains: "xian", mode: "insensitive" } },
+          { source: { contains: "xian", mode: "insensitive" } },
+          { tags: { has: "5A景区" } },
+          { tags: { has: "5A级景区" } },
+          { description: { contains: "5A景区", mode: "insensitive" } },
+          { description: { contains: "5A级", mode: "insensitive" } },
+          { description: { contains: "常见评级为5A", mode: "insensitive" } }
+        ]
+      }
+    ]
+  };
+}
 
 function hasDatabase() {
   return isDatabaseEnabled();
+}
+
+function buildSpotWhere(filters?: SpotFilters): Prisma.SpotWhereInput {
+  return {
+    id: filters?.ids ? { in: filters.ids } : undefined,
+    province: filters?.province || undefined,
+    city: filters?.city || undefined,
+    tags: filters?.tag ? { has: filters.tag } : undefined,
+    latitude: filters?.mapReadyOnly ? { not: null } : undefined,
+    longitude: filters?.mapReadyOnly ? { not: null } : undefined,
+    OR: filters?.q
+      ? [
+          { name: { contains: filters.q, mode: "insensitive" } },
+          { description: { contains: filters.q, mode: "insensitive" } },
+          { city: { contains: filters.q, mode: "insensitive" } },
+          { province: { contains: filters.q, mode: "insensitive" } }
+        ]
+      : undefined
+  };
+}
+
+function getSpotOrderBy(): Prisma.SpotOrderByWithRelationInput[] {
+  return [
+    { imageUrl: { sort: "desc", nulls: "last" } },
+    { rating: { sort: "desc", nulls: "last" } },
+    { createdAt: "desc" }
+  ];
+}
+
+function applySlice<T>(items: T[], skip = 0, take?: number) {
+  if (take == null) return skip > 0 ? items.slice(skip) : items;
+  return items.slice(skip, skip + take);
+}
+
+function textIncludes(text: string | null | undefined, keyword: string) {
+  if (!text || !keyword) return false;
+  return text.toLowerCase().includes(keyword.toLowerCase());
+}
+
+function matchesPlannerDestinationHard(spot: RuralSpotSeed, keyword: string) {
+  return [
+    spot.name,
+    spot.province,
+    spot.city,
+    spot.district,
+    spot.address
+  ].some((field) => textIncludes(field, keyword));
+}
+
+function matchesPlannerDestinationSoft(spot: RuralSpotSeed, keyword: string) {
+  return [
+    spot.description,
+    spot.transportInfo,
+    ...(spot.tags || []),
+    ...(spot.routeHighlights || [])
+  ].some((field) => textIncludes(field, keyword));
+}
+
+function scorePlannerCandidateSpot(spot: RuralSpotSeed, input: Pick<PlannerApiInput, "origin" | "destinationQuery" | "preferenceTags" | "companions" | "transportMode">) {
+  let score = 0;
+  const destinationQuery = input.destinationQuery?.trim() || "";
+  const origin = input.origin.trim();
+  const joinedTags = spot.tags.join(" ");
+  const locationText = [spot.province, spot.city, spot.district, spot.address].filter(Boolean).join(" ");
+  const richText = `${spot.name} ${locationText} ${spot.description} ${joinedTags}`;
+
+  if (destinationQuery) {
+    if (spot.name === destinationQuery) score += 24;
+    else if (textIncludes(spot.name, destinationQuery)) score += 18;
+    if (textIncludes(locationText, destinationQuery)) score += 14;
+    if (textIncludes(spot.description, destinationQuery)) score += 8;
+  }
+
+  if (origin) {
+    if (textIncludes(locationText, origin)) score += 10;
+    else if (textIncludes(spot.description, origin)) score += 4;
+  }
+
+  const tagHits = input.preferenceTags.filter((tag) => textIncludes(richText, tag)).length;
+  score += tagHits * 3;
+
+  if (input.transportMode === "self_drive" && /自驾|停车|环线/.test(`${spot.transportInfo || ""} ${richText}`)) {
+    score += 4;
+  }
+  if (input.transportMode === "public_transit" && /公交|地铁|高铁|客运|接驳/.test(`${spot.transportInfo || ""} ${richText}`)) {
+    score += 4;
+  }
+  if (input.companions === "family" && /亲子|研学|农事|乐园|家庭/.test(richText)) {
+    score += 4;
+  }
+  if (input.companions === "couple" && /拍照|民宿|咖啡|夜景|温泉/.test(richText)) {
+    score += 4;
+  }
+  if (input.companions === "elderly" && /温泉|康养|慢游|轻松/.test(richText)) {
+    score += 4;
+  }
+
+  if (spot.imageUrl) score += 1.5;
+  score += (spot.rating ?? 0) * 1.2;
+  return score;
 }
 
 function mapDbSpot(spot: any): RuralSpotSeed {
@@ -92,43 +267,31 @@ function mapDbSpot(spot: any): RuralSpotSeed {
   };
 }
 
-const getCachedHomeTopSpots = unstable_cache(
-  async () => {
-    const spots = await prisma.spot.findMany({
-      select: HOME_SPOT_SELECT,
-      orderBy: [{ rating: "desc" }, { createdAt: "desc" }],
-      take: 8
-    });
-
-    return spots.map(mapDbSpot);
-  },
-  ["home-top-spots"],
-  { revalidate: 300 }
-);
-
-async function listDemoSpots(filters?: { province?: string; city?: string; tag?: string; q?: string; ids?: string[] }): Promise<RuralSpotSeed[]> {
-  const demoSpots = await listRuntimeDemoSpots();
-  if (!filters?.province && !filters?.city && !filters?.tag && !filters?.q && !filters?.ids?.length) {
-    return demoSpots;
-  }
-
-  return demoSpots.filter((spot) => {
-    if (filters?.ids?.length && !filters.ids.includes(spot.id || "")) return false;
+function filterSeedSpots(filters?: SpotFilters) {
+  return loadSeedSpots().filter((spot) => {
+    if (filters?.ids && (!spot.id || !filters.ids.includes(spot.id))) return false;
     if (filters?.province && spot.province !== filters.province) return false;
     if (filters?.city && spot.city !== filters.city) return false;
     if (filters?.tag && !spot.tags.includes(filters.tag)) return false;
     if (filters?.q && !(spot.name.includes(filters.q) || spot.description.includes(filters.q))) return false;
+    if (filters?.mapReadyOnly && (spot.latitude == null || spot.longitude == null)) return false;
     return true;
   });
 }
 
-async function getDemoFilterOptions() {
+async function listDemoSpots(filters?: SpotFilters) {
   const spots = await listRuntimeDemoSpots();
-  return {
-    provinces: [...new Set(spots.map((spot) => spot.province))],
-    cities: [...new Set(spots.map((spot) => spot.city))],
-    tags: [...new Set(spots.flatMap((spot) => spot.tags))]
-  };
+  const filtered = spots.filter((spot) => {
+    if (filters?.ids && (!spot.id || !filters.ids.includes(spot.id))) return false;
+    if (filters?.province && spot.province !== filters.province) return false;
+    if (filters?.city && spot.city !== filters.city) return false;
+    if (filters?.tag && !spot.tags.includes(filters.tag)) return false;
+    if (filters?.q && !(spot.name.includes(filters.q) || spot.description.includes(filters.q))) return false;
+    if (filters?.mapReadyOnly && (spot.latitude == null || spot.longitude == null)) return false;
+    return true;
+  });
+
+  return applySlice(filtered, filters?.skip, filters?.take);
 }
 
 function mapPost(post: any, currentUserId?: string | null): CommunityPostItem {
@@ -194,30 +357,267 @@ function mapSubmission(submission: any): SpotSubmissionItem {
   };
 }
 
-export async function listSpots(filters?: { province?: string; city?: string; tag?: string; q?: string; ids?: string[] }): Promise<RuralSpotSeed[]> {
+export async function listSpots(filters?: SpotFilters) {
   if (!hasDatabase()) return listDemoSpots(filters);
 
   try {
     const spots = await prisma.spot.findMany({
-      where: {
-        id: filters?.ids ? { in: filters.ids } : undefined,
-        province: filters?.province || undefined,
-        city: filters?.city || undefined,
-        tags: filters?.tag ? { has: filters.tag } : undefined,
-        OR: filters?.q
-          ? [
-              { name: { contains: filters.q, mode: "insensitive" } },
-              { description: { contains: filters.q, mode: "insensitive" } },
-              { city: { contains: filters.q, mode: "insensitive" } },
-              { province: { contains: filters.q, mode: "insensitive" } }
-            ]
-          : undefined
-      },
-      orderBy: [{ rating: "desc" }, { createdAt: "desc" }]
+      where: buildSpotWhere(filters),
+      orderBy: getSpotOrderBy(),
+      skip: filters?.skip,
+      take: filters?.take
     });
     return spots.map(mapDbSpot);
   } catch {
     return [];
+  }
+}
+
+export async function countSpots(filters?: SpotFilters) {
+  if (!hasDatabase()) return filterSeedSpots(filters).length;
+
+  try {
+    return await prisma.spot.count({ where: buildSpotWhere(filters) });
+  } catch {
+    return 0;
+  }
+}
+
+export async function listPagedSpots(filters?: SpotFilters, page = 1, pageSize = 18): Promise<PaginatedSpots> {
+  const safePageSize = Math.max(1, Math.min(pageSize, 48));
+  const total = await countSpots(filters);
+  const maxPage = Math.max(1, Math.ceil(total / safePageSize));
+  const safePage = Math.min(Math.max(1, page), maxPage);
+  const items = await listSpots({
+    ...filters,
+    skip: (safePage - 1) * safePageSize,
+    take: safePageSize
+  });
+
+  return {
+    items,
+    total,
+    page: safePage,
+    pageSize: safePageSize
+  };
+}
+
+export async function listPlannerCandidateSpots(
+  input: Pick<PlannerApiInput, "origin" | "destinationQuery" | "preferenceTags" | "companions" | "transportMode">,
+  limit = 220
+) {
+  const destinationQuery = input.destinationQuery?.trim() || "";
+  const originQuery = input.origin.trim();
+  const tagSlice = input.preferenceTags.slice(0, 6);
+
+  if (!hasDatabase()) {
+    const items = filterSeedSpots();
+    if (destinationQuery) {
+      const hardMatches = items.filter((spot) => matchesPlannerDestinationHard(spot, destinationQuery));
+      if (hardMatches.length > 0) {
+        return hardMatches
+          .map((spot) => ({ spot, score: scorePlannerCandidateSpot(spot, input) }))
+          .sort((left, right) => right.score - left.score)
+          .slice(0, limit)
+          .map((item) => item.spot);
+      }
+
+      const softMatches = items.filter((spot) => matchesPlannerDestinationSoft(spot, destinationQuery));
+      if (softMatches.length > 0) {
+        return softMatches
+          .map((spot) => ({ spot, score: scorePlannerCandidateSpot(spot, input) }))
+          .sort((left, right) => right.score - left.score)
+          .slice(0, limit)
+          .map((item) => item.spot);
+      }
+
+      return [];
+    }
+    return items
+      .map((spot) => ({ spot, score: scorePlannerCandidateSpot(spot, input) }))
+      .sort((left, right) => right.score - left.score)
+      .slice(0, limit)
+      .map((item) => item.spot);
+  }
+
+  try {
+    if (destinationQuery) {
+      const strictRows = await prisma.spot.findMany({
+        where: {
+          OR: [
+            { name: { contains: destinationQuery, mode: "insensitive" } },
+            { province: { contains: destinationQuery, mode: "insensitive" } },
+            { city: { contains: destinationQuery, mode: "insensitive" } },
+            { district: { contains: destinationQuery, mode: "insensitive" } },
+            { address: { contains: destinationQuery, mode: "insensitive" } }
+          ]
+        },
+        orderBy: getSpotOrderBy(),
+        take: Math.min(limit * 3, 180)
+      });
+
+      if (strictRows.length > 0) {
+        return strictRows
+          .map(mapDbSpot)
+          .map((spot) => ({ spot, score: scorePlannerCandidateSpot(spot, input) }))
+          .sort((left, right) => right.score - left.score)
+          .slice(0, limit)
+          .map((item) => item.spot);
+      }
+
+      const softRows = await prisma.spot.findMany({
+        where: {
+          OR: [{ description: { contains: destinationQuery, mode: "insensitive" } }]
+        },
+        orderBy: getSpotOrderBy(),
+        take: Math.min(limit * 2, 120)
+      });
+
+      const softMatches = softRows.map(mapDbSpot).filter((spot) => matchesPlannerDestinationSoft(spot, destinationQuery));
+      if (softMatches.length > 0) {
+        return softMatches
+          .map((spot) => ({ spot, score: scorePlannerCandidateSpot(spot, input) }))
+          .sort((left, right) => right.score - left.score)
+          .slice(0, limit)
+          .map((item) => item.spot);
+      }
+
+      return [];
+    }
+
+    const queries: Array<Promise<any[]>> = [];
+
+    if (originQuery) {
+      queries.push(
+        prisma.spot.findMany({
+          where: {
+            OR: [
+              { province: { contains: originQuery, mode: "insensitive" } },
+              { city: { contains: originQuery, mode: "insensitive" } },
+              { district: { contains: originQuery, mode: "insensitive" } },
+              { address: { contains: originQuery, mode: "insensitive" } },
+              { description: { contains: originQuery, mode: "insensitive" } }
+            ]
+          },
+          orderBy: getSpotOrderBy(),
+          take: 120
+        })
+      );
+    }
+
+    if (tagSlice.length > 0) {
+      queries.push(
+        prisma.spot.findMany({
+          where: {
+            tags: { hasSome: tagSlice }
+          },
+          orderBy: getSpotOrderBy(),
+          take: 120
+        })
+      );
+    }
+
+    queries.push(
+      prisma.spot.findMany({
+        orderBy: getSpotOrderBy(),
+        take: 160
+      })
+    );
+
+    const buckets = await Promise.all(queries);
+    const merged = new Map<string, RuralSpotSeed>();
+
+    for (const bucket of buckets) {
+      for (const row of bucket) {
+        const spot = mapDbSpot(row);
+        if (!merged.has(spot.id!)) {
+          merged.set(spot.id!, spot);
+        }
+      }
+    }
+
+    return Array.from(merged.values())
+      .map((spot) => ({ spot, score: scorePlannerCandidateSpot(spot, input) }))
+      .sort((left, right) => right.score - left.score)
+      .slice(0, limit)
+      .map((item) => item.spot);
+  } catch {
+    return [];
+  }
+}
+
+export async function getMapPageData(filters?: SpotFilters, take = MAP_SPOT_LIMIT) {
+  const mapFilters: SpotFilters = { ...filters, mapReadyOnly: true };
+
+  if (!hasDatabase()) {
+    const items = (await listDemoSpots(mapFilters)).filter(isAllowedMapSpot);
+    const spots = applySlice(items, 0, take);
+    return {
+      spots,
+      total: items.length,
+      displayed: spots.length,
+      truncated: items.length > take
+    };
+  }
+
+  const [rows, total] = await Promise.all([
+    prisma.spot.findMany({
+      where: buildMapWhere(mapFilters),
+      orderBy: getSpotOrderBy(),
+      take
+    }),
+    prisma.spot.count({ where: buildMapWhere(mapFilters) })
+  ]);
+
+  const spots = rows.map(mapDbSpot);
+
+  return {
+    spots,
+    total,
+    displayed: spots.length,
+    truncated: total > take
+  };
+}
+
+export async function getHomePlatformStats(): Promise<HomePlatformStats> {
+  if (!hasDatabase()) {
+    return {
+      spotCount: filterSeedSpots().length,
+      userCount: 0,
+      todayViewCount: 0
+    };
+  }
+
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
+  try {
+    const [spotCount, userCount, todayViewCount] = await Promise.all([
+      prisma.spot.count(),
+      prisma.user.count(),
+      prisma.searchHistory.count({
+        where: {
+          createdAt: {
+            gte: startOfToday,
+            lt: startOfTomorrow
+          }
+        }
+      })
+    ]);
+
+    return {
+      spotCount,
+      userCount,
+      todayViewCount
+    };
+  } catch {
+    return {
+      spotCount: 0,
+      userCount: 0,
+      todayViewCount: 0
+    };
   }
 }
 
@@ -235,6 +635,7 @@ export async function getSpotById(id: string) {
 export async function getSpotDetailData(id: string, currentUserId?: string | null) {
   const spot = await getSpotById(id);
   if (!spot) return null;
+
   if (!hasDatabase()) {
     return {
       spot,
@@ -258,61 +659,71 @@ export async function getSpotDetailData(id: string, currentUserId?: string | nul
   };
 }
 
-export async function getHomeData(user?: UserSummary | null): Promise<{
-  featured: RuralSpotSeed[];
-  popular: RuralSpotSeed[];
-  mapSpots: RuralSpotSeed[];
-  personalized: RuralSpotSeed[];
-  recentSearches: SearchHistoryItem[];
-}> {
-  if (hasDatabase()) {
-    try {
-      const [topSpots, personalized, recentSearches] = await Promise.all([
-        getCachedHomeTopSpots(),
-        user ? getPersonalizedRecommendations(user.id, 6) : Promise.resolve<RuralSpotSeed[]>([]),
-        user ? listSearchHistory(user.id, 5) : Promise.resolve<SearchHistoryItem[]>([])
-      ]);
-
-      return {
-        featured: topSpots.slice(0, 6),
-        popular: topSpots,
-        mapSpots: [],
-        personalized,
-        recentSearches
-      };
-    } catch {
-      // Fall through to the generic loader when the database is temporarily unavailable.
-    }
-  }
-
-  const [spots, personalized, recentSearches] = await Promise.all([
-    listSpots(),
-    user ? getPersonalizedRecommendations(user.id, 6) : Promise.resolve<RuralSpotSeed[]>([]),
-    user ? listSearchHistory(user.id, 5) : Promise.resolve<SearchHistoryItem[]>([])
+export async function getHomeData(user?: UserSummary | null) {
+  const [featured, popular, mapSpots, personalized, recentSearches, platformStats] = await Promise.all([
+    listSpots({ take: HOME_FEATURED_LIMIT }),
+    listSpots({ take: HOME_POPULAR_LIMIT }),
+    listSpots({ mapReadyOnly: true, take: HOME_MAP_LIMIT }),
+    user ? getPersonalizedRecommendations(user.id, 6) : Promise.resolve([]),
+    user ? listSearchHistory(user.id, 5) : Promise.resolve([]),
+    getHomePlatformStats()
   ]);
 
   return {
-    featured: spots.slice(0, 6),
-    popular: [...spots]
-      .sort((left: RuralSpotSeed, right: RuralSpotSeed) => (right.rating ?? 0) - (left.rating ?? 0))
-      .slice(0, 8),
-    mapSpots: spots
-      .filter((spot: RuralSpotSeed) => spot.latitude != null && spot.longitude != null)
-      .slice(0, 12),
+    featured,
+    popular,
+    mapSpots,
     personalized,
-    recentSearches
+    recentSearches,
+    platformStats
   };
 }
 
 export async function getFilterOptions() {
-  if (!hasDatabase()) return getDemoFilterOptions();
+  if (!hasDatabase()) {
+    const spots = await listSpots();
+    return {
+      provinces: [...new Set(spots.map((spot) => spot.province))],
+      cities: [...new Set(spots.map((spot) => spot.city))],
+      tags: [...new Set(spots.flatMap((spot) => spot.tags))]
+    };
+  }
 
-  const spots = await listSpots();
-  return {
-    provinces: [...new Set(spots.map((spot) => spot.province))],
-    cities: [...new Set(spots.map((spot) => spot.city))],
-    tags: [...new Set(spots.flatMap((spot) => spot.tags))]
-  };
+  try {
+    const [provinces, cities, tags] = await Promise.all([
+      prisma.spot.findMany({
+        distinct: ["province"],
+        select: { province: true },
+        orderBy: { province: "asc" }
+      }),
+      prisma.spot.findMany({
+        distinct: ["city"],
+        select: { city: true },
+        orderBy: { city: "asc" }
+      }),
+      prisma.$queryRaw<Array<{ tag: string | null }>>(Prisma.sql`
+        SELECT DISTINCT tag
+        FROM (
+          SELECT unnest("tags") AS tag
+          FROM "Spot"
+        ) AS expanded_tags
+        WHERE tag IS NOT NULL AND tag <> ''
+        ORDER BY tag ASC
+      `)
+    ]);
+
+    return {
+      provinces: provinces.map((item) => item.province).filter(Boolean),
+      cities: cities.map((item) => item.city).filter(Boolean),
+      tags: tags.map((item) => item.tag).filter((item): item is string => Boolean(item))
+    };
+  } catch {
+    return {
+      provinces: [],
+      cities: [],
+      tags: []
+    };
+  }
 }
 
 export async function createSpot(data: Record<string, unknown>) {
@@ -461,11 +872,7 @@ export async function getPersonalizedRecommendations(userId: string, take = 6) {
   const [favoriteActions, searchedIds, spots] = await Promise.all([
     prisma.userSpotAction.findMany({ where: { userId }, select: { spotId: true } }),
     prisma.searchHistory.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 5, select: { resultIds: true } }),
-    prisma.spot.findMany({
-      select: HOME_SPOT_SELECT,
-      orderBy: [{ rating: "desc" }, { createdAt: "desc" }],
-      take: 60
-    })
+    prisma.spot.findMany({ orderBy: getSpotOrderBy(), take: 60 })
   ]);
 
   const preferredIds = new Set(favoriteActions.map((item) => item.spotId));
@@ -665,12 +1072,16 @@ export async function listUserSubmissions(userId: string): Promise<SpotSubmissio
 
 export async function listPendingSubmissions(status?: SpotSubmissionStatus): Promise<SpotSubmissionItem[]> {
   if (!hasDatabase()) return [];
-  const items = await prisma.spotSubmission.findMany({
-    where: { status: status ?? undefined },
-    include: { user: { select: { id: true, nickname: true, email: true } } },
-    orderBy: [{ status: "asc" }, { createdAt: "desc" }]
-  });
-  return items.map(mapSubmission);
+  try {
+    const items = await prisma.spotSubmission.findMany({
+      where: { status: status ?? undefined },
+      include: { user: { select: { id: true, nickname: true, email: true } } },
+      orderBy: [{ status: "asc" }, { createdAt: "desc" }]
+    });
+    return items.map(mapSubmission);
+  } catch {
+    return [];
+  }
 }
 
 export async function reviewSubmission(submissionId: string, decision: "APPROVED" | "REJECTED", reviewerNotes?: string) {
@@ -740,307 +1151,168 @@ export async function reviewSubmission(submissionId: string, decision: "APPROVED
   });
 }
 
-function buildDistribution(items: string[], take = 6): AdminDistributionItem[] {
-  const counts = new Map<string, number>();
-  for (const item of items) {
-    const label = item?.trim() || "未标注";
-    counts.set(label, (counts.get(label) ?? 0) + 1);
-  }
-
-  return [...counts.entries()]
-    .sort((left, right) => right[1] - left[1])
-    .slice(0, take)
-    .map(([label, count]) => ({ label, count }));
-}
-
-function buildSpotHealth(spots: RuralSpotSeed[]): AdminSpotHealth {
-  return {
-    missingCoordinates: spots.filter((spot) => spot.latitude == null || spot.longitude == null).length,
-    missingImages: spots.filter((spot) => !spot.imageUrl).length,
-    missingTransportInfo: spots.filter((spot) => !spot.transportInfo).length,
-    missingTicketLinks: spots.filter((spot) => !spot.ticketBookingUrl).length,
-    missingHotelLinks: spots.filter((spot) => !spot.hotelBookingUrl).length
-  };
-}
-
-function buildMissingFieldLabels(spot: RuralSpotSeed) {
-  const missing: string[] = [];
-  if (spot.latitude == null || spot.longitude == null) missing.push("坐标");
-  if (!spot.imageUrl) missing.push("封面图");
-  if (!spot.transportInfo) missing.push("交通");
-  if (!spot.ticketBookingUrl) missing.push("门票");
-  if (!spot.hotelBookingUrl) missing.push("酒店");
-  return missing;
-}
-
-function buildHotSpotItems(
-  spots: RuralSpotSeed[],
-  counts?: Map<string, { postCount: number; checkInCount: number; favoriteCount: number }>
-): AdminHotSpotItem[] {
-  return spots
-    .map((spot: RuralSpotSeed) => {
-      const metrics = counts?.get(spot.id || "") ?? {
-        postCount: 0,
-        checkInCount: 0,
-        favoriteCount: 0
-      };
-
-      return {
-        id: spot.id || spot.name,
-        name: spot.name,
-        city: spot.city,
-        rating: spot.rating,
-        postCount: metrics.postCount,
-        checkInCount: metrics.checkInCount,
-        favoriteCount: metrics.favoriteCount,
-        missingFields: buildMissingFieldLabels(spot)
-      };
-    })
-    .sort((left, right) => {
-      const leftScore = left.postCount + left.checkInCount + left.favoriteCount;
-      const rightScore = right.postCount + right.checkInCount + right.favoriteCount;
-      if (rightScore !== leftScore) return rightScore - leftScore;
-      return (right.rating ?? 0) - (left.rating ?? 0);
-    })
-    .slice(0, 6);
-}
-
-function buildDemoMonitoring(spots: RuralSpotSeed[]): AdminMonitoringData {
-  const health = buildSpotHealth(spots);
-  return {
-    mode: "demo",
-    health,
-    cards: [
-      {
-        label: "已接入景点",
-        value: spots.length,
-        hint: "演示模式下可以直接管理本地景点数据。",
-        tone: "neutral"
-      },
-      {
-        label: "资料待补",
-        value: spots.filter((spot) => buildMissingFieldLabels(spot).length > 0).length,
-        hint: "建议优先补齐图片、坐标、交通和门票入口。",
-        tone: "warning"
-      },
-      {
-        label: "高评分景点",
-        value: spots.filter((spot) => (spot.rating ?? 0) >= 4.5).length,
-        hint: "适合作为首页推荐和活动宣发资源。",
-        tone: "good"
-      },
-      {
-        label: "西安相关景点",
-        value: spots.filter((spot) => `${spot.province}${spot.city}${spot.district ?? ""}`.includes("西安")).length,
-        hint: "便于聚焦当前西安专题运营。",
-        tone: "neutral"
-      }
-    ],
-    sourceBreakdown: buildDistribution(spots.map((spot) => spot.source || "manual_seed")),
-    cityBreakdown: buildDistribution(spots.map((spot) => spot.city)),
-    hotSpots: buildHotSpotItems(spots),
-    recentActivities: []
-  };
-}
-
-function toIsoString(value?: Date | string | null) {
-  if (!value) return undefined;
-  return value instanceof Date ? value.toISOString() : value;
-}
-
-export async function getAdminWorkspaceData(): Promise<AdminWorkspaceData> {
-  const spots = await listSpots();
-
+export async function getAdminOverview() {
   if (!hasDatabase()) {
-    return {
-      overview: {
-        spotCount: spots.length,
-        userCount: 1,
-        postCount: 0,
-        checkInCount: 0,
-        pendingCount: 0,
-        searchCount: 0,
-        approvedCount: 0,
-        rejectedCount: 0
-      },
-      monitoring: buildDemoMonitoring(spots),
-      spots,
-      submissions: []
-    };
+    return { spotCount: 0, userCount: 0, postCount: 0, checkInCount: 0, pendingCount: 0 };
+  }
+  try {
+    const [spotCount, userCount, postCount, checkInCount, pendingCount] = await Promise.all([
+      prisma.spot.count(),
+      prisma.user.count(),
+      prisma.post.count(),
+      prisma.checkIn.count(),
+      prisma.spotSubmission.count({ where: { status: SpotSubmissionStatus.PENDING } })
+    ]);
+
+    return { spotCount, userCount, postCount, checkInCount, pendingCount };
+  } catch {
+    return { spotCount: 0, userCount: 0, postCount: 0, checkInCount: 0, pendingCount: 0 };
+  }
+}
+
+function formatChinaDayKey(date: Date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Shanghai",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(date);
+
+  const year = parts.find((part) => part.type === "year")?.value ?? "0000";
+  const month = parts.find((part) => part.type === "month")?.value ?? "01";
+  const day = parts.find((part) => part.type === "day")?.value ?? "01";
+
+  return `${year}-${month}-${day}`;
+}
+
+function formatChinaDayLabel(date: Date) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    timeZone: "Asia/Shanghai",
+    month: "numeric",
+    day: "numeric"
+  }).format(date);
+}
+
+export async function getAdminBrowseTrend(days = 7): Promise<AdminBrowseTrendPoint[]> {
+  const safeDays = Math.max(3, Math.min(days, 30));
+  const today = new Date();
+  const buckets = new Map<string, { label: string; users: Set<string>; browseCount: number }>();
+
+  for (let offset = safeDays - 1; offset >= 0; offset -= 1) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - offset);
+    const key = formatChinaDayKey(date);
+    buckets.set(key, {
+      label: formatChinaDayLabel(date),
+      users: new Set<string>(),
+      browseCount: 0
+    });
   }
 
-  const recentSince = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  if (!hasDatabase()) return buildEmptyBrowseTrend(safeDays);
 
-  const [
-    spotCount,
-    userCount,
-    postCount,
-    checkInCount,
-    pendingCount,
-    searchCount,
-    approvedCount,
-    rejectedCount,
-    submissions,
-    recentSearches,
-    recentPosts,
-    recentCheckIns,
-    recentPostCount,
-    recentCheckInCount,
-    recentSearchCount,
-    favoriteGroups,
-    spotCounts
-  ] = await Promise.all([
-    prisma.spot.count(),
-    prisma.user.count(),
-    prisma.post.count(),
-    prisma.checkIn.count(),
-    prisma.spotSubmission.count({ where: { status: SpotSubmissionStatus.PENDING } }),
-    prisma.searchHistory.count(),
-    prisma.spotSubmission.count({ where: { status: SpotSubmissionStatus.APPROVED } }),
-    prisma.spotSubmission.count({ where: { status: SpotSubmissionStatus.REJECTED } }),
-    listPendingSubmissions(),
-    prisma.searchHistory.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 6,
-      include: { user: { select: { nickname: true } } }
-    }),
-    prisma.post.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 6,
-      include: {
-        user: { select: { nickname: true } },
-        spot: { select: { name: true } },
-        _count: { select: { likes: true, comments: true } }
-      }
-    }),
-    prisma.checkIn.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 6,
-      include: {
-        user: { select: { nickname: true } },
-        spot: { select: { name: true } }
-      }
-    }),
-    prisma.post.count({ where: { createdAt: { gte: recentSince } } }),
-    prisma.checkIn.count({ where: { createdAt: { gte: recentSince } } }),
-    prisma.searchHistory.count({ where: { createdAt: { gte: recentSince } } }),
-    prisma.userSpotAction.groupBy({
-      by: ["spotId"],
-      where: { type: SpotActionType.FAVORITE },
-      _count: { _all: true }
-    }),
-    prisma.spot.findMany({
+  const start = new Date(today);
+  start.setDate(today.getDate() - (safeDays - 1));
+  start.setHours(0, 0, 0, 0);
+
+  try {
+    const rows = await prisma.searchHistory.findMany({
+      where: {
+        createdAt: { gte: start }
+      },
+      select: {
+        createdAt: true,
+        userId: true
+      },
+      orderBy: { createdAt: "asc" }
+    });
+
+    for (const row of rows) {
+      const key = formatChinaDayKey(row.createdAt);
+      const bucket = buckets.get(key);
+      if (!bucket) continue;
+      bucket.browseCount += 1;
+      bucket.users.add(row.userId);
+    }
+
+    return Array.from(buckets.entries()).map(([dateKey, bucket]) => ({
+      dateKey,
+      label: bucket.label,
+      visitorCount: bucket.users.size,
+      browseCount: bucket.browseCount
+    }));
+  } catch {
+    return buildEmptyBrowseTrend(safeDays);
+  }
+}
+
+export async function getAdminSpotHeatmap(limit = 60): Promise<AdminHeatmapSpot[]> {
+  if (!hasDatabase()) return [];
+
+  try {
+    const rows = await prisma.spot.findMany({
+      where: {
+        latitude: { not: null },
+        longitude: { not: null }
+      },
       select: {
         id: true,
-        _count: { select: { posts: true, checkIns: true } }
-      }
-    })
-  ]);
-
-  const hotSpotCounts = new Map<string, { postCount: number; checkInCount: number; favoriteCount: number }>();
-  for (const item of spotCounts) {
-    hotSpotCounts.set(item.id, {
-      postCount: item._count.posts,
-      checkInCount: item._count.checkIns,
-      favoriteCount: 0
+        name: true,
+        province: true,
+        city: true,
+        district: true,
+        latitude: true,
+        longitude: true,
+        rating: true,
+        _count: {
+          select: {
+            actions: true,
+            checkIns: true,
+            posts: true
+          }
+        }
+      },
+      take: 240
     });
+
+    return rows
+      .map((spot) => {
+        const actionCount = spot._count.actions;
+        const checkInCount = spot._count.checkIns;
+        const postCount = spot._count.posts;
+        const ratingWeight = Math.round((spot.rating ?? 0) * 2);
+        const heatScore = actionCount * 3 + checkInCount * 5 + postCount * 4 + ratingWeight;
+
+        return {
+          id: spot.id,
+          name: spot.name,
+          province: spot.province,
+          city: spot.city,
+          district: spot.district,
+          latitude: spot.latitude!,
+          longitude: spot.longitude!,
+          heatScore,
+          actionCount,
+          checkInCount,
+          postCount,
+          rating: spot.rating
+        };
+      })
+      .sort((left, right) => {
+        if (right.heatScore !== left.heatScore) return right.heatScore - left.heatScore;
+        return (right.rating ?? 0) - (left.rating ?? 0);
+      })
+      .slice(0, limit);
+  } catch {
+    return [];
   }
-
-  for (const item of favoriteGroups) {
-    const current = hotSpotCounts.get(item.spotId) ?? {
-      postCount: 0,
-      checkInCount: 0,
-      favoriteCount: 0
-    };
-    hotSpotCounts.set(item.spotId, {
-      ...current,
-      favoriteCount: item._count._all
-    });
-  }
-
-  const health = buildSpotHealth(spots);
-  const monitoring: AdminMonitoringData = {
-    mode: "database",
-    health,
-    cards: [
-      {
-        label: "近 7 天搜索",
-        value: recentSearchCount,
-        hint: "反映用户查找目的地和攻略的热度变化。",
-        tone: "neutral"
-      },
-      {
-        label: "近 7 天发帖",
-        value: recentPostCount,
-        hint: "衡量社区内容生产情况。",
-        tone: recentPostCount > 0 ? "good" : "warning"
-      },
-      {
-        label: "近 7 天打卡",
-        value: recentCheckInCount,
-        hint: "反映实际到访和线下活跃度。",
-        tone: recentCheckInCount > 0 ? "good" : "warning"
-      },
-      {
-        label: "资料待补景点",
-        value: spots.filter((spot) => buildMissingFieldLabels(spot).length > 0).length,
-        hint: "建议优先清理缺图、缺坐标、缺交通和缺入口的景点。",
-        tone: "warning"
-      }
-    ],
-    sourceBreakdown: buildDistribution(spots.map((spot) => spot.source || "admin_import")),
-    cityBreakdown: buildDistribution(spots.map((spot) => spot.city)),
-    hotSpots: buildHotSpotItems(spots, hotSpotCounts),
-    recentActivities: [
-      ...recentSearches.map<AdminRecentActivity>((item) => ({
-        id: `search-${item.id}`,
-        type: "search",
-        title: item.query || [item.province, item.city, item.tag].filter(Boolean).join(" / ") || "综合浏览",
-        subtitle: `搜索用户：${item.user.nickname}`,
-        createdAt: toIsoString(item.createdAt),
-        metric: `${item.resultIds.length} 个结果`
-      })),
-      ...recentPosts.map<AdminRecentActivity>((item) => ({
-        id: `post-${item.id}`,
-        type: "post",
-        title: item.title,
-        subtitle: `${item.user.nickname} 发布于 ${item.spot?.name || "未知景点"}`,
-        createdAt: toIsoString(item.createdAt),
-        metric: `${item._count.likes} 赞 · ${item._count.comments} 评论`
-      })),
-      ...recentCheckIns.map<AdminRecentActivity>((item) => ({
-        id: `checkin-${item.id}`,
-        type: "checkin",
-        title: item.spot?.name || "未知景点打卡",
-        subtitle: `${item.user.nickname} 提交了新的到访记录`,
-        createdAt: toIsoString(item.createdAt),
-        metric: item.visitDate ? `到访日期 ${item.visitDate.toISOString().slice(0, 10)}` : "未填写到访日期"
-      }))
-    ]
-      .sort((left, right) => new Date(right.createdAt || 0).getTime() - new Date(left.createdAt || 0).getTime())
-      .slice(0, 10)
-  };
-
-  const overview: AdminOverview = {
-    spotCount,
-    userCount,
-    postCount,
-    checkInCount,
-    pendingCount,
-    searchCount,
-    approvedCount,
-    rejectedCount
-  };
-
-  return {
-    overview,
-    monitoring,
-    spots,
-    submissions
-  };
 }
 
-export async function getAdminOverview(): Promise<AdminOverview> {
-  const data = await getAdminWorkspaceData();
-  return data.overview;
-}
+
+
+
+
+
+
+
+

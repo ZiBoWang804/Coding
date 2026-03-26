@@ -80,6 +80,36 @@ a {
   backdrop-filter: blur(16px);
 }
 
+.norway-hero {
+  background: #10251d;
+  box-shadow: 0 34px 90px rgba(12, 27, 21, 0.24);
+}
+
+.norway-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 72% 20%, rgba(242, 180, 65, 0.16), transparent 24%),
+    radial-gradient(circle at 20% 80%, rgba(46, 108, 81, 0.16), transparent 28%);
+}
+
+.norway-hero-overlay {
+  background:
+    linear-gradient(90deg, rgba(10, 23, 18, 0.76) 0%, rgba(10, 23, 18, 0.42) 36%, rgba(10, 23, 18, 0.24) 62%, rgba(10, 23, 18, 0.6) 100%),
+    linear-gradient(180deg, rgba(8, 18, 15, 0.28), rgba(8, 18, 15, 0.1) 35%, rgba(8, 18, 15, 0.62) 100%);
+}
+
+.frost-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.06));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 18px 40px rgba(8, 20, 16, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px);
+}
+
 .hero-panel,
 .hero-stage {
   position: relative;
@@ -187,6 +217,12 @@ a {
   inset: 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.52));
   pointer-events: none;
+}
+
+.destination-story {
+  position: relative;
+  border: 1px solid rgba(34, 73, 56, 0.08);
+  box-shadow: 0 28px 60px rgba(23, 46, 37, 0.08);
 }
 
 .feature-metric {

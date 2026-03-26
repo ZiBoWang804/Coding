@@ -6,12 +6,14 @@ import { getCurrentUser } from "@/lib/auth";
 import { APP_NAME } from "@/lib/constants";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: {
-    default: `${APP_NAME} | 西安周边乡野旅行平台`,
+    default: `${APP_NAME} | 西安周边周末旅行平台`,
     template: `%s | ${APP_NAME}`
   },
-  description: "用更成熟的旅游平台方式整理西安周边乡村景点、地图点位、周末路线和智能推荐。",
+  description: "把西安周边景点、地图分布、路线灵感和智能规划整理成一套更像真实旅游平台的出行入口。",
   applicationName: APP_NAME,
   appleWebApp: {
     capable: true,
@@ -30,6 +32,8 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
+  const adminHref = user?.role === "ADMIN" ? "/admin" : "/admin/login";
+  const adminLabel = user?.role === "ADMIN" ? "进入管理后台" : "管理员登录";
 
   return (
     <html lang="zh-CN">
@@ -44,7 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 </div>
                 <div className="min-w-0">
                   <div className="truncate text-lg font-semibold tracking-[0.02em] text-brand-950">{APP_NAME}</div>
-                  <div className="text-[11px] uppercase tracking-[0.34em] text-brand-700/72">XI&apos;AN RURAL ESCAPES</div>
+                  <div className="text-[11px] uppercase tracking-[0.34em] text-brand-700/72">西安周末出行</div>
                 </div>
               </Link>
 
@@ -66,12 +70,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(86,152,118,0.22),transparent_62%)]" />
               <div className="grid gap-10 lg:grid-cols-[1.1fr,0.95fr,0.95fr]">
                 <div className="relative">
-                  <div className="section-kicker text-white/55">Weekend Escape</div>
+                  <div className="section-kicker text-white/55">周末出发</div>
                   <h2 className="font-display mt-4 max-w-xl text-3xl font-semibold leading-tight text-white md:text-4xl">
-                    把周末留给山野、村落、温泉和能真正慢下来的风景。
+                    把周末留给山野、村落、温泉和真正能慢下来的风景。
                   </h2>
                   <p className="mt-4 max-w-xl text-sm leading-8 text-white/68">
-                    {APP_NAME} 不是演示页式的信息拼接，而是一套更接近真实旅游平台的目的地浏览、地图发现与行程规划入口。
+                    {APP_NAME} 不是功能堆叠式的页面，而是一套更接近真实旅游平台的浏览、发现、地图与规划入口。
                   </p>
                   <div className="mt-7 flex flex-wrap gap-3">
                     <Link href="/planner" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-brand-950">
@@ -80,6 +84,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     <Link href="/map" className="rounded-full border border-white/16 px-5 py-3 text-sm font-medium text-white/88">
                       去地图里找方向
                     </Link>
+                    <Link href={adminHref} className="rounded-full border border-white/16 px-5 py-3 text-sm font-medium text-white/88">
+                      {adminLabel}
+                    </Link>
                   </div>
                 </div>
 
@@ -87,24 +94,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <div className="text-sm font-semibold text-white/92">热门入口</div>
                   <div className="mt-4 grid gap-3 text-sm text-white/68">
                     <Link href="/spots" className="footer-link">浏览全部景点</Link>
-                    <Link href="/map" className="footer-link">按区域查看地图点位</Link>
+                    <Link href="/map" className="footer-link">按区域查看地图分布</Link>
                     <Link href="/planner" className="footer-link">让 AI 帮你选路线</Link>
-                    <Link href="/me" className="footer-link">查看自己的收藏与记录</Link>
+                    <Link href="/me" className="footer-link">查看收藏与行程记录</Link>
+                    <Link href={adminHref} className="footer-link">{adminLabel}</Link>
                   </div>
                 </div>
 
                 <div>
                   <div className="text-sm font-semibold text-white/92">出发建议</div>
                   <div className="mt-4 space-y-3 text-sm leading-7 text-white/68">
-                    <p>适合周末短途的方向包括古寨漫游、竹海轻徒步、亲子农园、温泉休闲和村落慢逛。</p>
-                    <p>建议先看地图分布，再决定去北线、东线还是山地方向，整体体验会更顺。</p>
-                    <p>遇到天气变化、拥堵或路线不合适时，智能规划会优先给出更稳妥的替代方案。</p>
+                    <p>周末短途更适合从地图分布和出发半径开始筛选，再决定是去山线、古镇线还是轻度假方向。</p>
+                    <p>平台会优先展示有图片、有评分、有坐标的景点，降低挑选成本，也让路线建议更稳妥。</p>
+                    <p>如果天气、路况或预算限制明显，智能规划会自动给出更合适的替代方案。</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-10 border-t border-white/10 pt-6 text-xs tracking-[0.18em] text-white/36">
-                {APP_NAME} · XI&apos;AN RURAL WEEKEND PLATFORM
+                {APP_NAME} | 西安周边乡野周末平台
               </div>
             </div>
           </footer>

@@ -73,6 +73,7 @@ export function buildUserFitReasons(destination: PlannerDestination, context: Pl
 export function buildReadableSummary(output: PlannerEngineOutput, context: PlannerRuntimeContext) {
   const best = output.recommendedPlans[0];
   const origin = formatOrigin(context.user.origin);
+  const destinationQuery = context.user.destinationQuery?.trim();
 
   if (!best) {
     return {
@@ -95,7 +96,11 @@ export function buildReadableSummary(output: PlannerEngineOutput, context: Plann
   const isFallback = !best.filterDecision.passed;
 
   return {
-    headline: isFallback ? `为你保留的折中方案：${best.destinationName}` : `首选方案：${best.destinationName}`,
+    headline: isFallback
+      ? `为你保留的折中方案：${best.destinationName}`
+      : destinationQuery
+        ? `围绕“${destinationQuery}”为你筛出的首选方案：${best.destinationName}`
+        : `首选方案：${best.destinationName}`,
     recommendation: isFallback
       ? [
           `当前条件下没有完全命中的路线，${best.destinationName} 是从 ${origin} 出发最接近需求的折中推荐。`,

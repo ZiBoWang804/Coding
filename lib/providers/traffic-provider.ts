@@ -12,9 +12,10 @@ function isWeekend(travelDate: string) {
 export async function getTrafficContext(travelDate: string, override?: Partial<TrafficContext>, options?: PlannerProviderOptions): Promise<TrafficContext> {
   const fallback = trafficMap[travelDate] || trafficMap["2026-03-22"];
   const shouldUseLive = hasAmapWebServiceKey() && !options?.forceMock;
+  const referenceLocation = options?.referenceLocation || options?.origin || "西安市";
 
   if (shouldUseLive) {
-    const originGeo = await geocodePlace(options?.origin || "西安市", "西安");
+    const originGeo = await geocodePlace(referenceLocation);
     if (originGeo) {
       const liveTraffic = await getTrafficCircleSummary(originGeo.longitude, originGeo.latitude, 5000);
       if (liveTraffic) {

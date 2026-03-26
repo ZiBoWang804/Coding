@@ -18,6 +18,14 @@
 - 第三方内容观察数据导入（手动导出文件，不含站点抓取）
 - 内置全国样例数据 + 西安周边规划 mock 数据
 
+## 协同开发更新（2026-03-25）
+
+- 已将本地最新开发分支与远端 `origin/master` 完成对齐整合，冲突点主要集中在登录、后台工作台、景点详情和仓储层。
+- 新增管理员独立登录入口：`/admin/login`，并在登录接口中补充入口角色校验。
+- 后台能力扩展为“概览 + 审核 + 热力图 + 导入”组合工作台，支持更完整的运营闭环。
+- 规划链路与资源推荐持续增强，补充景点服务面板、规划页交互扩展和全国旅游资料整合资产。
+- 协作文档已更新：`docs/collaboration-change-log.md` 与 `TASK_MEMORY.md`。
+
 ## 技术栈
 
 - 前端：Next.js App Router + TypeScript + Tailwind CSS
@@ -222,6 +230,50 @@ npm run import:spots -- --file=./data/official_list_sample.csv --source=official
 ```bash
 npm run import:observations -- --file=./data/third-party-observations.sample.csv --source=manual_export --batch=third-party-demo
 ```
+
+### 统一同步三类整合数据（景点画像 + 攻略 + 小红书）
+
+```bash
+npm run import:integrated-sync
+```
+
+说明：
+- 脚本会读取 `data/131景点资料整合_2026-03-25`、`data/全国旅游数据整合_2026-03-24`、`data/小红书旅游数据整合_2026-03-25` 的核心 CSV。
+- 自动做景点去重、攻略摘要合并、图片同步到 `public/media/integrated-spots`，并写出导入报告 `data/import-ready/integrated-sync.report.json`。
+- 若数据库暂时不可达，会自动回退到 demo runtime store，保证平台可先同步看到最新数据。
+- `Spot` 的复合唯一键包含 `district`；当历史数据里 `district` 为空时，导入脚本会自动走“命中映射后按 `id` 更新，否则创建”的策略，避免 Prisma 在 `upsert.where` 中因空值失败。
+
+### 审查并补全景点数据
+
+```bash
+npm run audit:spots
+```
+
+说明：
+- 清洗描述中冗余的 `图文来源` 尾巴，减少英文来源名和 OCR 杂质直接暴露到平台。
+- 对已人工核验的热门景点补充区县、中文地址和更适合展示的简介。
+- 输出审查报告到 `data/import-ready/spot-audit.report.json`，便于协同开发复核。
+
+### 删除无法补全的低质量景点
+
+```bash
+npm run prune:spots
+```
+
+说明：
+- 仅删除 `national_poi_2025_cleaned` 中无地址、无图片、只有模板描述且没有任何用户关联数据的旧 POI。
+- 输出删除报告到 `data/import-ready/spot-prune.report.json`，方便回溯删除范围与样例。
+
+### 批量补全剩余景点详情
+
+```bash
+npm run enrich:remaining-spots
+```
+
+说明：
+- 基于本地 `景点画像汇总_含平台照片.csv` 的详情页索引，批量抓取景点地址、简介、游玩时长和坐标。
+- 优先修复缺地址、英文占位地址、缺坐标的剩余景点。
+- 输出补全报告到 `data/import-ready/remaining-spots-enrich.report.json`。
 
 ## 合规边界
 

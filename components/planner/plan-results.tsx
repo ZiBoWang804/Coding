@@ -19,7 +19,7 @@ const SCORE_LABELS: Record<string, string> = {
 
 function formatOpenStatus(status?: string) {
   if (status === "open") return "预计开放";
-  if (status === "closed") return "疑似关闭";
+  if (status === "closed") return "疑似闭园";
   return "待核验";
 }
 
@@ -28,7 +28,7 @@ function buildHighlightItems(plan: RankedPlan) {
     {
       label: "综合得分",
       value: `${plan.totalScore}`,
-      note: "系统综合排序结果"
+      note: "系统排序结果"
     },
     {
       label: "参考预算",
@@ -64,21 +64,17 @@ function buildTravelResourceSpot(plan: RankedPlan) {
   };
 }
 
-function buildTransitTarget(plan: RankedPlan) {
-  return {
-    name: plan.destinationName,
-    city: plan.mappedDestination.city,
-    district: plan.mappedDestination.district,
-    address: plan.mappedDestination.address,
-    latitude: plan.mappedDestination.latitude,
-    longitude: plan.mappedDestination.longitude,
-    publicTransitFriendlyScore: plan.mappedDestination.publicTransitFriendlyScore,
-    lastMileDifficulty: plan.mappedDestination.lastMileDifficulty,
-    nearestRailStation: plan.mappedDestination.nearestRailStation
-  };
-}
-
-export function PlanResults({ result, origin }: { result: PlannerEngineOutput | null; origin: string }) {
+export function PlanResults({
+  result,
+  origin,
+  preferReasonFirst = true,
+  includeLiveSignals = true
+}: {
+  result: PlannerEngineOutput | null;
+  origin: string;
+  preferReasonFirst?: boolean;
+  includeLiveSignals?: boolean;
+}) {
   if (!result) {
     return (
       <div className="mt-4 rounded-[2rem] border border-dashed border-brand-200 bg-white/75 p-8 text-sm text-slate-500">
@@ -104,18 +100,35 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
         <div className="bg-[linear-gradient(135deg,rgba(33,79,62,0.96),rgba(44,97,77,0.9))] px-6 py-6 text-white md:px-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="max-w-2xl">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">AI Recommendation</div>
+              <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/70">
+                <span>AI 推荐结论</span>
+                {result.summaryMeta?.source === "ai" ? (
+                  <span className="rounded-full border border-white/18 bg-white/10 px-3 py-1 tracking-[0.14em] text-white/82">
+                    大模型已参与
+                  </span>
+                ) : null}
+              </div>
               <h3 className="mt-3 text-3xl font-semibold">{best.destinationName}</h3>
               <p className="mt-3 max-w-xl text-sm leading-7 text-white/84">{result.readableSummary.headline}</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5">{formatOpenStatus(best.mappedDestination.openStatus)}</span>
                 <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5">{best.transportSummary}</span>
+                {result.runtimeInsights?.destinationQuery ? (
+                  <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5">目的地：{result.runtimeInsights.destinationQuery}</span>
+                ) : null}
               </div>
             </div>
 
-            <Link href={`/spots/${best.destinationId}`} className="inline-flex rounded-full bg-white px-4 py-2 text-xs font-medium text-brand-800">
-              查看景点详情
-            </Link>
+            <div className="flex flex-wrap items-center gap-2">
+              {result.summaryMeta?.provider ? (
+                <div className="rounded-full border border-white/14 bg-white/8 px-3 py-2 text-[11px] text-white/78">
+                  {result.summaryMeta.provider}
+                </div>
+              ) : null}
+              <Link href={`/spots/${best.destinationId}`} className="inline-flex rounded-full bg-white px-4 py-2 text-xs font-medium text-brand-800">
+                查看景点详情
+              </Link>
+            </div>
           </div>
 
           <div className="mt-6 grid gap-3 md:grid-cols-3">
@@ -130,8 +143,8 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
         </div>
 
         <div className="grid gap-5 px-6 py-6 md:grid-cols-[1.15fr,0.85fr] md:px-8">
-          <div className="space-y-5">
-            <div className="rounded-2xl bg-brand-50/70 p-5">
+          <div className={`space-y-5 ${preferReasonFirst ? "md:order-1" : "md:order-2"}`}>
+            <div id="planner-reason-first" className="scroll-mt-24 rounded-2xl bg-brand-50/70 p-5">
               <div className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-600">AI 判断</div>
               <div className="mt-3 space-y-2 text-[15px] leading-7 text-slate-700">
                 {result.readableSummary.recommendation.map((item) => (
@@ -160,9 +173,25 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="rounded-2xl border border-brand-100 bg-sand/80 p-5">
+          <div className={`space-y-4 ${preferReasonFirst ? "md:order-2" : "md:order-1"}`}>
+            <div id="planner-live-signals" className="scroll-mt-24 rounded-2xl border border-brand-100 bg-sand/80 p-5">
               <div className="font-medium text-brand-800">动态因素</div>
+              {includeLiveSignals && result.runtimeInsights ? (
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  <div className="rounded-2xl bg-white/80 p-4">
+                    <div className="text-xs tracking-[0.18em] text-slate-400">天气参考</div>
+                    <div className="mt-2 text-sm leading-6 text-slate-700">{result.runtimeInsights.weather}</div>
+                  </div>
+                  <div className="rounded-2xl bg-white/80 p-4">
+                    <div className="text-xs tracking-[0.18em] text-slate-400">路况参考</div>
+                    <div className="mt-2 text-sm leading-6 text-slate-700">{result.runtimeInsights.traffic}</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-3 rounded-2xl bg-white/80 p-4 text-sm leading-6 text-slate-600">
+                  你已关闭实时天气与路况参考，本次结果按规则引擎、静态开放信息和基础路线数据给出，生成会更快一些。
+                </div>
+              )}
               <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
                 {compactReasons(result.readableSummary.dynamicImpact, "当前没有额外动态风险。").map((item) => (
                   <li key={item}>• {item}</li>
@@ -192,6 +221,18 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
                     ) : null}
                   </div>
                 ) : null}
+                {best.mappedDestination.aiTicketSummary ? (
+                  <div>
+                    <div className="text-xs tracking-[0.18em] text-slate-400">门票与预约</div>
+                    <div className="mt-1">{best.mappedDestination.aiTicketSummary}</div>
+                  </div>
+                ) : null}
+                {best.mappedDestination.aiHotelSummary ? (
+                  <div>
+                    <div className="text-xs tracking-[0.18em] text-slate-400">住宿补充</div>
+                    <div className="mt-1">{best.mappedDestination.aiHotelSummary}</div>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
@@ -202,7 +243,7 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
         <div className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-card">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">Top Match</div>
+              <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">首选方案</div>
               <h4 className="mt-2 text-xl font-semibold text-brand-900">首选方案拆解</h4>
             </div>
             <div className="rounded-full bg-brand-50 px-4 py-2 text-xs font-medium text-brand-700">{best.destinationName}</div>
@@ -236,11 +277,25 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
         </div>
 
         <div className="space-y-4">
-          <TransitAssistant defaultOrigin={origin || "西安市区"} routePlans={best.mappedDestination.routePlans} target={buildTransitTarget(best)} />
+          <TransitAssistant
+            defaultOrigin={origin || "西安市区"}
+            routePlans={best.mappedDestination.routePlans}
+            target={{
+              name: best.destinationName,
+              city: best.mappedDestination.city,
+              district: best.mappedDestination.district,
+              address: best.mappedDestination.address,
+              latitude: best.mappedDestination.latitude,
+              longitude: best.mappedDestination.longitude,
+              publicTransitFriendlyScore: best.mappedDestination.publicTransitFriendlyScore,
+              lastMileDifficulty: best.mappedDestination.lastMileDifficulty,
+              nearestRailStation: best.mappedDestination.nearestRailStation
+            }}
+          />
           <TravelServicePanel spot={buildTravelResourceSpot(best)} />
 
           <div className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-card">
-            <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">Alternatives</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">备选方案</div>
             <h4 className="mt-2 text-lg font-semibold text-brand-900">其他可选方案</h4>
             <div className="mt-4 space-y-3">
               {alternatives.length ? (
@@ -269,7 +324,7 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
       <section className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-card">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">Recommendation List</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">推荐列表</div>
             <h4 className="mt-2 text-lg font-semibold text-brand-900">全部推荐结果</h4>
           </div>
           <div className="text-sm text-slate-500">按综合适配度排序，便于快速横向比较。</div>
@@ -297,18 +352,7 @@ export function PlanResults({ result, origin }: { result: PlannerEngineOutput | 
                 </div>
               </div>
 
-              <TravelServicePanel className="mt-4" compact spot={buildTravelResourceSpot(plan)} />
-
               <div className="mt-4 text-sm leading-6 text-slate-600">{plan.whyFitUser[0] || plan.rankingReason[0] || plan.transportSummary}</div>
-              {plan.rankingReason.length > 0 ? (
-                <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
-                  {plan.rankingReason.slice(0, 2).map((item) => (
-                    <li key={`${plan.destinationId}-${item}`} className="rounded-2xl bg-white/80 px-4 py-3">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
             </div>
           ))}
         </div>

@@ -10,6 +10,25 @@
 
 ## 当前已接入的变更
 
+### [协同整合] 2026-03-25 本地版本对齐远端基线
+
+- 本地分支已与远端 `origin/master` 最新版本对齐，先对比了旧基线提交，再回放本地最新改动并逐项整合。
+- 重点冲突文件（登录、后台、景点页、仓储层）采用“本地最新逻辑优先”，同时保留远端新增的协同能力和结构文件。
+- 已补充任务记忆文档、管理员登录入口、后台热力图与规划页增强组件，便于多人协同继续开发。
+- 已补充全国景点资料整合目录、媒体资源及导入脚本，并在 `.gitignore` 中新增临时文件忽略规则，避免误提交调试文件。
+
+影响文件（核心）：
+
+- `app/api/auth/login/route.ts`
+- `app/admin/page.tsx`
+- `app/login/page.tsx`
+- `components/admin-dashboard.tsx`
+- `components/planner-form.tsx`
+- `lib/repository.ts`
+- `lib/openai.ts`
+- `TASK_MEMORY.md`
+- `.gitignore`
+
 ### [新增功能] 西安地下交通到达建议
 
 - 支持从任意西安出发点生成景点公交 / 地铁到达建议。

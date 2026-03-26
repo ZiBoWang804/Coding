@@ -23,6 +23,23 @@ function appendDynamicRisk(destination: PlannerDestination, message: string) {
   destination.cautionNotes = uniqueStrings([...destination.cautionNotes, message]);
 }
 
+async function mapWithConcurrency<T, R>(items: T[], concurrency: number, worker: (item: T) => Promise<R>) {
+  const results: R[] = new Array(items.length);
+  let nextIndex = 0;
+
+  async function run() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      results[currentIndex] = await worker(items[currentIndex]);
+    }
+  }
+
+  const workers = Array.from({ length: Math.min(concurrency, items.length) }, () => run());
+  await Promise.all(workers);
+  return results;
+}
+
 function choosePrimaryRoutePlan(destination: PlannerDestination, context: PlannerRuntimeContext) {
   if (!destination.routePlans?.length) return null;
   if (context.user.transportMode === "public_transit") {
@@ -143,13 +160,11 @@ export async function enrichDestinationsWithLiveSignals(
   context: PlannerRuntimeContext,
   options?: PlannerProviderOptions
 ) {
-  const originGeo = hasAmapWebServiceKey() && !options?.forceMock ? await geocodePlace(options?.origin || context.user.origin, "西安") : null;
+  const originGeo = hasAmapWebServiceKey() && !options?.forceMock ? await geocodePlace(options?.origin || context.user.origin) : null;
 
-  const enriched: PlannerDestination[] = [];
-  for (const destination of destinations) {
-    enriched.push(await enrichSingleDestination(destination, context, originGeo));
-  }
-  return enriched;
+  return mapWithConcurrency(destinations, hasAmapWebServiceKey() && !options?.forceMock ? 6 : 12, async (destination) =>
+    enrichSingleDestination(destination, context, originGeo)
+  );
 }
 
 export async function verifyRankedPlansOpeningHours(plans: RankedPlan[]) {

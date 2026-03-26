@@ -33,16 +33,24 @@ function MapViewport({ spots }: { spots: RuralSpotSeed[] }) {
   return null;
 }
 
+function buildSpotAddress(spot: RuralSpotSeed) {
+  return spot.address || [spot.city, spot.district].filter(Boolean).join(" / ") || spot.province;
+}
+
 export function MapClient({ spots }: { spots: RuralSpotSeed[] }) {
   const mapSpots = spots.filter((spot) => spot.latitude != null && spot.longitude != null);
 
   if (mapSpots.length === 0) {
-    return <div className="rounded-3xl border border-dashed border-brand-200 bg-white p-8 text-sm text-slate-500">当前没有可展示的地图点位，先去景点库查看详情，或补充坐标后再查看地图。</div>;
+    return (
+      <div className="rounded-3xl border border-dashed border-brand-200 bg-white p-8 text-sm text-slate-500">
+        当前没有可展示的地图点位。可以先调整筛选条件，或回到景点库查看详情。
+      </div>
+    );
   }
 
   return (
     <div className="h-[480px] overflow-hidden rounded-3xl border border-brand-100 shadow-card">
-      <MapContainer center={[mapSpots[0].latitude!, mapSpots[0].longitude!]} zoom={10} scrollWheelZoom className="h-full w-full">
+      <MapContainer center={[mapSpots[0].latitude!, mapSpots[0].longitude!]} zoom={10} scrollWheelZoom preferCanvas className="h-full w-full">
         <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MapViewport spots={mapSpots} />
         {mapSpots.map((spot) => (
@@ -50,9 +58,13 @@ export function MapClient({ spots }: { spots: RuralSpotSeed[] }) {
             <Popup>
               <div className="space-y-2 text-sm">
                 <div className="font-medium text-brand-900">{spot.name}</div>
-                <div className="text-xs text-slate-500">{[spot.city, spot.district].filter(Boolean).join(" / ") || spot.province}</div>
-                <div className="text-xs leading-6 text-slate-600">{spot.description}</div>
-                <Link href={`/spots/${spot.id}`} className="text-xs font-medium text-brand-700 underline">查看详情</Link>
+                <div className="text-xs text-slate-500">{buildSpotAddress(spot)}</div>
+                <div className="text-xs leading-6 text-slate-600">
+                  {spot.description.length > 72 ? `${spot.description.slice(0, 72)}...` : spot.description}
+                </div>
+                <Link href={`/spots/${spot.id}`} className="text-xs font-medium text-brand-700 underline">
+                  查看详情
+                </Link>
               </div>
             </Popup>
           </Marker>

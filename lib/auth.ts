@@ -2,7 +2,6 @@ import "server-only";
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import { redirect } from "next/navigation";
-import { cache } from "react";
 import { SESSION_COOKIE, SESSION_MAX_AGE } from "@/lib/constants";
 import { isDemoDataEnabled } from "@/lib/database-mode";
 import { prisma } from "@/lib/prisma";
@@ -56,7 +55,7 @@ export async function verifySessionToken(token: string) {
   return payload as unknown as SessionPayload;
 }
 
-const getCachedSessionPayload = cache(async () => {
+export async function getSessionPayload() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (!token) return null;
@@ -66,14 +65,10 @@ const getCachedSessionPayload = cache(async () => {
   } catch {
     return null;
   }
-});
-
-export async function getSessionPayload() {
-  return getCachedSessionPayload();
 }
 
-const getCachedCurrentUser = cache(async () => {
-  const session = await getCachedSessionPayload();
+export async function getCurrentUser() {
+  const session = await getSessionPayload();
   if (!session) return null;
 
   if (isDemoDataEnabled()) {
@@ -106,12 +101,17 @@ const getCachedCurrentUser = cache(async () => {
 
     return user ? mapUser(user) : null;
   } catch {
-    return null;
+    return {
+      id: session.userId,
+      email: session.email,
+      nickname: session.nickname,
+      avatarUrl: session.avatarUrl ?? null,
+      bio: session.bio ?? null,
+      role: session.role,
+      preferences: session.preferences ?? [],
+      homeCity: session.homeCity ?? null
+    };
   }
-});
-
-export async function getCurrentUser() {
-  return getCachedCurrentUser();
 }
 
 export async function requireUser() {
@@ -122,18 +122,21 @@ export async function requireUser() {
 
 export async function requireAdmin() {
   const user = await getCurrentUser();
-  if (!user) redirect("/login?entry=admin&redirect=/admin");
+  if (!user) redirect("/admin/login?redirect=/admin");
   if (user.role !== "ADMIN") redirect("/");
   return user;
 }
 
 export function getSessionCookieOptions() {
   const appUrl = process.env.APP_URL || "";
-  const shouldUseSecureCookie = process.env.NODE_ENV === "production" && appUrl.startsWith("https://");
+  const isLocalHttp =
+    appUrl.startsWith("http://localhost") ||
+    appUrl.startsWith("http://127.0.0.1") ||
+    appUrl.startsWith("http://0.0.0.0");
 
   return {
     httpOnly: true,
-    secure: shouldUseSecureCookie,
+    secure: process.env.NODE_ENV === "production" && !isLocalHttp,
     sameSite: "lax" as const,
     path: "/",
     maxAge: SESSION_MAX_AGE

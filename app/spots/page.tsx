@@ -1,18 +1,39 @@
+import Link from "next/link";
 import { SearchRecorder } from "@/components/search-recorder";
 import { SpotCard } from "@/components/spot-card";
 import { getCurrentUser } from "@/lib/auth";
-import { getFilterOptions, getPersonalizedRecommendations, listSpots } from "@/lib/repository";
+import { getFilterOptions, getPersonalizedRecommendations, listPagedSpots } from "@/lib/repository";
+
+const PAGE_SIZE = 18;
+
+function normalizePage(value?: string) {
+  const page = Number(value);
+  if (!Number.isFinite(page) || page < 1) return 1;
+  return Math.floor(page);
+}
+
+function buildPageHref(params: Record<string, string | undefined>, page: number) {
+  const nextParams = new URLSearchParams();
+  for (const key of ["q", "province", "city", "tag"] as const) {
+    const value = params[key];
+    if (value) nextParams.set(key, value);
+  }
+  if (page > 1) nextParams.set("page", String(page));
+  const query = nextParams.toString();
+  return query ? `/spots?${query}` : "/spots";
+}
 
 export default async function SpotsPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const params = await searchParams;
-  const filtersPromise = getFilterOptions();
-  const spotsPromise = listSpots({ province: params.province, city: params.city, tag: params.tag, q: params.q });
-  const user = await getCurrentUser();
-  const [filters, spots, personalized] = await Promise.all([
-    filtersPromise,
-    spotsPromise,
-    user ? getPersonalizedRecommendations(user.id, 4) : Promise.resolve([])
+  const requestedPage = normalizePage(params.page);
+  const [user, filters, spotPage] = await Promise.all([
+    getCurrentUser(),
+    getFilterOptions(),
+    listPagedSpots({ province: params.province, city: params.city, tag: params.tag, q: params.q }, requestedPage, PAGE_SIZE)
   ]);
+  const personalized = user ? await getPersonalizedRecommendations(user.id, 4) : [];
+  const spots = spotPage.items;
+  const totalPages = Math.max(1, Math.ceil(spotPage.total / spotPage.pageSize));
 
   return (
     <div className="mx-auto max-w-[1480px] px-4 py-8 sm:px-6 lg:px-8">
@@ -31,17 +52,19 @@ export default async function SpotsPage({ searchParams }: { searchParams: Promis
       <section className="soft-card rounded-[2.6rem] p-6 md:p-8 lg:p-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-3xl">
-            <div className="section-kicker">Destination Library</div>
+            <div className="section-kicker">目的地库</div>
             <h1 className="font-display mt-3 text-4xl font-semibold leading-tight text-brand-950 md:text-5xl">
               挑个想去的地方，
               <br />
-              让这次周末有一个明确的方向。
+              让这次周末有个明确的方向。
             </h1>
             <p className="mt-4 text-sm leading-8 text-slate-600 md:text-base">
-              这一页更像你的周末灵感库。可以按区域、玩法和关键词慢慢挑，先看图、先找感觉，看见顺眼的再点进去看详情和路线。
+              这一页更像你的周末灵感库。可以按区域、玩法和关键词慢慢挑，先看图、先找感觉，看到顺眼的再点进去看详情和路线。
             </p>
           </div>
-          <div className="rounded-full bg-brand-900 px-4 py-2 text-sm text-white">这次找到 {spots.length} 个结果</div>
+          <div className="rounded-full bg-brand-900 px-4 py-2 text-sm text-white">
+            共 {spotPage.total} 个结果 · 第 {spotPage.page} / {totalPages} 页
+          </div>
         </div>
       </section>
 
@@ -107,15 +130,60 @@ export default async function SpotsPage({ searchParams }: { searchParams: Promis
           <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="text-2xl font-semibold text-brand-950">看看这次有哪些地方值得出发</h2>
-              <p className="mt-1 text-sm text-slate-500">点开卡片可以继续看景点详情、地图位置、交通建议和社区内容。</p>
+              <p className="mt-1 text-sm text-slate-500">
+                当前页展示 {spots.length} 条，分批加载后切页会更顺，点开卡片可以继续看详情、地图位置和路线建议。
+              </p>
             </div>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {spots.map((spot) => (
-              <SpotCard key={spot.id} spot={spot} />
-            ))}
-          </div>
+          {spots.length > 0 ? (
+            <>
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {spots.map((spot) => (
+                  <SpotCard key={spot.id} spot={spot} />
+                ))}
+              </div>
+
+              {totalPages > 1 ? (
+                <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-[1.8rem] border border-brand-100 bg-white/90 px-5 py-4">
+                  <div className="text-sm text-slate-500">
+                    正在浏览第 {spotPage.page} 页，共 {totalPages} 页。
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href={buildPageHref(params, spotPage.page - 1)}
+                      aria-disabled={spotPage.page <= 1}
+                      className={`rounded-full px-5 py-3 text-sm font-medium transition ${
+                        spotPage.page <= 1
+                          ? "pointer-events-none border border-slate-200 text-slate-300"
+                          : "border border-brand-200 text-brand-900 hover:bg-brand-50"
+                      }`}
+                    >
+                      上一页
+                    </Link>
+                    <Link
+                      href={buildPageHref(params, spotPage.page + 1)}
+                      aria-disabled={spotPage.page >= totalPages}
+                      className={`rounded-full px-5 py-3 text-sm font-medium transition ${
+                        spotPage.page >= totalPages
+                          ? "pointer-events-none border border-slate-200 text-slate-300"
+                          : "bg-brand-900 text-white hover:bg-brand-800"
+                      }`}
+                    >
+                      下一页
+                    </Link>
+                  </div>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <div className="soft-card rounded-[2rem] p-8 text-center">
+              <div className="text-xl font-semibold text-brand-950">这一轮没有筛到合适的地方</div>
+              <p className="mt-3 text-sm leading-7 text-slate-500">
+                可以把关键词放宽一点，或者先清掉城市和玩法筛选，再从更大的范围里慢慢挑。
+              </p>
+            </div>
+          )}
         </section>
       </div>
     </div>

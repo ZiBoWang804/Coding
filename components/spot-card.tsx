@@ -13,6 +13,11 @@ function resolveImageSrc(spot: RuralSpotSeed) {
   return FALLBACK_IMAGE;
 }
 
+function formatRating(value?: number | null) {
+  if (value == null) return "待补充";
+  return `${value.toFixed(1)} 分`;
+}
+
 export function SpotCard({ spot }: { spot: RuralSpotSeed }) {
   const imageSrc = resolveImageSrc(spot);
   const hotelSummary = getSpotHotelSummary(spot);
@@ -58,7 +63,7 @@ export function SpotCard({ spot }: { spot: RuralSpotSeed }) {
         <p className="line-clamp-2 text-sm leading-7 text-slate-600">{spot.description}</p>
 
         <div className="grid grid-cols-2 gap-3 text-sm text-slate-600">
-          <div className="rounded-[1.35rem] bg-[#f5efe3] px-3 py-3">评分：{spot.rating ?? "待补充"}</div>
+          <div className="rounded-[1.35rem] bg-[#f5efe3] px-3 py-3">评分：{formatRating(spot.rating)}</div>
           <div className="rounded-[1.35rem] bg-[#f5efe3] px-3 py-3">人流：{formatCrowdLevel(spot.crowdLevel)}</div>
           <div className="rounded-[1.35rem] bg-[#f5efe3] px-3 py-3">{formatCurrency(spot.avgCost)}</div>
           <div className="rounded-[1.35rem] bg-[#f5efe3] px-3 py-3">{spot.suggestedDuration ?? "建议 1 天"}</div>

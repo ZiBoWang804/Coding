@@ -101,6 +101,8 @@ export interface PlannerDestination {
   openingSourceUrl?: string | null;
   openingVerifiedAt?: string | null;
   openingVerificationNote?: string | null;
+  aiHotelSummary?: string | null;
+  aiTicketSummary?: string | null;
   liveTravelMinutes?: number | null;
   liveDistanceKm?: number | null;
   liveTrafficStatus?: string | null;
@@ -125,6 +127,10 @@ export interface WeatherContext {
   weatherSummary?: string | null;
 }
 
+export type DepartureTimePreference = "early_morning" | "morning" | "noon" | "after_work" | "flexible";
+export type BookingPreference = "avoid_reservations" | "can_book" | "must_bookable";
+export type TicketPreference = "free_or_low_cost" | "balanced" | "premium_ok";
+
 export interface TrafficContext {
   isWeekend: boolean;
   isHoliday: boolean;
@@ -146,8 +152,10 @@ export interface SeasonalContext {
 
 export interface UserContext {
   origin: string;
+  destinationQuery?: string | null;
+  includeLiveSignals?: boolean;
   travelDate: string;
-  days: 1 | 2 | 3;
+  days: number;
   budgetMin?: number;
   budgetMax?: number;
   transportMode: TransportMode;
@@ -157,6 +165,9 @@ export interface UserContext {
   pacePreference: PacePreference;
   lodgingPreference?: string | null;
   diningPreference?: string | null;
+  departureTimePreference?: DepartureTimePreference | null;
+  bookingPreference?: BookingPreference | null;
+  ticketPreference?: TicketPreference | null;
   specialConstraints: string[];
   historicalProfile?: Record<string, unknown> | null;
 }
@@ -261,6 +272,17 @@ export interface PlannerEngineOutput {
     cautions: string[];
     alternatives: string[];
   };
+  runtimeInsights?: {
+    weather: string;
+    traffic: string;
+    destinationQuery?: string | null;
+  };
+  summaryMeta?: {
+    source: "rules" | "ai";
+    provider?: string | null;
+    candidateCount?: number;
+    enrichedCount?: number;
+  };
   debug?: {
     filteredOut: Array<{ destinationId: string; destinationName: string; reasons: string[] }>;
     profileKey: PlannerProfileKey;
@@ -270,6 +292,7 @@ export interface PlannerEngineOutput {
 export interface PlannerProviderOptions {
   forceMock?: boolean;
   origin?: string;
+  referenceLocation?: string;
 }
 
 export interface LegacyPlannerInput {
@@ -284,8 +307,10 @@ export interface LegacyPlannerInput {
 
 export interface PlannerApiInput {
   origin: string;
+  destinationQuery?: string | null;
+  includeLiveSignals?: boolean;
   travelDate: string;
-  days: 1 | 2 | 3;
+  days: number;
   budgetMin?: number;
   budgetMax?: number;
   transportMode: TransportMode;
@@ -295,6 +320,9 @@ export interface PlannerApiInput {
   pacePreference: PacePreference;
   lodgingPreference?: string | null;
   diningPreference?: string | null;
+  departureTimePreference?: DepartureTimePreference | null;
+  bookingPreference?: BookingPreference | null;
+  ticketPreference?: TicketPreference | null;
   specialConstraints?: string[];
   weather?: Partial<WeatherContext>;
   traffic?: Partial<TrafficContext>;

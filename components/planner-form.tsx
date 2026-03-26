@@ -52,8 +52,8 @@ const LODGING_PREFS = [
   { label: "住宿不限", value: "flexible" },
   { label: "特色民宿", value: "design_homestay" },
   { label: "舒适酒店", value: "comfort_hotel" },
-  { label: "温泉/度假酒店", value: "hot_spring_resort" },
-  { label: "露营营地也可以", value: "camping_ok" }
+  { label: "温泉 / 度假酒店", value: "hot_spring_resort" },
+  { label: "露营也可以", value: "camping_ok" }
 ];
 
 const DINING_PREFS = [
@@ -61,7 +61,7 @@ const DINING_PREFS = [
   { label: "优先本地餐饮", value: "local_food" },
   { label: "咖啡和早午餐", value: "cafe_brunch" },
   { label: "适合家庭就餐", value: "family_restaurant" },
-  { label: "餐饮方便最重要", value: "easy_to_find" }
+  { label: "找吃的方便最重要", value: "easy_to_find" }
 ];
 
 const DEPARTURE_PREFS: Array<{ label: string; value: DepartureTimePreference }> = [
@@ -115,6 +115,10 @@ function clampBudget(value: string) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) return undefined;
   return Math.round(parsed);
+}
+
+function SummaryChip({ children }: { children: React.ReactNode }) {
+  return <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">{children}</span>;
 }
 
 export function PlannerForm() {
@@ -208,6 +212,7 @@ export function PlannerForm() {
           destinationQuery: form.destinationQuery?.trim() || undefined
         })
       });
+
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "规划请求失败");
       setResult(data);
@@ -225,13 +230,11 @@ export function PlannerForm() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
             <div className="inline-flex rounded-full bg-brand-50 px-4 py-2 text-xs font-medium text-brand-700">出行条件</div>
-            <h2 className="mt-4 text-2xl font-semibold text-brand-900">
-              {result && !showFilters ? "这次的出行条件已经帮你收好了" : "先设定这次周末怎么过"}
-            </h2>
+            <h2 className="mt-4 text-2xl font-semibold text-brand-900">{result && !showFilters ? "这次的出行条件已经整理好了" : "先把这次旅行的大方向定下来"}</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
               {result && !showFilters
-                ? "结果已经完整展开在下方。想改方向、预算、住宿方式或预约要求时，直接点“修改条件”继续调整。"
-                : "这次除了基础条件，还会把住宿、门票、预约方式、出发时段和联网搜索到的实时信息一起交给 AI，推荐会更像真正能落地执行的方案。"}
+                ? "结果已经展开在下方。想改目的地、预算、住宿偏好或额外约束时，直接点“修改条件”继续调整。"
+                : "系统会结合你的出发地、目的地、预算、住宿和预约偏好，再叠加实时天气、路况和开放信息，给出更可执行的方案。"}
             </p>
           </div>
 
@@ -251,31 +254,25 @@ export function PlannerForm() {
               disabled={loading}
               className="rounded-full bg-brand-700 px-6 py-3 text-sm font-medium text-white disabled:opacity-60"
             >
-              {loading ? "生成推荐中..." : "生成推荐"}
+              {loading ? "正在生成推荐..." : "生成推荐"}
             </button>
           </div>
         </div>
 
         {result && !showFilters ? (
           <div className="mt-6 flex flex-wrap gap-3">
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">出发地：{form.origin}</span>
-            {form.destinationQuery ? <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">目的地：{form.destinationQuery}</span> : null}
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">{labelOf(DAY_OPTIONS, String(form.days), `${form.days} 天`)}</span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">交通：{labelOf(MODES, form.transportMode)}</span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">同行：{labelOf(COMPANIONS, form.companions)}</span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">节奏：{labelOf(PACE_PREFS, form.pacePreference)}</span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">人流：{labelOf(CROWD_PREFS, form.crowdPreference)}</span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">住宿：{labelOf(LODGING_PREFS, form.lodgingPreference || "flexible")}</span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">预约：{labelOf(BOOKING_PREFS, form.bookingPreference || "can_book")}</span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">
-              预算：{form.budgetMin ?? 0}-{form.budgetMax ?? "不限"} 元
-            </span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">
-              实时参考：{form.includeLiveSignals === false ? "关闭" : "开启（含联网搜索）"}
-            </span>
-            <span className="rounded-full bg-sand px-4 py-2 text-sm text-brand-800">
-              推荐理由：{preferReasonFirst ? "优先展示" : "常规顺序"}
-            </span>
+            <SummaryChip>出发地：{form.origin}</SummaryChip>
+            {form.destinationQuery ? <SummaryChip>目的地：{form.destinationQuery}</SummaryChip> : null}
+            <SummaryChip>{labelOf(DAY_OPTIONS, form.days, `${form.days} 天`)}</SummaryChip>
+            <SummaryChip>交通：{labelOf(MODES, form.transportMode)}</SummaryChip>
+            <SummaryChip>同行：{labelOf(COMPANIONS, form.companions)}</SummaryChip>
+            <SummaryChip>节奏：{labelOf(PACE_PREFS, form.pacePreference)}</SummaryChip>
+            <SummaryChip>人流：{labelOf(CROWD_PREFS, form.crowdPreference)}</SummaryChip>
+            <SummaryChip>住宿：{labelOf(LODGING_PREFS, form.lodgingPreference || "flexible")}</SummaryChip>
+            <SummaryChip>预约：{labelOf(BOOKING_PREFS, form.bookingPreference || "can_book")}</SummaryChip>
+            <SummaryChip>预算：¥{form.budgetMin ?? 0} - {form.budgetMax ?? "不限"}</SummaryChip>
+            <SummaryChip>实时参考：{form.includeLiveSignals === false ? "关闭" : "开启"}</SummaryChip>
+            <SummaryChip>推荐理由：{preferReasonFirst ? "优先展示" : "常规顺序"}</SummaryChip>
           </div>
         ) : (
           <>
@@ -283,7 +280,7 @@ export function PlannerForm() {
               <div className="space-y-4 rounded-[1.6rem] border border-brand-100 bg-sand/30 p-5">
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">基础信息</div>
-                  <h3 className="mt-2 text-lg font-semibold text-brand-900">先把这趟行程的边界说清楚</h3>
+                  <h3 className="mt-2 text-lg font-semibold text-brand-900">确定出发点、目的地和行程时长</h3>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
@@ -303,7 +300,7 @@ export function PlannerForm() {
                       className="w-full rounded-2xl border border-brand-100 px-4 py-3"
                       value={form.destinationQuery ?? ""}
                       onChange={(e) => updateForm("destinationQuery", e.target.value)}
-                      placeholder="例如：临潼、秦岭、竹海、温泉、北京"
+                      placeholder="例如：临潼、秦岭、竹海、温泉"
                     />
                   </label>
 
@@ -319,11 +316,7 @@ export function PlannerForm() {
 
                   <label className="space-y-2 text-sm">
                     <span>出行天数</span>
-                    <select
-                      className="w-full rounded-2xl border border-brand-100 px-4 py-3"
-                      value={form.days}
-                      onChange={(e) => updateForm("days", Number(e.target.value))}
-                    >
+                    <select className="w-full rounded-2xl border border-brand-100 px-4 py-3" value={form.days} onChange={(e) => updateForm("days", Number(e.target.value))}>
                       {DAY_OPTIONS.map((item) => (
                         <option key={item.value} value={item.value}>
                           {item.label}
@@ -337,7 +330,7 @@ export function PlannerForm() {
               <div className="space-y-4 rounded-[1.6rem] border border-brand-100 bg-white p-5">
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">偏好与节奏</div>
-                  <h3 className="mt-2 text-lg font-semibold text-brand-900">这些条件会直接影响 AI 怎么选点</h3>
+                  <h3 className="mt-2 text-lg font-semibold text-brand-900">这些条件会直接影响 AI 如何选点</h3>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
@@ -388,11 +381,11 @@ export function PlannerForm() {
               </div>
 
               <div className="rounded-[1.6rem] border border-dashed border-brand-100 bg-brand-50/40 p-5 text-sm text-slate-600">
-                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">提速建议</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-600">填写建议</div>
                 <div className="mt-3 space-y-3 leading-6">
-                  <p>先填一个大致目的地区域，系统会先缩小候选，再交给 AI 总结，速度会更稳。</p>
-                  <p>联网搜索已经会补天气、路况、开放时间、门票、预约和周边酒店信息，但条件越明确，搜索噪音越少。</p>
-                  <p>如果只是想当天往返，优先选 1-2 天并勾选“门票别太贵”“停车方便优先”这类额外要求。</p>
+                  <p>先填一个大致目的地区域，系统会先缩小候选范围，再交给 AI 总结，速度更稳定。</p>
+                  <p>条件越清晰，实时搜索补充的信息越少偏差，尤其是门票、开放时间、停车和预约要求。</p>
+                  <p>如果只想当天往返，优先选 1-2 天，并勾选“门票别太贵”“停车方便优先”这类约束。</p>
                 </div>
               </div>
             </div>
@@ -497,11 +490,11 @@ export function PlannerForm() {
                     form.includeLiveSignals === false ? "border-brand-100 bg-white text-slate-600" : "border-brand-200 bg-brand-50/70 text-brand-900"
                   }`}
                 >
-                  <div className="text-sm font-medium">动态天气、路况与联网搜索</div>
+                  <div className="text-sm font-medium">实时天气、路况与联网搜索</div>
                   <div className="mt-2 text-sm leading-6">
                     {form.includeLiveSignals === false
-                      ? "当前已关闭实时链路，只按数据库与规则生成，速度更快但会少掉天气、门票、预约和酒店的实时补充。"
-                      : "当前已开启实时参考，豆包会结合联网搜索结果补天气、开放时间、门票、酒店和交通信息。"}
+                      ? "当前已关闭实时链路，只按数据库与规则生成，速度更快，但会少掉天气、门票、预约和酒店等实时补充。"
+                      : "当前已开启实时参考，会结合联网搜索补充天气、开放时间、门票、酒店和交通信息。"}
                   </div>
                 </button>
 
@@ -515,7 +508,7 @@ export function PlannerForm() {
                   <div className="text-sm font-medium">优先展示推荐理由</div>
                   <div className="mt-2 text-sm leading-6">
                     {preferReasonFirst
-                      ? "结果会先展开 AI 推荐结论、推荐理由和动态因素，再看路线和服务信息。"
+                      ? "结果会优先展示 AI 总结、推荐理由和动态因素，再展示路线与服务信息。"
                       : "结果会按更均衡的顺序展示，路线和动态参考会更靠前。"}
                   </div>
                 </button>
@@ -566,7 +559,7 @@ export function PlannerForm() {
       <section className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-card">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-semibold text-brand-900">智能推荐结果</h3>
-          {result ? <div className="text-sm text-slate-500">结果已整页展开显示</div> : null}
+          {result ? <div className="text-sm text-slate-500">结果已展开显示</div> : null}
         </div>
         <PlanResults result={result} origin={form.origin} preferReasonFirst={preferReasonFirst} includeLiveSignals={form.includeLiveSignals !== false} />
       </section>

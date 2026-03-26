@@ -18,6 +18,7 @@
     "audit:spots": "tsx --tsconfig tsconfig.scripts.json scripts/audit-and-enrich-spot-data.ts",
     "prune:spots": "tsx --tsconfig tsconfig.scripts.json scripts/prune-low-quality-spots.ts",
     "enrich:remaining-spots": "tsx --tsconfig tsconfig.scripts.json scripts/batch-enrich-remaining-spots.ts",
+    "final-refine:spots": "tsx --tsconfig tsconfig.scripts.json scripts/final-refine-remaining-spots.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",

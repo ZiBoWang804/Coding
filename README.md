@@ -275,6 +275,17 @@ npm run enrich:remaining-spots
 - 优先修复缺地址、英文占位地址、缺坐标的剩余景点。
 - 输出补全报告到 `data/import-ready/remaining-spots-enrich.report.json`。
 
+### 最后一轮人工精修残留景点
+
+```bash
+npm run final-refine:spots
+```
+
+说明：
+- 对最后一批仍缺地址或仍保留英文地址的景点进行人工校准，补全区县和中文地址。
+- 对已经确认是泛化标题、噪声关联或无法可靠落到具体景点的空壳 POI 直接删除。
+- 输出最终精修报告到 `data/import-ready/remaining-spots-final-refine.report.json`，便于复盘这批补全和删除依据。
+
 ## 合规边界
 
 当前项目不包含针对小红书、携程、大众点评等平台的未授权抓取脚本。

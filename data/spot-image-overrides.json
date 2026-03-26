@@ -1,0 +1,412 @@
+[
+  {
+    "key": "安徽省|芜湖市|方特欢乐世界",
+    "name": "方特欢乐世界",
+    "province": "安徽省",
+    "city": "芜湖市",
+    "imageUrl": "/media/curated-spots/9cb27909de1d.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/1lo6712000b9w9wqt3763.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "北京市|北京市|798艺术区",
+    "name": "798艺术区",
+    "province": "北京市",
+    "city": "北京市",
+    "imageUrl": "/media/curated-spots/96bbd5567f32.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://shibatakuma.com/wp-content/uploads/2024/07/ff61d80530ba872bfa00f0de4e5ae66f-768x402.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "北京市|北京市|北京欢乐谷",
+    "name": "北京欢乐谷",
+    "province": "北京市",
+    "city": "北京市",
+    "imageUrl": "/media/curated-spots/b8d62546f8e8.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://bj.happyvalley.cn/activity/beijing240206/dist/images/img_01.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "北京市|北京市|慕田峪长城",
+    "name": "慕田峪长城",
+    "province": "北京市",
+    "city": "北京市",
+    "imageUrl": "/media/curated-spots/61845157fcfe.png",
+    "source": "bing-image-search",
+    "sourceUrl": "https://cdn.getyourguide.com/img/tour/3d716fe51f08203a22dccc9e5bef8ccb2eedcb49f4f836917c1287f5d0b0c1c9.png/148.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "北京市|北京市|圆明园遗址公园",
+    "name": "圆明园遗址公园",
+    "province": "北京市",
+    "city": "北京市",
+    "imageUrl": "/media/curated-spots/a7758b7050cb.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://r1.visitbeijing.com.cn/vbj-s/2023/0619/f1a6a940d8ae106f91ca7482f627da98.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "广东省|广州市|白云山",
+    "name": "白云山",
+    "province": "广东省",
+    "city": "广州市",
+    "imageUrl": "/media/curated-spots/93b60f1e9d77.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/1lo1b12000lkwgnsr5B70.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "广东省|深圳市|深圳世界之窗",
+    "name": "深圳世界之窗",
+    "province": "广东省",
+    "city": "深圳市",
+    "imageUrl": "/media/curated-spots/1c815861ea6f.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/1lo6112000qps0lzg87B7.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "贵州省|黔东南苗族侗族自治州|西江千户苗寨周边村落",
+    "name": "西江千户苗寨周边村落",
+    "province": "贵州省",
+    "city": "黔东南苗族侗族自治州",
+    "imageUrl": "/media/curated-spots/cb9b67c6dc58.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "http://p9.itc.cn/images01/20201008/54a0eb00fb0045c084561e6dd4fab1fe.jpeg",
+    "confidence": "medium"
+  },
+  {
+    "key": "海南省|万宁市|万宁兴隆热带植物园",
+    "name": "万宁兴隆热带植物园",
+    "province": "海南省",
+    "city": "万宁市",
+    "imageUrl": "/media/curated-spots/e7c18f3031e9.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/1lo3b12000j74pdwbB1AF.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "河北省|衡水市|衡水湖",
+    "name": "衡水湖",
+    "province": "河北省",
+    "city": "衡水市",
+    "imageUrl": "/media/curated-spots/976343c80e3c.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/1lo5312000evoxh9aB99C.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "河北省|石家庄市|正定隆兴寺",
+    "name": "正定隆兴寺",
+    "province": "河北省",
+    "city": "石家庄市",
+    "imageUrl": "/media/curated-spots/1504a5ddb5c2.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/0104o12000i106u2sCC8F.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "河南省|安阳市|殷墟",
+    "name": "殷墟",
+    "province": "河南省",
+    "city": "安阳市",
+    "imageUrl": "/media/curated-spots/e5316aef19cf.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/0106512000f6sbrt57DE7.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "湖南省|常德市|柳叶湖",
+    "name": "柳叶湖",
+    "province": "湖南省",
+    "city": "常德市",
+    "imageUrl": "/media/curated-spots/8864ed50d9c9.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/0104712000nu6qbot50E0.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "湖南省|湘西土家族苗族自治州|凤凰竹山村",
+    "name": "凤凰竹山村",
+    "province": "湖南省",
+    "city": "湘西土家族苗族自治州",
+    "imageUrl": "/media/curated-spots/c54bf1888b77.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://so1.360tres.com/t0162879297aa94eab6.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "吉林省|白山市|露水河国家森林公园",
+    "name": "露水河国家森林公园",
+    "province": "吉林省",
+    "city": "白山市",
+    "imageUrl": "/media/curated-spots/86bddc9dcaf7.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/100110000000pdwn00DD4.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "吉林省|吉林市|吉林北山",
+    "name": "吉林北山",
+    "province": "吉林省",
+    "city": "吉林市",
+    "imageUrl": "/media/curated-spots/61af6ce0d125.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/1lo3o12000ds0o56d63E1.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "吉林省|延边朝鲜族自治州|六鼎山",
+    "name": "六鼎山",
+    "province": "吉林省",
+    "city": "延边朝鲜族自治州",
+    "imageUrl": "/media/curated-spots/81e9b32042ef.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/01A3c12000915x6fq1021.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "吉林省|延边朝鲜族自治州|长白山",
+    "name": "长白山",
+    "province": "吉林省",
+    "city": "延边朝鲜族自治州",
+    "imageUrl": "/media/curated-spots/c8fb81d70fe9.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/0104g120003to7jeq9E4A.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "江苏省|徐州市|徐州云龙湖",
+    "name": "徐州云龙湖",
+    "province": "江苏省",
+    "city": "徐州市",
+    "imageUrl": "/media/curated-spots/c4595098ba0a.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/100w0z000000mtexh795C.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "江西省|萍乡市|安源路矿工人运动纪念馆",
+    "name": "安源路矿工人运动纪念馆",
+    "province": "江西省",
+    "city": "萍乡市",
+    "imageUrl": "/media/curated-spots/75ff7849b52c.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/3503160000010rlwtCC36.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "江西省|上饶市|婺源篁岭",
+    "name": "婺源篁岭",
+    "province": "江西省",
+    "city": "上饶市",
+    "imageUrl": "/media/curated-spots/9c9e6b94398b.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "http://www.news.cn/photo/2023-03/04/1129412517_16779109649781n.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "陕西省|西安市|大雁塔",
+    "name": "大雁塔",
+    "province": "陕西省",
+    "city": "西安市",
+    "imageUrl": "/media/curated-spots/197f4b12ca61.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://i.pinimg.com/originals/a7/52/7c/a7527cb1ada0947e2c5236c27ee8185b.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "陕西省|西安市|回民街",
+    "name": "回民街",
+    "province": "陕西省",
+    "city": "西安市",
+    "imageUrl": "/media/curated-spots/664b4dd604fc.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://i.ytimg.com/vi/iOTIO64EoO0/maxresdefault.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "陕西省|西安市|陕西历史博物馆",
+    "name": "陕西历史博物馆",
+    "province": "陕西省",
+    "city": "西安市",
+    "imageUrl": "/media/curated-spots/4ce726efe798.png",
+    "source": "bing-image-search",
+    "sourceUrl": "http://qiye.zpxuan.com:89/show/71106101012311/image/guanwai44.png",
+    "confidence": "medium"
+  },
+  {
+    "key": "陕西省|西安市|西安城墙",
+    "name": "西安城墙",
+    "province": "陕西省",
+    "city": "西安市",
+    "imageUrl": "/media/curated-spots/e928f2a1a05c.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://photo-static-api.fotomore.com/creative/vcg/veer/612/veer-146845122.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "陕西省|西安市|终南山",
+    "name": "终南山",
+    "province": "陕西省",
+    "city": "西安市",
+    "imageUrl": "/media/curated-spots/c1f6d425f60f.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "http://5b0988e595225.cdn.sohucs.com/images/20191116/fc67f359bc6b4fc5b1b287330d0276ab.jpeg",
+    "confidence": "medium"
+  },
+  {
+    "key": "上海市|上海市|上海辰山植物园",
+    "name": "上海辰山植物园",
+    "province": "上海市",
+    "city": "上海市",
+    "imageUrl": "/media/curated-spots/e84dd3cf17d2.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://youimg1.c-ctrip.com/target/100j13000000ubi2j5FD7.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "上海市|上海市|上海大观园",
+    "name": "上海大观园",
+    "province": "上海市",
+    "city": "上海市",
+    "imageUrl": "/media/curated-spots/e8146c8b064f.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://img1.qunarzz.com/piao/fusion/1611/a4/8b2d3b6c61a54c02.jpg_r_720x480x95_334481b0.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "上海市|上海市|上海迪士尼乐园",
+    "name": "上海迪士尼乐园",
+    "province": "上海市",
+    "city": "上海市",
+    "imageUrl": "/media/curated-spots/d7de65684100.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://p7.itc.cn/q_70/images01/20221125/ebdaf8d7d7e94f74979bf8e8d8265505.jpeg",
+    "confidence": "medium"
+  },
+  {
+    "key": "上海市|上海市|上海海洋水族馆",
+    "name": "上海海洋水族馆",
+    "province": "上海市",
+    "city": "上海市",
+    "imageUrl": "/media/curated-spots/89af187ae807.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://so1.360tres.com/t0155919d5b378d5613.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "上海市|上海市|上海自然博物馆",
+    "name": "上海自然博物馆",
+    "province": "上海市",
+    "city": "上海市",
+    "imageUrl": "/media/curated-spots/fc5ae54f9153.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://picn.huitu.com/pic/20211016/20211016203011566900_0.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "上海市|上海市|田子坊",
+    "name": "田子坊",
+    "province": "上海市",
+    "city": "上海市",
+    "imageUrl": "/media/curated-spots/909584b184e4.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://img.redocn.com/sheying/20170626/shanghaitianzifangjiejing_8362979.jpg",
+    "confidence": "medium"
+  },
+  {
+    "key": "四川省|阿坝藏族羌族自治州|黄龙",
+    "name": "黄龙",
+    "province": "四川省",
+    "city": "阿坝藏族羌族自治州",
+    "imageUrl": "/media/curated-spots/4e826ed2fc04.png",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/10071d000001f1xw9D9DE.png",
+    "confidence": "high"
+  },
+  {
+    "key": "四川省|德阳市|三星堆遗址",
+    "name": "三星堆遗址",
+    "province": "四川省",
+    "city": "德阳市",
+    "imageUrl": "/media/curated-spots/dddfba7d481d.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/0104o12000h0jx9pr937E.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "四川省|甘孜藏族自治州|稻城亚丁",
+    "name": "稻城亚丁",
+    "province": "四川省",
+    "city": "甘孜藏族自治州",
+    "imageUrl": "/media/curated-spots/1685fee2bc4b.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/100o0g0000007tevr8DED.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "四川省|甘孜藏族自治州|海螺沟",
+    "name": "海螺沟",
+    "province": "四川省",
+    "city": "甘孜藏族自治州",
+    "imageUrl": "/media/curated-spots/aa2a3674da1c.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/0100o12000j195bfa18DB.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "新疆维吾尔自治区|阿克苏地区|乌孙古道",
+    "name": "乌孙古道",
+    "province": "新疆维吾尔自治区",
+    "city": "阿克苏地区",
+    "imageUrl": "/media/curated-spots/fe9b5065f887.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "https://p2.itc.cn/q_70/images01/20230518/2295e5605db34b91b11372c0176d1bb0.jpeg",
+    "confidence": "medium"
+  },
+  {
+    "key": "云南省|大理白族自治州|大理古城",
+    "name": "大理古城",
+    "province": "云南省",
+    "city": "大理白族自治州",
+    "imageUrl": "/media/curated-spots/f41e86a565ec.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/1A0t1f000001g47by6723.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "云南省|红河哈尼族彝族自治州|元阳梯田",
+    "name": "元阳梯田",
+    "province": "云南省",
+    "city": "红河哈尼族彝族自治州",
+    "imageUrl": "/media/curated-spots/545794d99051.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/0100d12000j0if0cw6146.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "浙江省|嘉兴市|西塘古镇",
+    "name": "西塘古镇",
+    "province": "浙江省",
+    "city": "嘉兴市",
+    "imageUrl": "/media/curated-spots/3f4228139a06.jpg",
+    "source": "携程Trip景点页",
+    "sourceUrl": "https://ak-d.tripcdn.com/images/1lo5012000krjeubtA534.jpg",
+    "confidence": "high"
+  },
+  {
+    "key": "浙江省|丽水市|松阳杨家堂村",
+    "name": "松阳杨家堂村",
+    "province": "浙江省",
+    "city": "丽水市",
+    "imageUrl": "/media/curated-spots/c3efb985b263.jpg",
+    "source": "bing-image-search",
+    "sourceUrl": "http://p4.itc.cn/images01/20200903/4b5f50b2e6134c0386e5c54a87db6a24.jpeg",
+    "confidence": "medium"
+  }
+]

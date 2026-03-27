@@ -2,7 +2,14 @@ import { mapSpotToPlannerDestination } from "@/lib/planner/destination-mapper";
 import { buildRankingReason, buildReadableSummary, buildUserFitReasons } from "@/lib/planner/explain";
 import { evaluateHardFilters } from "@/lib/planner/filters";
 import { enrichDestinationsWithLiveSignals, verifyRankedPlansOpeningHours } from "@/lib/planner/live-enricher";
-import { buildAlternativeOptions, generateItinerary } from "@/lib/planner/itinerary-generator";
+import {
+  buildAlternativeOptions,
+  buildDiningRecommendation,
+  buildLodgingRecommendation,
+  buildTransportRecommendation,
+  generateItinerary,
+  shouldRegenerateItinerary
+} from "@/lib/planner/itinerary-generator";
 import { generateTravelPlan } from "@/lib/planner/ai-planner-v2";
 import { scoreDestination } from "@/lib/planner/scoring";
 import { buildAiReadablePlannerSummary, generateAiPlannerPlan } from "@/lib/openai";
@@ -198,14 +205,6 @@ function buildRuntimeInsightsForUi(
     traffic?: string;
   }
 ) {
-  if (context.user.includeLiveSignals === false) {
-    return {
-      weather: "已关闭实时天气参考，当前使用基础天气与季节信息。",
-      traffic: "已关闭实时路况参考，当前使用基础交通与路线规则。",
-      destinationQuery: context.user.destinationQuery || null
-    };
-  }
-
   return {
     weather: getWeatherSummaryText(context, override?.weather),
     traffic: getTrafficSummaryText(context, override?.traffic),
@@ -394,9 +393,16 @@ async function buildAiDrivenOutput(
 
   for (let index = 0; index < finalPlans.length; index += 1) {
     const current = finalPlans[index];
+    const supportingDestinations = finalPlans.filter((item) => item.destinationId !== current.destinationId).map((item) => item.mappedDestination);
+    current.transportSummary = buildTransportRecommendation(current.mappedDestination, context);
+    current.lodgingSummary = buildLodgingRecommendation(current.mappedDestination, context, supportingDestinations[0] ?? null);
+    current.diningSummary = buildDiningRecommendation(current.mappedDestination);
+    if (shouldRegenerateItinerary(current.itinerary, context.user.days)) {
+      current.itinerary = generateItinerary(current.mappedDestination, context, supportingDestinations);
+    }
     if (!current.rankingReason.length) current.rankingReason = buildRankingReason(current, context);
     if (!current.whyFitUser.length) current.whyFitUser = buildUserFitReasons(current.mappedDestination, context);
-    current.alternativeOptions = buildAlternativeOptions(finalPlans.filter((item) => item.destinationId !== current.destinationId).map((item) => item.mappedDestination));
+    current.alternativeOptions = buildAlternativeOptions(supportingDestinations);
   }
 
   return {
@@ -496,9 +502,14 @@ async function runRulePlannerEngineFallback(
 
   for (let index = 0; index < ranked.length; index += 1) {
     const current = ranked[index];
+    const supportingDestinations = ranked.filter((item) => item.destinationId !== current.destinationId).map((item) => item.mappedDestination);
+    current.transportSummary = buildTransportRecommendation(current.mappedDestination, context);
+    current.lodgingSummary = buildLodgingRecommendation(current.mappedDestination, context, supportingDestinations[0] ?? null);
+    current.diningSummary = buildDiningRecommendation(current.mappedDestination);
+    current.itinerary = generateItinerary(current.mappedDestination, context, supportingDestinations);
     current.rankingReason = buildRankingReason(current, context);
     current.whyFitUser = buildUserFitReasons(current.mappedDestination, context);
-    current.alternativeOptions = buildAlternativeOptions(ranked.filter((item) => item.destinationId !== current.destinationId).map((item) => item.mappedDestination));
+    current.alternativeOptions = buildAlternativeOptions(supportingDestinations);
   }
 
   const output: PlannerEngineOutput = {

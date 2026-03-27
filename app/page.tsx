@@ -165,25 +165,31 @@ export default async function HomePage() {
           <div className="norway-hero-overlay absolute inset-0" />
 
           <div className="relative mx-auto flex min-h-[calc(100vh-1.5rem)] max-w-[1560px] flex-col justify-between px-5 py-6 text-white sm:px-8 sm:py-8 lg:px-10 lg:py-10">
-            <ScrollReveal className="max-w-[860px] pt-10 md:pt-16 lg:pt-20">
+            <ScrollReveal className="max-w-[980px] pt-10 md:pt-16 lg:pt-20">
               <div className="inline-flex items-center gap-3 rounded-full border border-white/16 bg-black/18 px-4 py-2 text-xs font-medium tracking-[0.24em] text-white/82 backdrop-blur-md">
                 <Play className="h-3.5 w-3.5 fill-current" />
                 西安周末出行
               </div>
 
-              <h1 className="font-display mt-6 max-w-5xl text-[2.9rem] font-semibold leading-[0.98] text-white sm:text-[4.1rem] md:text-[5rem] xl:text-[6rem]">
-                把周末留给
-                <br />
-                真正值得出发的山野、
-                <br />
-                村落与城外风景。
+              <h1 className="font-display mt-6 font-semibold tracking-[-0.045em] text-white drop-shadow-[0_12px_32px_rgba(0,0,0,0.2)]">
+                <span className="block text-[clamp(3.1rem,11.8vw,4.5rem)] leading-[0.9] md:hidden">
+                  <span className="block">把周末留给</span>
+                  <span className="block">真正值得出发的</span>
+                  <span className="block">山野、村落与</span>
+                  <span className="block">城外风景。</span>
+                </span>
+                <span className="hidden text-[clamp(4.35rem,6.9vw,5.7rem)] leading-[0.92] md:block">
+                  <span className="block whitespace-nowrap">把周末留给</span>
+                  <span className="block whitespace-nowrap">真正值得出发的山野、</span>
+                  <span className="block whitespace-nowrap">村落与城外风景。</span>
+                </span>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-8 text-white/82 md:text-lg">
+              <p className="mt-7 max-w-[44rem] text-base leading-8 text-white/82 md:text-[1.1rem] md:leading-9">
                 从地图找方向、从景点页看细节、从智能规划选路线，把零散的周末灵感整理成一套真正能用的出行入口。
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-9 flex flex-wrap gap-3">
                 <Link
                   href="/spots"
                   className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-brand-950 shadow-[0_20px_36px_rgba(0,0,0,0.14)]"

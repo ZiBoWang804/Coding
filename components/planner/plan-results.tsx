@@ -48,6 +48,22 @@ function compactReasons(items: string[], fallback: string) {
 }
 
 function buildTravelResourceSpot(plan: RankedPlan) {
+  const rawSource =
+    plan.mappedDestination.rawSource && typeof plan.mappedDestination.rawSource === "object"
+      ? (plan.mappedDestination.rawSource as Record<string, unknown>)
+      : null;
+  const accommodationTips = Array.isArray(rawSource?.accommodationTips)
+    ? rawSource.accommodationTips
+        .map((item) => {
+          if (typeof item === "string") return { name: item };
+          if (item && typeof item === "object" && "name" in item) {
+            return { name: String((item as { name?: unknown }).name || "") };
+          }
+          return null;
+        })
+        .filter((item): item is { name: string } => Boolean(item?.name))
+    : [];
+
   return {
     name: plan.destinationName,
     city: plan.mappedDestination.city,
@@ -55,6 +71,10 @@ function buildTravelResourceSpot(plan: RankedPlan) {
     address: plan.mappedDestination.address,
     description: plan.mappedDestination.description,
     tags: plan.mappedDestination.originalTags,
+    accommodationTips,
+    avgCost: plan.mappedDestination.avgCostMin,
+    rating: plan.mappedDestination.rating,
+    sourceUrl: plan.mappedDestination.sourceUrl,
     lodgingSummary: plan.lodgingSummary || plan.mappedDestination.lodgingSummary,
     lodgingPriceMin: plan.mappedDestination.lodgingPriceMin,
     lodgingPriceMax: plan.mappedDestination.lodgingPriceMax,
@@ -194,14 +214,14 @@ export function PlanResults({
           <div className={`space-y-4 ${preferReasonFirst ? "md:order-2" : "md:order-1"}`}>
             <div id="planner-live-signals" className="scroll-mt-24 rounded-2xl border border-brand-100 bg-sand/80 p-5">
               <div className="font-medium text-brand-800">动态因素</div>
-              {includeLiveSignals && result.runtimeInsights ? (
+              {result.runtimeInsights ? (
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
                   <div className="rounded-2xl bg-white/80 p-4">
-                    <div className="text-xs tracking-[0.18em] text-slate-400">天气参考</div>
+                    <div className="text-xs tracking-[0.18em] text-slate-400">{includeLiveSignals ? "天气参考" : "基础天气"}</div>
                     <div className="mt-2 text-sm leading-6 text-slate-700">{result.runtimeInsights.weather}</div>
                   </div>
                   <div className="rounded-2xl bg-white/80 p-4">
-                    <div className="text-xs tracking-[0.18em] text-slate-400">路况参考</div>
+                    <div className="text-xs tracking-[0.18em] text-slate-400">{includeLiveSignals ? "路况参考" : "基础路况"}</div>
                     <div className="mt-2 text-sm leading-6 text-slate-700">{result.runtimeInsights.traffic}</div>
                   </div>
                 </div>
@@ -210,6 +230,11 @@ export function PlanResults({
                   你已关闭实时天气与路况参考，本次结果按规则引擎、静态开放信息和基础路线数据给出，生成会更快一些。
                 </div>
               )}
+              {!includeLiveSignals && result.runtimeInsights ? (
+                <div className="mt-3 rounded-2xl bg-white/80 p-4 text-sm leading-6 text-slate-600">
+                  当前未启用联网补充，以上内容会按出行日期结合基础天气、季节和路线规则生成，所以不同日期会有不同参考。
+                </div>
+              ) : null}
               <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
                 {compactReasons(result.readableSummary.dynamicImpact, "当前没有额外动态风险。").map((item) => (
                   <li key={item}>• {item}</li>

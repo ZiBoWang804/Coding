@@ -43,6 +43,10 @@ function uniqueSpots(spots: RuralSpotSeed[]) {
   return spots.filter((spot, index, source) => source.findIndex((item) => item.id === spot.id) === index);
 }
 
+function uniqueStrings(values: string[]) {
+  return values.filter((value, index, source) => source.indexOf(value) === index);
+}
+
 function resolveSpotImage(spot?: RuralSpotSeed | null) {
   if (!spot) return HERO_FALLBACK_IMAGE;
   if (spot.imageUrl && isLikelyImageUrl(spot.imageUrl)) return spot.imageUrl;
@@ -142,7 +146,7 @@ export default async function HomePage() {
   const matrixPrimary = matrixSpots[0] || heroSpots[0] || null;
   const matrixSecondary = matrixSpots[1] || heroSpots[1] || matrixPrimary;
   const matrixSupport = uniqueSpots([...weekendStorySpots, ...heroSpots.slice(0, 4)]).slice(0, 2);
-  const recentKeywords = recentSearches.slice(0, 4).map(buildRecentLabel);
+  const recentKeywords = uniqueStrings(recentSearches.map(buildRecentLabel).filter(Boolean)).slice(0, 4);
 
   return (
     <div className="pb-24">

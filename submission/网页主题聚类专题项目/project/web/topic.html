@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>主题详情 - 网页主题聚类专题观察台</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="topic">
+  <div class="app-shell detail-shell">
+    <a class="back-link" href="/">
+      <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-arrow-left"></use></svg>
+      <span>返回总览</span>
+    </a>
+
+    <header class="panel detail-hero reveal" data-ghost="主题">
+      <p id="detailKicker" class="detail-kicker">主题详情</p>
+      <h1 id="detailTitle" class="detail-title">正在加载主题内容...</h1>
+      <p id="detailLead" class="detail-lead"></p>
+      <div id="detailMeta" class="chip-row detail-meta"></div>
+      <div id="detailActions" class="detail-actions"></div>
+    </header>
+
+    <main class="detail-layout">
+      <section class="panel detail-section reveal">
+        <div class="panel-head">
+          <div>
+            <p class="section-tag">主题概览</p>
+            <h2>关键词、来源与情感结构</h2>
+          </div>
+        </div>
+        <div id="topicStats" class="detail-card-grid"></div>
+        <div id="topicKeywords" class="chip-row"></div>
+        <div id="topicSources" class="chip-row"></div>
+      </section>
+
+      <section class="panel detail-section reveal">
+        <div class="detail-section-title">
+          <div>
+            <p class="section-tag">簇内网页</p>
+            <h2>这个主题下的网页文章样本</h2>
+          </div>
+          <div id="topicArticlesMeta" class="detail-inline"></div>
+        </div>
+        <div id="topicArticles" class="detail-list"></div>
+      </section>
+
+      <section class="panel detail-section reveal">
+        <div class="detail-section-title">
+          <div>
+            <p class="section-tag">后续跟踪</p>
+            <h2>关注后筛出的后续相关文章</h2>
+          </div>
+          <div id="topicFollowupMeta" class="detail-inline"></div>
+        </div>
+        <div id="topicFollowupArticles" class="detail-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/detail.js" defer></script>
+</body>
+</html>

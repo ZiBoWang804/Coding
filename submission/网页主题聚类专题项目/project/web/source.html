@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>来源详情 - 网页主题聚类专题观察台</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="source">
+  <div class="app-shell detail-shell">
+    <a class="back-link" href="/">
+      <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-arrow-left"></use></svg>
+      <span>返回总览</span>
+    </a>
+
+    <header class="panel detail-hero reveal" data-ghost="来源">
+      <p id="detailKicker" class="detail-kicker">来源详情</p>
+      <h1 id="detailTitle" class="detail-title">正在加载来源站点...</h1>
+      <p id="detailLead" class="detail-lead"></p>
+      <div id="detailMeta" class="chip-row detail-meta"></div>
+      <div id="detailActions" class="detail-actions"></div>
+    </header>
+
+    <main class="detail-layout">
+      <section class="panel detail-section reveal">
+        <div class="panel-head">
+          <div>
+            <p class="section-tag">来源概览</p>
+            <h2>覆盖主题与情感分布</h2>
+          </div>
+        </div>
+        <div id="sourceStats" class="detail-card-grid"></div>
+        <div id="sourceThemes" class="chip-row"></div>
+      </section>
+
+      <section class="panel detail-section reveal">
+        <div class="detail-section-title">
+          <div>
+            <p class="section-tag">文章清单</p>
+            <h2>该来源收录的网页文章</h2>
+          </div>
+          <div id="sourceMeta" class="detail-inline"></div>
+        </div>
+        <div id="sourceArticles" class="detail-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/detail.js" defer></script>
+</body>
+</html>

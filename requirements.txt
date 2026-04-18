@@ -1,0 +1,4 @@
+beautifulsoup4>=4.12
+numpy>=1.26
+requests>=2.31
+scikit-learn>=1.4

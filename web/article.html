@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文章详情 - 网页主题聚类专题观察台</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="article">
+  <div class="app-shell detail-shell">
+    <a class="back-link" href="/">
+      <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-arrow-left"></use></svg>
+      <span>返回总览</span>
+    </a>
+
+    <header class="panel detail-hero reveal" data-ghost="文章">
+      <p id="detailKicker" class="detail-kicker">文章详情</p>
+      <h1 id="detailTitle" class="detail-title">正在加载文章内容...</h1>
+      <p id="detailLead" class="detail-lead"></p>
+      <div id="detailMeta" class="chip-row detail-meta"></div>
+      <div id="detailActions" class="detail-actions"></div>
+    </header>
+
+    <main class="detail-layout">
+      <section class="panel detail-section reveal">
+        <div class="panel-head">
+          <div>
+            <p class="section-tag">网页内容</p>
+            <h2>文章摘要与主题线索</h2>
+          </div>
+        </div>
+        <p id="articleSummary" class="detail-copy"></p>
+        <div id="articleKeywords" class="chip-row"></div>
+      </section>
+
+      <section class="panel detail-section reveal">
+        <div class="panel-head">
+          <div>
+            <p class="section-tag">文章上下文</p>
+            <h2>来源、主题与跟踪状态</h2>
+          </div>
+        </div>
+        <div id="articleContext" class="detail-card-grid"></div>
+      </section>
+
+      <section class="panel detail-section reveal">
+        <div class="detail-section-title">
+          <div>
+            <p class="section-tag">相关延伸</p>
+            <h2>同来源的其它文章</h2>
+          </div>
+          <div id="relatedMeta" class="detail-inline"></div>
+        </div>
+        <div id="relatedArticles" class="detail-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/runtime-config.js"></script>
+  <script src="/site-runtime.js"></script>
+  <script src="/detail.js" defer></script>
+</body>
+</html>

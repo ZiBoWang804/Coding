@@ -1,0 +1,4371 @@
+{
+  "generated_at": "2026-04-18T19:23:09",
+  "source_mode_requested": "demo",
+  "source_mode_requested_label": "演示数据",
+  "source_mode_resolved": "demo",
+  "source_mode_resolved_label": "演示数据",
+  "notes": [
+    "当前使用本地演示数据，适合稳定展示真实聚类、主题选择与情感跟踪流程。",
+    "主题跟踪文章当前也来自本地内置样例集。",
+    "当前结果来自真实 TF-IDF + KMeans 聚类；候选 K 为 [2, 3, 4, 5, 6, 7, 8]，算法自动选择最佳 K=8。"
+  ],
+  "metrics": {
+    "article_count": 66,
+    "cluster_count": 8,
+    "best_k": 8,
+    "candidate_ks": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "source_count": 32,
+    "tracked_article_count": 8,
+    "silhouette_score": 0.128,
+    "clustering_quality": 0.233
+  },
+  "source_examples": [
+    {
+      "id": "nba-official",
+      "name": "NBA官网",
+      "url": "https://www.nba.com/news",
+      "count": 3
+    },
+    {
+      "id": "hupu-nba",
+      "name": "虎扑篮球",
+      "url": "https://nba.hupu.com/",
+      "count": 3
+    },
+    {
+      "id": "openai-watch",
+      "name": "AI技术前线",
+      "url": "https://openai.com/news/",
+      "count": 2
+    },
+    {
+      "id": "health-next",
+      "name": "健康科技参考",
+      "url": "https://www.mobihealthnews.com/",
+      "count": 2
+    },
+    {
+      "id": "charge-network",
+      "name": "充电产业网",
+      "url": "https://insideevs.com/",
+      "count": 2
+    },
+    {
+      "id": "med-device",
+      "name": "医疗器械观察",
+      "url": "https://www.medtechdive.com/",
+      "count": 2
+    },
+    {
+      "id": "stadium-wire",
+      "name": "场馆脉冲",
+      "url": "https://www.stadiumdb.com/",
+      "count": 2
+    },
+    {
+      "id": "culture-grid",
+      "name": "城市文化网",
+      "url": "https://www.theartnewspaper.com/",
+      "count": 2
+    },
+    {
+      "id": "threat-monitor",
+      "name": "威胁监测站",
+      "url": "https://www.securityweek.com/",
+      "count": 2
+    },
+    {
+      "id": "cyber-brief",
+      "name": "安全内参",
+      "url": "https://www.darkreading.com/",
+      "count": 2
+    },
+    {
+      "id": "exhibit-lab",
+      "name": "展陈体验实验室",
+      "url": "https://blooloop.com/",
+      "count": 2
+    },
+    {
+      "id": "market-expectations",
+      "name": "市场预期观察",
+      "url": "https://www.reuters.com/markets/",
+      "count": 2
+    },
+    {
+      "id": "payments-wire",
+      "name": "支付产业线",
+      "url": "https://thepaypers.com/",
+      "count": 2
+    },
+    {
+      "id": "travel-loop",
+      "name": "文旅环线",
+      "url": "https://www.travelweekly.com/",
+      "count": 2
+    },
+    {
+      "id": "ai-systems-weekly",
+      "name": "智算周报",
+      "url": "https://www.datacenterdynamics.com/en/",
+      "count": 2
+    },
+    {
+      "id": "mobility-journal",
+      "name": "智能出行观察",
+      "url": "https://www.smartcitiesdive.com/",
+      "count": 2
+    },
+    {
+      "id": "model-wire",
+      "name": "模型情报站",
+      "url": "https://huggingface.co/blog",
+      "count": 2
+    },
+    {
+      "id": "climate-desk",
+      "name": "气候瞭望",
+      "url": "https://www.canarymedia.com/",
+      "count": 2
+    },
+    {
+      "id": "forex-flash",
+      "name": "汇率快报",
+      "url": "https://www.investing.com/currencies/",
+      "count": 2
+    },
+    {
+      "id": "pitch-report",
+      "name": "球场观察",
+      "url": "https://www.goal.com/",
+      "count": 2
+    },
+    {
+      "id": "bio-innovation",
+      "name": "生物创新日报",
+      "url": "https://www.biospace.com/",
+      "count": 2
+    },
+    {
+      "id": "power-market",
+      "name": "电力市场通",
+      "url": "https://www.powermag.com/",
+      "count": 2
+    },
+    {
+      "id": "grid-watch",
+      "name": "电网观察",
+      "url": "https://www.utilitydive.com/",
+      "count": 2
+    },
+    {
+      "id": "ev-insight",
+      "name": "电驱观察",
+      "url": "https://electrek.co/",
+      "count": 2
+    },
+    {
+      "id": "compute-frontier",
+      "name": "算力前沿网",
+      "url": "https://www.tomshardware.com/",
+      "count": 2
+    },
+    {
+      "id": "infra-radar",
+      "name": "算力基础设施雷达",
+      "url": "https://www.datacenterdynamics.com/en/",
+      "count": 2
+    },
+    {
+      "id": "security-post",
+      "name": "网安邮报",
+      "url": "https://www.bleepingcomputer.com/",
+      "count": 2
+    },
+    {
+      "id": "equity-sentiment",
+      "name": "股票情绪追踪",
+      "url": "https://www.marketwatch.com/investing",
+      "count": 2
+    },
+    {
+      "id": "silicon-dispatch",
+      "name": "芯片产业快讯",
+      "url": "https://www.semiconductor-digest.com/",
+      "count": 2
+    },
+    {
+      "id": "capital-pulse",
+      "name": "资本脉冲",
+      "url": "https://www.bloomberg.com/markets",
+      "count": 2
+    },
+    {
+      "id": "fan-route",
+      "name": "赛事商业内参",
+      "url": "https://www.sportbusiness.com/",
+      "count": 2
+    },
+    {
+      "id": "fintech-scope",
+      "name": "金融科技视野",
+      "url": "https://www.finextra.com/",
+      "count": 2
+    }
+  ],
+  "clusters": [
+    {
+      "id": 0,
+      "label": "能源电力",
+      "topic_name": "能源电力",
+      "topic_keyword": "光伏",
+      "keywords": [
+        "光伏",
+        "电网",
+        "气候",
+        "身份治理",
+        "风电"
+      ],
+      "raw_keywords": [
+        "solar",
+        "grid",
+        "climate",
+        "identity",
+        "wind",
+        "disclosure",
+        "phishing",
+        "resilience",
+        "ransomware",
+        "storage"
+      ],
+      "size": 13,
+      "mood": "neutral",
+      "mood_label": "中性",
+      "sources": [
+        {
+          "id": "threat-monitor",
+          "name": "威胁监测站",
+          "url": "https://www.securityweek.com/",
+          "count": 2
+        },
+        {
+          "id": "cyber-brief",
+          "name": "安全内参",
+          "url": "https://www.darkreading.com/",
+          "count": 2
+        },
+        {
+          "id": "climate-desk",
+          "name": "气候瞭望",
+          "url": "https://www.canarymedia.com/",
+          "count": 2
+        },
+        {
+          "id": "power-market",
+          "name": "电力市场通",
+          "url": "https://www.powermag.com/",
+          "count": 2
+        },
+        {
+          "id": "grid-watch",
+          "name": "电网观察",
+          "url": "https://www.utilitydive.com/",
+          "count": 2
+        },
+        {
+          "id": "security-post",
+          "name": "网安邮报",
+          "url": "https://www.bleepingcomputer.com/",
+          "count": 2
+        },
+        {
+          "id": "mobility-journal",
+          "name": "智能出行观察",
+          "url": "https://www.smartcitiesdive.com/",
+          "count": 1
+        }
+      ],
+      "sentiment_distribution": {
+        "positive": 6,
+        "neutral": 1,
+        "negative": 6
+      },
+      "centroid": {
+        "x": 0.1535,
+        "y": 0.5275
+      },
+      "quality_score": 0.477,
+      "matching_threshold": 0.407,
+      "representative_title": "高温高压地区加快部署光储微电网",
+      "representative_article": {
+        "id": "seed-energy-001",
+        "title": "高温高压地区加快部署光储微电网",
+        "url": "",
+        "source": "气候瞭望",
+        "source_id": "climate-desk"
+      },
+      "latest_article": {
+        "id": "seed-energy-006",
+        "title": "输电瓶颈拖慢西部能源基地光伏外送",
+        "url": "",
+        "source": "电力市场通",
+        "source_id": "power-market",
+        "published_at": "2026-04-13"
+      },
+      "summary": "能源电力主要围绕“光伏、电网、气候”展开，当前整体舆情为中性，代表文章是《高温高压地区加快部署光储微电网》。",
+      "articles": [
+        {
+          "id": "seed-energy-001",
+          "source_id": "climate-desk",
+          "title": "高温高压地区加快部署光储微电网",
+          "summary": "多个社区项目通过屋顶光伏与储能结合，提高极端高温期间的供电韧性。",
+          "source": "气候瞭望",
+          "source_url": "https://www.canarymedia.com/",
+          "url": "",
+          "published_at": "2026-04-08",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.371,
+            "positive_hits": [
+              "expand",
+              "improve"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.54,
+          "cluster_relevance_norm": 1.0,
+          "x": 0.2174,
+          "y": 0.7659
+        },
+        {
+          "id": "seed-energy-004",
+          "source_id": "grid-watch",
+          "title": "电网侧储能为大规模风电走廊削峰填谷",
+          "summary": "公用事业方表示，储能系统正在帮助降低弃风率并稳定晚高峰供电。",
+          "source": "电网观察",
+          "source_url": "https://www.utilitydive.com/",
+          "url": "",
+          "published_at": "2026-04-11",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.359,
+            "positive_hits": [
+              "reduce",
+              "smooth"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.538,
+          "cluster_relevance_norm": 0.995,
+          "x": 0.2415,
+          "y": 0.8029
+        },
+        {
+          "id": "seed-energy-005",
+          "source_id": "power-market",
+          "title": "需求响应聚合商缓解城市电网晚高峰压力",
+          "summary": "公用事业方表示，灵活工业负荷正在以更低成本帮助平滑晚高峰负载。",
+          "source": "电力市场通",
+          "source_url": "https://www.powermag.com/",
+          "url": "",
+          "published_at": "2026-04-12",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.348,
+            "positive_hits": [
+              "lower",
+              "smooth"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.53,
+          "cluster_relevance_norm": 0.974,
+          "x": 0.223,
+          "y": 0.7743
+        },
+        {
+          "id": "seed-energy-002",
+          "source_id": "grid-watch",
+          "title": "海上风电开发商因成本上涨寻求合同缓冲",
+          "summary": "开发商表示，通胀与供应延迟正在给新海上风电项目带来更大压力。",
+          "source": "电网观察",
+          "source_url": "https://www.utilitydive.com/",
+          "url": "",
+          "published_at": "2026-04-09",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.707,
+            "positive_hits": [],
+            "negative_hits": [
+              "delays",
+              "inflation",
+              "strain",
+              "warned"
+            ]
+          },
+          "cluster_relevance": 0.519,
+          "cluster_relevance_norm": 0.944,
+          "x": 0.2005,
+          "y": 0.7297
+        },
+        {
+          "id": "seed-energy-003",
+          "source_id": "climate-desk",
+          "title": "干旱与热浪让多地水电出力承压",
+          "summary": "库容下降正在推高夏季用电高峰来临前的电力市场风险。",
+          "source": "气候瞭望",
+          "source_url": "https://www.canarymedia.com/",
+          "url": "",
+          "published_at": "2026-04-10",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.354,
+            "positive_hits": [
+              "lower"
+            ],
+            "negative_hits": [
+              "drought",
+              "risk",
+              "strain"
+            ]
+          },
+          "cluster_relevance": 0.5,
+          "cluster_relevance_norm": 0.893,
+          "x": 0.2047,
+          "y": 0.7196
+        },
+        {
+          "id": "seed-energy-006",
+          "source_id": "power-market",
+          "title": "输电瓶颈拖慢西部能源基地光伏外送",
+          "summary": "开发商警告称，线路拥堵与检修窗口正在给光伏外送计划带来压力。",
+          "source": "电力市场通",
+          "source_url": "https://www.powermag.com/",
+          "url": "",
+          "published_at": "2026-04-13",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.5,
+            "positive_hits": [],
+            "negative_hits": [
+              "delay",
+              "pressure",
+              "warned"
+            ]
+          },
+          "cluster_relevance": 0.496,
+          "cluster_relevance_norm": 0.881,
+          "x": 0.2245,
+          "y": 0.6913
+        },
+        {
+          "id": "seed-security-001",
+          "source_id": "cyber-brief",
+          "title": "零信任身份治理在金融与通信行业加速落地",
+          "summary": "安全团队表示，统一身份治理正在降低大型企业中的横向移动风险。",
+          "source": "安全内参",
+          "source_url": "https://www.darkreading.com/",
+          "url": "",
+          "published_at": "2026-04-08",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.18,
+            "positive_hits": [],
+            "negative_hits": [
+              "risk"
+            ]
+          },
+          "cluster_relevance": 0.496,
+          "cluster_relevance_norm": 0.882,
+          "x": 0.1034,
+          "y": 0.3564
+        },
+        {
+          "id": "seed-security-003",
+          "source_id": "cyber-brief",
+          "title": "浏览器隔离试点帮助混合办公场景降低钓鱼风险",
+          "summary": "多家公司表示，将高风险访问迁入远程隔离环境后，凭证被盗事件明显减少。",
+          "source": "安全内参",
+          "source_url": "https://www.darkreading.com/",
+          "url": "",
+          "published_at": "2026-04-10",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.354,
+            "positive_hits": [
+              "help",
+              "reduce"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.491,
+          "cluster_relevance_norm": 0.868,
+          "x": 0.0864,
+          "y": 0.354
+        },
+        {
+          "id": "seed-security-002",
+          "source_id": "security-post",
+          "title": "勒索团伙开始集中攻击医院外包软件供应商",
+          "summary": "研究人员警告称，分区隔离不足的医疗软件供应商仍是高风险攻击入口。",
+          "source": "网安邮报",
+          "source_url": "https://www.bleepingcomputer.com/",
+          "url": "",
+          "published_at": "2026-04-09",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.371,
+            "positive_hits": [],
+            "negative_hits": [
+              "warned",
+              "weak"
+            ]
+          },
+          "cluster_relevance": 0.48,
+          "cluster_relevance_norm": 0.838,
+          "x": 0.1202,
+          "y": 0.3308
+        },
+        {
+          "id": "seed-security-004",
+          "source_id": "security-post",
+          "title": "监管机构收紧云服务承包商的数据泄露披露时限",
+          "summary": "合规团队指出，更短的披露窗口正在倒逼企业升级事件分级与上报流程。",
+          "source": "网安邮报",
+          "source_url": "https://www.bleepingcomputer.com/",
+          "url": "",
+          "published_at": "2026-04-11",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.177,
+            "positive_hits": [
+              "faster"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.479,
+          "cluster_relevance_norm": 0.835,
+          "x": 0.1358,
+          "y": 0.3292
+        },
+        {
+          "id": "seed-security-006",
+          "source_id": "threat-monitor",
+          "title": "托管检测团队警惕供应商门户入侵演练升级",
+          "summary": "研究人员指出，供应商访问审查不足仍是企业协同系统面临的严重风险。",
+          "source": "威胁监测站",
+          "source_url": "https://www.securityweek.com/",
+          "url": "",
+          "published_at": "2026-04-13",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.522,
+            "positive_hits": [],
+            "negative_hits": [
+              "risk",
+              "serious",
+              "weak"
+            ]
+          },
+          "cluster_relevance": 0.478,
+          "cluster_relevance_norm": 0.832,
+          "x": 0.1216,
+          "y": 0.339
+        },
+        {
+          "id": "seed-security-005",
+          "source_id": "threat-monitor",
+          "title": "银行启动通行密钥登录计划以减少凭证盗用",
+          "summary": "安全团队表示，通行密钥推广有助于降低零售银行入口的钓鱼风险暴露。",
+          "source": "威胁监测站",
+          "source_url": "https://www.securityweek.com/",
+          "url": "",
+          "published_at": "2026-04-12",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.522,
+            "positive_hits": [
+              "help",
+              "lower",
+              "reduce"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.478,
+          "cluster_relevance_norm": 0.832,
+          "x": 0.0875,
+          "y": 0.3517
+        },
+        {
+          "id": "seed-ev-005",
+          "source_id": "mobility-journal",
+          "title": "居民社区加快共享电动车路侧充电桩铺设",
+          "summary": "多地试点显示，夜间路侧充电正在改善高密度社区共享车辆的周转效率。",
+          "source": "智能出行观察",
+          "source_url": "https://www.smartcitiesdive.com/",
+          "url": "",
+          "published_at": "2026-04-12",
+          "sentiment": {
+            "label": "neutral",
+            "score": 0.0,
+            "positive_hits": [],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.173,
+          "cluster_relevance_norm": 0.0,
+          "x": 0.0295,
+          "y": 0.3126
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "label": "AI技术",
+      "topic_name": "AI技术",
+      "topic_keyword": "推理",
+      "keywords": [
+        "推理",
+        "算力",
+        "封装",
+        "数据",
+        "云计算"
+      ],
+      "raw_keywords": [
+        "inference",
+        "compute",
+        "packaging",
+        "data",
+        "cloud",
+        "chip",
+        "model",
+        "accelerator",
+        "cloud inference",
+        "inference compute"
+      ],
+      "size": 12,
+      "mood": "positive",
+      "mood_label": "偏正面",
+      "sources": [
+        {
+          "id": "openai-watch",
+          "name": "AI技术前线",
+          "url": "https://openai.com/news/",
+          "count": 2
+        },
+        {
+          "id": "ai-systems-weekly",
+          "name": "智算周报",
+          "url": "https://www.datacenterdynamics.com/en/",
+          "count": 2
+        },
+        {
+          "id": "model-wire",
+          "name": "模型情报站",
+          "url": "https://huggingface.co/blog",
+          "count": 2
+        },
+        {
+          "id": "compute-frontier",
+          "name": "算力前沿网",
+          "url": "https://www.tomshardware.com/",
+          "count": 2
+        },
+        {
+          "id": "infra-radar",
+          "name": "算力基础设施雷达",
+          "url": "https://www.datacenterdynamics.com/en/",
+          "count": 2
+        },
+        {
+          "id": "silicon-dispatch",
+          "name": "芯片产业快讯",
+          "url": "https://www.semiconductor-digest.com/",
+          "count": 2
+        }
+      ],
+      "sentiment_distribution": {
+        "positive": 9,
+        "neutral": 0,
+        "negative": 3
+      },
+      "centroid": {
+        "x": 0.6674,
+        "y": 0.0957
+      },
+      "quality_score": 0.512,
+      "matching_threshold": 0.469,
+      "representative_title": "私有推理一体机获得制造业客户试点订单",
+      "representative_article": {
+        "id": "seed-ai-006",
+        "title": "私有推理一体机获得制造业客户试点订单",
+        "url": "",
+        "source": "芯片产业快讯",
+        "source_id": "silicon-dispatch"
+      },
+      "latest_article": {
+        "id": "seed-ai-006",
+        "title": "私有推理一体机获得制造业客户试点订单",
+        "url": "",
+        "source": "芯片产业快讯",
+        "source_id": "silicon-dispatch",
+        "published_at": "2026-04-13"
+      },
+      "summary": "AI技术主要围绕“推理、算力、封装”展开，当前整体舆情为偏正面，代表文章是《私有推理一体机获得制造业客户试点订单》。",
+      "articles": [
+        {
+          "id": "seed-ai-006",
+          "source_id": "silicon-dispatch",
+          "title": "私有推理一体机获得制造业客户试点订单",
+          "summary": "厂商表示，制造业客户更看重低时延、数据本地留存的紧凑型 AI 系统。",
+          "source": "芯片产业快讯",
+          "source_url": "https://www.semiconductor-digest.com/",
+          "url": "",
+          "published_at": "2026-04-13",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.171,
+            "positive_hits": [
+              "win"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.638,
+          "cluster_relevance_norm": 1.0,
+          "x": 1.0,
+          "y": 0.0
+        },
+        {
+          "id": "seed-ai-005",
+          "source_id": "silicon-dispatch",
+          "title": "先进封装供应商为 AI 加速模块扩充产能",
+          "summary": "先进封装与互连升级正在提升 AI 加速机柜的交付把握。",
+          "source": "芯片产业快讯",
+          "source_url": "https://www.semiconductor-digest.com/",
+          "url": "",
+          "published_at": "2026-04-12",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.359,
+            "positive_hits": [
+              "stronger",
+              "supporting"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.621,
+          "cluster_relevance_norm": 0.945,
+          "x": 0.9829,
+          "y": 0.0003
+        },
+        {
+          "id": "seed-ai-001",
+          "source_id": "compute-frontier",
+          "title": "AI 芯片厂商面向企业客户扩建推理集群",
+          "summary": "供应商表示，新一代加速卡和更高效的机架设计，正在带动企业级推理算力需求上升。",
+          "source": "算力前沿网",
+          "source_url": "https://www.tomshardware.com/",
+          "url": "",
+          "published_at": "2026-04-08",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.359,
+            "positive_hits": [
+              "efficient",
+              "expand"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.614,
+          "cluster_relevance_norm": 0.92,
+          "x": 0.92,
+          "y": 0.0328
+        },
+        {
+          "id": "seed-ai-009",
+          "source_id": "infra-radar",
+          "title": "推理基准成绩提升同时推理成本继续走低",
+          "summary": "基础设施团队表示，新推理栈提升了代码任务准确率，并带来了更快、更低成本的服务表现。",
+          "source": "算力基础设施雷达",
+          "source_url": "https://www.datacenterdynamics.com/en/",
+          "url": "",
+          "published_at": "2026-03-29",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.686,
+            "positive_hits": [
+              "faster",
+              "improved",
+              "lower"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.613,
+          "cluster_relevance_norm": 0.918,
+          "x": 0.9152,
+          "y": 0.024
+        },
+        {
+          "id": "seed-ai-004",
+          "source_id": "ai-systems-weekly",
+          "title": "云服务商为多模态负载签下长期高速网络合同",
+          "summary": "由于多模态业务流量预期提升，低时延交换与高带宽内存升级需求同步增长。",
+          "source": "智算周报",
+          "source_url": "https://www.datacenterdynamics.com/en/",
+          "url": "",
+          "published_at": "2026-04-11",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.18,
+            "positive_hits": [
+              "stronger"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.579,
+          "cluster_relevance_norm": 0.808,
+          "x": 0.8847,
+          "y": 0.0423
+        },
+        {
+          "id": "seed-ai-003",
+          "source_id": "compute-frontier",
+          "title": "主权算力基金加码先进封装与光互连",
+          "summary": "公共资本正集中投向先进封装、光子互连与本土 AI 基础设施供应链。",
+          "source": "算力前沿网",
+          "source_url": "https://www.tomshardware.com/",
+          "url": "",
+          "published_at": "2026-04-10",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.186,
+            "positive_hits": [
+              "resilient"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.578,
+          "cluster_relevance_norm": 0.804,
+          "x": 0.893,
+          "y": 0.0276
+        },
+        {
+          "id": "seed-ai-002",
+          "source_id": "ai-systems-weekly",
+          "title": "区域数据中心加速推进液冷改造",
+          "summary": "运营方称，大模型训练机房的液冷改造周期更短、机柜密度也更高。",
+          "source": "智算周报",
+          "source_url": "https://www.datacenterdynamics.com/en/",
+          "url": "",
+          "published_at": "2026-04-09",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.365,
+            "positive_hits": [
+              "faster",
+              "stronger"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.566,
+          "cluster_relevance_norm": 0.768,
+          "x": 0.84,
+          "y": 0.0526
+        },
+        {
+          "id": "seed-ai-012",
+          "source_id": "infra-radar",
+          "title": "芯片封装瓶颈让四月加速卡交付出现不确定性",
+          "summary": "系统集成商警告称，封装瓶颈可能拖慢加速卡交付，并让采购团队继续保持谨慎。",
+          "source": "算力基础设施雷达",
+          "source_url": "https://www.datacenterdynamics.com/en/",
+          "url": "",
+          "published_at": "2026-04-07",
+          "sentiment": {
+            "label": "negative",
+            "score": -1.014,
+            "positive_hits": [],
+            "negative_hits": [
+              "bottleneck",
+              "cautious",
+              "slow",
+              "uncertainty",
+              "warned"
+            ]
+          },
+          "cluster_relevance": 0.557,
+          "cluster_relevance_norm": 0.738,
+          "x": 0.8658,
+          "y": 0.0358
+        },
+        {
+          "id": "seed-ai-011",
+          "source_id": "model-wire",
+          "title": "企业客户在一轮强势演示后扩大AI一体机订单",
+          "summary": "厂商表示，试点反馈积极，加上部署工具更可靠，正在支撑新一轮一体机需求增长。",
+          "source": "模型情报站",
+          "source_url": "https://huggingface.co/blog",
+          "url": "",
+          "published_at": "2026-04-05",
+          "sentiment": {
+            "label": "positive",
+            "score": 1.029,
+            "positive_hits": [
+              "expand",
+              "growth",
+              "reliable",
+              "strong",
+              "supporting"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.365,
+          "cluster_relevance_norm": 0.12,
+          "x": 0.2307,
+          "y": 0.2099
+        },
+        {
+          "id": "seed-ai-008",
+          "source_id": "model-wire",
+          "title": "GPU短缺拖慢多家云厂商多模态模型上线节奏",
+          "summary": "高管警告称，GPU短缺和交付延迟正在给春季模型上线带来不确定性。",
+          "source": "模型情报站",
+          "source_url": "https://huggingface.co/blog",
+          "url": "",
+          "published_at": "2026-03-24",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.845,
+            "positive_hits": [],
+            "negative_hits": [
+              "delays",
+              "shortage",
+              "uncertainty",
+              "warned"
+            ]
+          },
+          "cluster_relevance": 0.358,
+          "cluster_relevance_norm": 0.101,
+          "x": 0.1994,
+          "y": 0.2251
+        },
+        {
+          "id": "seed-ai-007",
+          "source_id": "openai-watch",
+          "title": "智能体试点在客服团队中展现出强劲采用势头",
+          "summary": "管理者表示，智能体上线改善了回复质量、降低了排队压力，并带来了满意度回升。",
+          "source": "AI技术前线",
+          "source_url": "https://openai.com/news/",
+          "url": "",
+          "published_at": "2026-03-19",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.857,
+            "positive_hits": [
+              "adoption",
+              "healthy",
+              "improved",
+              "rebound",
+              "strong",
+              "support"
+            ],
+            "negative_hits": [
+              "pressure"
+            ]
+          },
+          "cluster_relevance": 0.335,
+          "cluster_relevance_norm": 0.024,
+          "x": 0.146,
+          "y": 0.2353
+        },
+        {
+          "id": "seed-ai-010",
+          "source_id": "openai-watch",
+          "title": "安全审查推迟语音智能体在欧洲的上线",
+          "summary": "产品负责人表示，这次延期已经对合作方排期造成明显压力，但安全与可信要求依然重要。",
+          "source": "AI技术前线",
+          "source_url": "https://openai.com/news/",
+          "url": "",
+          "published_at": "2026-04-02",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.522,
+            "positive_hits": [
+              "important"
+            ],
+            "negative_hits": [
+              "delay",
+              "delays",
+              "pressure",
+              "serious"
+            ]
+          },
+          "cluster_relevance": 0.327,
+          "cluster_relevance_norm": 0.0,
+          "x": 0.1309,
+          "y": 0.2623
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "label": "体育资讯",
+      "topic_name": "体育资讯",
+      "topic_keyword": "NBA",
+      "keywords": [
+        "NBA",
+        "前锋",
+        "伤病",
+        "胜利",
+        "后卫"
+      ],
+      "raw_keywords": [
+        "nba",
+        "forward",
+        "injury",
+        "victory",
+        "guard",
+        "playoff",
+        "rotation",
+        "injury comeback",
+        "playoff injury",
+        "defeat"
+      ],
+      "size": 8,
+      "mood": "positive",
+      "mood_label": "偏正面",
+      "sources": [
+        {
+          "id": "nba-official",
+          "name": "NBA官网",
+          "url": "https://www.nba.com/news",
+          "count": 3
+        },
+        {
+          "id": "hupu-nba",
+          "name": "虎扑篮球",
+          "url": "https://nba.hupu.com/",
+          "count": 3
+        },
+        {
+          "id": "charge-network",
+          "name": "充电产业网",
+          "url": "https://insideevs.com/",
+          "count": 1
+        },
+        {
+          "id": "ev-insight",
+          "name": "电驱观察",
+          "url": "https://electrek.co/",
+          "count": 1
+        }
+      ],
+      "sentiment_distribution": {
+        "positive": 5,
+        "neutral": 0,
+        "negative": 3
+      },
+      "centroid": {
+        "x": 0.31,
+        "y": 0.2083
+      },
+      "quality_score": 0.588,
+      "matching_threshold": 0.554,
+      "representative_title": "NBA官网通报首发后卫因脚踝伤势缺席两周",
+      "representative_article": {
+        "id": "seed-sport-008",
+        "title": "NBA官网通报首发后卫因脚踝伤势缺席两周",
+        "url": "",
+        "source": "NBA官网",
+        "source_id": "nba-official"
+      },
+      "latest_article": {
+        "id": "seed-ev-004",
+        "title": "经销商在促销压力下收缩电动车库存",
+        "url": "",
+        "source": "充电产业网",
+        "source_id": "charge-network",
+        "published_at": "2026-04-11"
+      },
+      "summary": "体育资讯主要围绕“NBA、前锋、伤病”展开，当前整体舆情为偏正面，代表文章是《NBA官网通报首发后卫因脚踝伤势缺席两周》。",
+      "articles": [
+        {
+          "id": "seed-sport-008",
+          "source_id": "nba-official",
+          "title": "NBA官网通报首发后卫因脚踝伤势缺席两周",
+          "summary": "医疗团队表示，这次脚踝伤病会让球队在连续比赛前面临更大的轮换压力。",
+          "source": "NBA官网",
+          "source_url": "https://www.nba.com/news",
+          "url": "",
+          "published_at": "2026-03-22",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.801,
+            "positive_hits": [
+              "victory"
+            ],
+            "negative_hits": [
+              "injury",
+              "out",
+              "pressure",
+              "warned"
+            ]
+          },
+          "cluster_relevance": 0.724,
+          "cluster_relevance_norm": 1.0,
+          "x": 0.4076,
+          "y": 0.1675
+        },
+        {
+          "id": "seed-sport-011",
+          "source_id": "hupu-nba",
+          "title": "末节崩盘让争冠球队再吞失利并加剧压力",
+          "summary": "最后时刻表现疲软把原本接近到手的胜利变成失利，球迷态度转为谨慎，主教练压力也继续上升。",
+          "source": "虎扑篮球",
+          "source_url": "https://nba.hupu.com/",
+          "url": "",
+          "published_at": "2026-04-04",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.781,
+            "positive_hits": [
+              "victory",
+              "win"
+            ],
+            "negative_hits": [
+              "cautious",
+              "injury",
+              "loss",
+              "pressure",
+              "weak"
+            ]
+          },
+          "cluster_relevance": 0.712,
+          "cluster_relevance_norm": 0.973,
+          "x": 0.4122,
+          "y": 0.1676
+        },
+        {
+          "id": "seed-sport-012",
+          "source_id": "nba-official",
+          "title": "前锋恢复进度正常有望在四月复出",
+          "summary": "球队表示这名前锋恢复情况良好，不过本周对抗训练安排仍会保持谨慎。",
+          "source": "NBA官网",
+          "source_url": "https://www.nba.com/news",
+          "url": "",
+          "published_at": "2026-04-07",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.324,
+            "positive_hits": [
+              "recovery",
+              "strong",
+              "victory"
+            ],
+            "negative_hits": [
+              "cautious",
+              "injury"
+            ]
+          },
+          "cluster_relevance": 0.678,
+          "cluster_relevance_norm": 0.898,
+          "x": 0.3818,
+          "y": 0.1795
+        },
+        {
+          "id": "seed-sport-007",
+          "source_id": "hupu-nba",
+          "title": "虎扑关注强势第四节胜利让球队继续保有季后赛希望",
+          "summary": "球队靠末节发力和后卫线的自信表现拿下胜利，在紧张客场之旅后重新提振士气。",
+          "source": "虎扑篮球",
+          "source_url": "https://nba.hupu.com/",
+          "url": "",
+          "published_at": "2026-03-18",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.781,
+            "positive_hits": [
+              "confident",
+              "momentum",
+              "strong",
+              "victory",
+              "win"
+            ],
+            "negative_hits": [
+              "injury",
+              "tense"
+            ]
+          },
+          "cluster_relevance": 0.677,
+          "cluster_relevance_norm": 0.895,
+          "x": 0.3808,
+          "y": 0.1646
+        },
+        {
+          "id": "seed-sport-010",
+          "source_id": "nba-official",
+          "title": "老将中锋从小腿拉伤中复出并帮助球队取胜",
+          "summary": "教练组表示，这位老将以良好状态复出，他的恢复明显提升了球队在胜利中的护框质量。",
+          "source": "NBA官网",
+          "source_url": "https://www.nba.com/news",
+          "url": "",
+          "published_at": "2026-04-01",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.961,
+            "positive_hits": [
+              "improved",
+              "recovery",
+              "returned",
+              "strong",
+              "victory"
+            ],
+            "negative_hits": [
+              "injury",
+              "strain"
+            ]
+          },
+          "cluster_relevance": 0.675,
+          "cluster_relevance_norm": 0.891,
+          "x": 0.4061,
+          "y": 0.167
+        },
+        {
+          "id": "seed-sport-009",
+          "source_id": "hupu-nba",
+          "title": "替补阵容反弹帮助西部劲旅止住两连败",
+          "summary": "替补得分点带来的精彩胜利引发球迷庆祝，也让球队重新找回积极势头。",
+          "source": "虎扑篮球",
+          "source_url": "https://nba.hupu.com/",
+          "url": "",
+          "published_at": "2026-03-27",
+          "sentiment": {
+            "label": "positive",
+            "score": 1.0,
+            "positive_hits": [
+              "celebrated",
+              "healthy",
+              "momentum",
+              "rebound",
+              "thrilling",
+              "victory",
+              "win"
+            ],
+            "negative_hits": [
+              "injury",
+              "loss"
+            ]
+          },
+          "cluster_relevance": 0.675,
+          "cluster_relevance_norm": 0.89,
+          "x": 0.3857,
+          "y": 0.1682
+        },
+        {
+          "id": "seed-ev-004",
+          "source_id": "charge-network",
+          "title": "经销商在促销压力下收缩电动车库存",
+          "summary": "零售端警告称，客流偏弱与促销压力可能推迟部分车型的上市节奏。",
+          "source": "充电产业网",
+          "source_url": "https://insideevs.com/",
+          "url": "",
+          "published_at": "2026-04-11",
+          "sentiment": {
+            "label": "negative",
+            "score": -1.078,
+            "positive_hits": [],
+            "negative_hits": [
+              "delay",
+              "discount",
+              "pressure",
+              "slower",
+              "soft",
+              "warned"
+            ]
+          },
+          "cluster_relevance": 0.289,
+          "cluster_relevance_norm": 0.026,
+          "x": 0.062,
+          "y": 0.3132
+        },
+        {
+          "id": "seed-ev-003",
+          "source_id": "ev-insight",
+          "title": "高速充电走廊新增面向电卡的兆瓦级站点",
+          "summary": "开发方认为，面向电动卡车的兆瓦级站点将缓解长途电动化过程中的续航焦虑。",
+          "source": "电驱观察",
+          "source_url": "https://electrek.co/",
+          "url": "",
+          "published_at": "2026-04-10",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.192,
+            "positive_hits": [
+              "reduce"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.278,
+          "cluster_relevance_norm": 0.0,
+          "x": 0.0437,
+          "y": 0.3386
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "label": "文旅资讯",
+      "topic_name": "文旅资讯",
+      "topic_keyword": "旅游",
+      "keywords": [
+        "旅游",
+        "文化",
+        "文旅",
+        "演出",
+        "博物馆"
+      ],
+      "raw_keywords": [
+        "travel",
+        "culture",
+        "tourism",
+        "concert",
+        "museum",
+        "scenic",
+        "culture travel",
+        "creator",
+        "concert festival",
+        "tourism museum"
+      ],
+      "size": 7,
+      "mood": "positive",
+      "mood_label": "偏正面",
+      "sources": [
+        {
+          "id": "culture-grid",
+          "name": "城市文化网",
+          "url": "https://www.theartnewspaper.com/",
+          "count": 2
+        },
+        {
+          "id": "exhibit-lab",
+          "name": "展陈体验实验室",
+          "url": "https://blooloop.com/",
+          "count": 2
+        },
+        {
+          "id": "travel-loop",
+          "name": "文旅环线",
+          "url": "https://www.travelweekly.com/",
+          "count": 2
+        },
+        {
+          "id": "ev-insight",
+          "name": "电驱观察",
+          "url": "https://electrek.co/",
+          "count": 1
+        }
+      ],
+      "sentiment_distribution": {
+        "positive": 4,
+        "neutral": 3,
+        "negative": 0
+      },
+      "centroid": {
+        "x": 0.0894,
+        "y": 0.8567
+      },
+      "quality_score": 0.646,
+      "matching_threshold": 0.594,
+      "representative_title": "博物馆上线 AR 导览吸引亲子客群",
+      "representative_article": {
+        "id": "seed-culture-002",
+        "title": "博物馆上线 AR 导览吸引亲子客群",
+        "url": "",
+        "source": "城市文化网",
+        "source_id": "culture-grid"
+      },
+      "latest_article": {
+        "id": "seed-culture-006",
+        "title": "县域文旅线路把演出、集市与住宿打包联动",
+        "url": "",
+        "source": "展陈体验实验室",
+        "source_id": "exhibit-lab",
+        "published_at": "2026-04-13"
+      },
+      "summary": "文旅资讯主要围绕“旅游、文化、文旅”展开，当前整体舆情为偏正面，代表文章是《博物馆上线 AR 导览吸引亲子客群》。",
+      "articles": [
+        {
+          "id": "seed-culture-002",
+          "source_id": "culture-grid",
+          "title": "博物馆上线 AR 导览吸引亲子客群",
+          "summary": "文化场馆称，增强现实导览提升了亲子用户的停留时长与复访意愿。",
+          "source": "城市文化网",
+          "source_url": "https://www.theartnewspaper.com/",
+          "url": "",
+          "published_at": "2026-04-09",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.18,
+            "positive_hits": [
+              "improving"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.755,
+          "cluster_relevance_norm": 1.0,
+          "x": 0.1029,
+          "y": 1.0
+        },
+        {
+          "id": "seed-culture-001",
+          "source_id": "travel-loop",
+          "title": "演唱会旅游带动二线城市酒店预订增长",
+          "summary": "旅行机构表示，音乐活动正在拉长周末停留时间，并带动本地消费提升。",
+          "source": "文旅环线",
+          "source_url": "https://www.travelweekly.com/",
+          "url": "",
+          "published_at": "2026-04-08",
+          "sentiment": {
+            "label": "neutral",
+            "score": 0.0,
+            "positive_hits": [],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.753,
+          "cluster_relevance_norm": 0.997,
+          "x": 0.091,
+          "y": 0.9751
+        },
+        {
+          "id": "seed-culture-003",
+          "source_id": "travel-loop",
+          "title": "短视频创作者带动小城春季旅游热度",
+          "summary": "多地文旅部门正与创作者合作，组合线路、美食与活动日历，提升目的地传播效率。",
+          "source": "文旅环线",
+          "source_url": "https://www.travelweekly.com/",
+          "url": "",
+          "published_at": "2026-04-10",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.174,
+            "positive_hits": [
+              "help"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.727,
+          "cluster_relevance_norm": 0.947,
+          "x": 0.083,
+          "y": 0.9404
+        },
+        {
+          "id": "seed-culture-006",
+          "source_id": "exhibit-lab",
+          "title": "县域文旅线路把演出、集市与住宿打包联动",
+          "summary": "地方策划方表示，一体化线路套餐正在帮助游客停留更久，并带动更广泛消费。",
+          "source": "展陈体验实验室",
+          "source_url": "https://blooloop.com/",
+          "url": "",
+          "published_at": "2026-04-13",
+          "sentiment": {
+            "label": "neutral",
+            "score": 0.0,
+            "positive_hits": [],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.725,
+          "cluster_relevance_norm": 0.943,
+          "x": 0.0939,
+          "y": 0.9482
+        },
+        {
+          "id": "seed-culture-005",
+          "source_id": "exhibit-lab",
+          "title": "沉浸式展陈延长博物馆夜场停留时间",
+          "summary": "策展团队表示，以投影互动为核心的展陈正在吸引更多夜场客流，并提高复访意愿。",
+          "source": "展陈体验实验室",
+          "source_url": "https://blooloop.com/",
+          "url": "",
+          "published_at": "2026-04-12",
+          "sentiment": {
+            "label": "neutral",
+            "score": 0.0,
+            "positive_hits": [],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.701,
+          "cluster_relevance_norm": 0.897,
+          "x": 0.0877,
+          "y": 0.9457
+        },
+        {
+          "id": "seed-culture-004",
+          "source_id": "culture-grid",
+          "title": "主题乐园试行节假日动态票价机制",
+          "summary": "运营方表示，动态票价有助于调节客流，但也可能引发游客对价格波动的敏感反应。",
+          "source": "城市文化网",
+          "source_url": "https://www.theartnewspaper.com/",
+          "url": "",
+          "published_at": "2026-04-11",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.174,
+            "positive_hits": [
+              "improve"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.631,
+          "cluster_relevance_norm": 0.764,
+          "x": 0.1007,
+          "y": 0.8594
+        },
+        {
+          "id": "seed-ev-001",
+          "source_id": "ev-insight",
+          "title": "换电站模式在城市配送车队中走热",
+          "summary": "车队运营方表示，换电可缩短停运时间，并提升高频配送线路的车辆利用率。",
+          "source": "电驱观察",
+          "source_url": "https://electrek.co/",
+          "url": "",
+          "published_at": "2026-04-08",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.183,
+            "positive_hits": [
+              "gain"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.233,
+          "cluster_relevance_norm": 0.0,
+          "x": 0.0669,
+          "y": 0.3284
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "label": "金融资讯",
+      "topic_name": "金融资讯",
+      "topic_keyword": "预期",
+      "keywords": [
+        "预期",
+        "股票",
+        "财报",
+        "业绩指引",
+        "预测"
+      ],
+      "raw_keywords": [
+        "expectations",
+        "share",
+        "equity",
+        "earnings",
+        "guidance",
+        "forecast",
+        "stock",
+        "currency",
+        "hedge",
+        "bank"
+      ],
+      "size": 7,
+      "mood": "positive",
+      "mood_label": "偏正面",
+      "sources": [
+        {
+          "id": "market-expectations",
+          "name": "市场预期观察",
+          "url": "https://www.reuters.com/markets/",
+          "count": 2
+        },
+        {
+          "id": "forex-flash",
+          "name": "汇率快报",
+          "url": "https://www.investing.com/currencies/",
+          "count": 2
+        },
+        {
+          "id": "equity-sentiment",
+          "name": "股票情绪追踪",
+          "url": "https://www.marketwatch.com/investing",
+          "count": 2
+        },
+        {
+          "id": "charge-network",
+          "name": "充电产业网",
+          "url": "https://insideevs.com/",
+          "count": 1
+        }
+      ],
+      "sentiment_distribution": {
+        "positive": 4,
+        "neutral": 0,
+        "negative": 3
+      },
+      "centroid": {
+        "x": 0.0539,
+        "y": 0.2598
+      },
+      "quality_score": 0.539,
+      "matching_threshold": 0.487,
+      "representative_title": "分析师预计银行业绩超预期将推动金融股延续三月反弹",
+      "representative_article": {
+        "id": "seed-finance-007",
+        "title": "分析师预计银行业绩超预期将推动金融股延续三月反弹",
+        "url": "",
+        "source": "市场预期观察",
+        "source_id": "market-expectations"
+      },
+      "latest_article": {
+        "id": "seed-ev-002",
+        "title": "随着回收能力提升，磷酸铁锂电池包价格回落",
+        "url": "",
+        "source": "充电产业网",
+        "source_id": "charge-network",
+        "published_at": "2026-04-09"
+      },
+      "summary": "金融资讯主要围绕“预期、股票、财报”展开，当前整体舆情为偏正面，代表文章是《分析师预计银行业绩超预期将推动金融股延续三月反弹》。",
+      "articles": [
+        {
+          "id": "seed-finance-007",
+          "source_id": "market-expectations",
+          "title": "分析师预计银行业绩超预期将推动金融股延续三月反弹",
+          "summary": "券商研究团队表示，乐观的业绩预期与更强的资本回报可能再次提振大型银行股。",
+          "source": "市场预期观察",
+          "source_url": "https://www.reuters.com/markets/",
+          "url": "",
+          "published_at": "2026-03-17",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.801,
+            "positive_hits": [
+              "beat",
+              "boost",
+              "optimistic",
+              "rebound",
+              "stronger"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.673,
+          "cluster_relevance_norm": 1.0,
+          "x": 0.0574,
+          "y": 0.2482
+        },
+        {
+          "id": "seed-finance-009",
+          "source_id": "equity-sentiment",
+          "title": "分析师上调需求预期后芯片股反弹获得更多支撑",
+          "summary": "基金经理表示，在多份上调评级与更健康的二季度订单展望推动下，这轮反弹显得更强。",
+          "source": "股票情绪追踪",
+          "source_url": "https://www.marketwatch.com/investing",
+          "url": "",
+          "published_at": "2026-03-28",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.973,
+            "positive_hits": [
+              "gains",
+              "rally",
+              "stronger",
+              "support",
+              "upgrade"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.631,
+          "cluster_relevance_norm": 0.892,
+          "x": 0.1328,
+          "y": 0.2318
+        },
+        {
+          "id": "seed-finance-010",
+          "source_id": "market-expectations",
+          "title": "零售股因谨慎指引和门店客流放缓而走弱",
+          "summary": "投资者表示，谨慎的业绩指引、放缓的客流与利润压力让板块预期持续偏弱。",
+          "source": "市场预期观察",
+          "source_url": "https://www.reuters.com/markets/",
+          "url": "",
+          "published_at": "2026-04-01",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.973,
+            "positive_hits": [],
+            "negative_hits": [
+              "cautious",
+              "pressure",
+              "slower",
+              "soft"
+            ]
+          },
+          "cluster_relevance": 0.621,
+          "cluster_relevance_norm": 0.866,
+          "x": 0.0563,
+          "y": 0.2446
+        },
+        {
+          "id": "seed-finance-012",
+          "source_id": "equity-sentiment",
+          "title": "地产股因再融资风险升温再遭抛售",
+          "summary": "投资组合经理警告称，新一轮抛售与再融资风险升温可能让地产板块在四月继续承压。",
+          "source": "股票情绪追踪",
+          "source_url": "https://www.marketwatch.com/investing",
+          "url": "",
+          "published_at": "2026-04-07",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.973,
+            "positive_hits": [],
+            "negative_hits": [
+              "pressure",
+              "risk",
+              "selloff",
+              "warned"
+            ]
+          },
+          "cluster_relevance": 0.594,
+          "cluster_relevance_norm": 0.797,
+          "x": 0.0445,
+          "y": 0.2615
+        },
+        {
+          "id": "seed-finance-011",
+          "source_id": "forex-flash",
+          "title": "日元波动收敛并降低套保成本令出口商情绪改善",
+          "summary": "外汇策略师表示，更低的波动率和改善的套保报价正在支撑更乐观的出口前景。",
+          "source": "汇率快报",
+          "source_url": "https://www.investing.com/currencies/",
+          "url": "",
+          "published_at": "2026-04-04",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.658,
+            "positive_hits": [
+              "improve",
+              "improved",
+              "lower",
+              "optimistic",
+              "supporting"
+            ],
+            "negative_hits": [
+              "volatility"
+            ]
+          },
+          "cluster_relevance": 0.484,
+          "cluster_relevance_norm": 0.513,
+          "x": 0.0105,
+          "y": 0.2633
+        },
+        {
+          "id": "seed-finance-008",
+          "source_id": "forex-flash",
+          "title": "美元走强叠加套保成本上升令亚洲进口商承压",
+          "summary": "外汇交易台表示，汇率压力与更高的套保成本正使买方在下次利率会议前保持谨慎。",
+          "source": "汇率快报",
+          "source_url": "https://www.investing.com/currencies/",
+          "url": "",
+          "published_at": "2026-03-23",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.469,
+            "positive_hits": [],
+            "negative_hits": [
+              "cautious",
+              "pressure"
+            ]
+          },
+          "cluster_relevance": 0.484,
+          "cluster_relevance_norm": 0.514,
+          "x": 0.0081,
+          "y": 0.2497
+        },
+        {
+          "id": "seed-ev-002",
+          "source_id": "charge-network",
+          "title": "随着回收能力提升，磷酸铁锂电池包价格回落",
+          "summary": "锂回收效率提升与良率改善，正在帮助主流电动车型获得更稳定的电池成本。",
+          "source": "充电产业网",
+          "source_url": "https://insideevs.com/",
+          "url": "",
+          "published_at": "2026-04-09",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.348,
+            "positive_hits": [
+              "recovery",
+              "supporting"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.285,
+          "cluster_relevance_norm": 0.0,
+          "x": 0.0679,
+          "y": 0.3193
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "label": "医疗科技",
+      "topic_name": "医疗科技",
+      "topic_keyword": "疫苗",
+      "keywords": [
+        "疫苗",
+        "生物科技",
+        "影像",
+        "远程医疗",
+        "影像 / 医院"
+      ],
+      "raw_keywords": [
+        "vaccine",
+        "biotech",
+        "imaging",
+        "telehealth",
+        "imaging hospital",
+        "sensor",
+        "vaccine sensor",
+        "biotech imaging",
+        "sensor telehealth",
+        "hospital vaccine"
+      ],
+      "size": 7,
+      "mood": "positive",
+      "mood_label": "偏正面",
+      "sources": [
+        {
+          "id": "health-next",
+          "name": "健康科技参考",
+          "url": "https://www.mobihealthnews.com/",
+          "count": 2
+        },
+        {
+          "id": "med-device",
+          "name": "医疗器械观察",
+          "url": "https://www.medtechdive.com/",
+          "count": 2
+        },
+        {
+          "id": "bio-innovation",
+          "name": "生物创新日报",
+          "url": "https://www.biospace.com/",
+          "count": 2
+        },
+        {
+          "id": "mobility-journal",
+          "name": "智能出行观察",
+          "url": "https://www.smartcitiesdive.com/",
+          "count": 1
+        }
+      ],
+      "sentiment_distribution": {
+        "positive": 4,
+        "neutral": 2,
+        "negative": 1
+      },
+      "centroid": {
+        "x": 0.0229,
+        "y": 0.2997
+      },
+      "quality_score": 0.588,
+      "matching_threshold": 0.513,
+      "representative_title": "可穿戴葡萄糖传感器提升慢病患者依从性",
+      "representative_article": {
+        "id": "seed-health-003",
+        "title": "可穿戴葡萄糖传感器提升慢病患者依从性",
+        "url": "",
+        "source": "健康科技参考",
+        "source_id": "health-next"
+      },
+      "latest_article": {
+        "id": "seed-health-006",
+        "title": "居家护理套件把远程生命体征设备与护士随访结合",
+        "url": "",
+        "source": "医疗器械观察",
+        "source_id": "med-device",
+        "published_at": "2026-04-13"
+      },
+      "summary": "医疗科技主要围绕“疫苗、生物科技、影像”展开，当前整体舆情为偏正面，代表文章是《可穿戴葡萄糖传感器提升慢病患者依从性》。",
+      "articles": [
+        {
+          "id": "seed-health-003",
+          "source_id": "health-next",
+          "title": "可穿戴葡萄糖传感器提升慢病患者依从性",
+          "summary": "门诊反馈显示，连续监测结合移动提醒后，患者复诊率与管理依从性有所改善。",
+          "source": "健康科技参考",
+          "source_url": "https://www.mobihealthnews.com/",
+          "url": "",
+          "published_at": "2026-04-10",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.186,
+            "positive_hits": [
+              "improve"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.683,
+          "cluster_relevance_norm": 1.0,
+          "x": 0.0058,
+          "y": 0.2963
+        },
+        {
+          "id": "seed-health-006",
+          "source_id": "med-device",
+          "title": "居家护理套件把远程生命体征设备与护士随访结合",
+          "summary": "服务机构反馈，将家庭监测设备与护士协同随访结合后，慢病跟进效果更稳定。",
+          "source": "医疗器械观察",
+          "source_url": "https://www.medtechdive.com/",
+          "url": "",
+          "published_at": "2026-04-13",
+          "sentiment": {
+            "label": "neutral",
+            "score": 0.0,
+            "positive_hits": [],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.662,
+          "cluster_relevance_norm": 0.951,
+          "x": 0.0,
+          "y": 0.2917
+        },
+        {
+          "id": "seed-health-002",
+          "source_id": "bio-innovation",
+          "title": "mRNA 产线扩容以支持个性化疫苗试验",
+          "summary": "多家生物技术企业正在投资更灵活的生产模块，以满足更小批量、更快节奏的临床试验需求。",
+          "source": "生物创新日报",
+          "source_url": "https://www.biospace.com/",
+          "url": "",
+          "published_at": "2026-04-09",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.539,
+            "positive_hits": [
+              "expand",
+              "faster",
+              "support"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.644,
+          "cluster_relevance_norm": 0.907,
+          "x": 0.0614,
+          "y": 0.2889
+        },
+        {
+          "id": "seed-health-005",
+          "source_id": "med-device",
+          "title": "县域医院将手术机器人招标纳入设备预算",
+          "summary": "采购团队表示，手术机器人平台正从展示性项目走向常规预算周期。",
+          "source": "医疗器械观察",
+          "source_url": "https://www.medtechdive.com/",
+          "url": "",
+          "published_at": "2026-04-12",
+          "sentiment": {
+            "label": "neutral",
+            "score": 0.0,
+            "positive_hits": [],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.626,
+          "cluster_relevance_norm": 0.861,
+          "x": 0.0173,
+          "y": 0.2928
+        },
+        {
+          "id": "seed-health-001",
+          "source_id": "health-next",
+          "title": "AI 影像辅助系统缩短公立医院阅片时间",
+          "summary": "放射科表示，AI 预分诊工具有助于优先处理急重症影像并提升整体通量。",
+          "source": "健康科技参考",
+          "source_url": "https://www.mobihealthnews.com/",
+          "url": "",
+          "published_at": "2026-04-08",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.186,
+            "positive_hits": [
+              "improve"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.618,
+          "cluster_relevance_norm": 0.844,
+          "x": 0.0209,
+          "y": 0.3248
+        },
+        {
+          "id": "seed-health-004",
+          "source_id": "bio-innovation",
+          "title": "远程医疗支付谈判影响数字医疗下一阶段扩张",
+          "summary": "服务提供方认为，支付政策的不确定性仍是远程医疗投资计划中的最大变量。",
+          "source": "生物创新日报",
+          "source_url": "https://www.biospace.com/",
+          "url": "",
+          "published_at": "2026-04-11",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.18,
+            "positive_hits": [],
+            "negative_hits": [
+              "uncertainty"
+            ]
+          },
+          "cluster_relevance": 0.611,
+          "cluster_relevance_norm": 0.825,
+          "x": 0.0025,
+          "y": 0.2818
+        },
+        {
+          "id": "seed-ev-006",
+          "source_id": "mobility-journal",
+          "title": "电池健康分析帮助出租车车队规划换包周期",
+          "summary": "车队管理方表示，更准确的诊断可以减少突发停运，并让维护安排更高效。",
+          "source": "智能出行观察",
+          "source_url": "https://www.smartcitiesdive.com/",
+          "url": "",
+          "published_at": "2026-04-13",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.507,
+            "positive_hits": [
+              "efficient",
+              "help",
+              "reduce"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.27,
+          "cluster_relevance_norm": 0.0,
+          "x": 0.0525,
+          "y": 0.3215
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "label": "金融科技",
+      "topic_name": "金融科技",
+      "topic_keyword": "结算",
+      "keywords": [
+        "结算",
+        "金融科技",
+        "信贷",
+        "资产代币化",
+        "支付"
+      ],
+      "raw_keywords": [
+        "settlement",
+        "fintech",
+        "credit",
+        "tokenized",
+        "payment",
+        "compliance",
+        "credit compliance",
+        "fintech payment",
+        "finance fintech",
+        "compliance banking"
+      ],
+      "size": 6,
+      "mood": "positive",
+      "mood_label": "偏正面",
+      "sources": [
+        {
+          "id": "payments-wire",
+          "name": "支付产业线",
+          "url": "https://thepaypers.com/",
+          "count": 2
+        },
+        {
+          "id": "capital-pulse",
+          "name": "资本脉冲",
+          "url": "https://www.bloomberg.com/markets",
+          "count": 2
+        },
+        {
+          "id": "fintech-scope",
+          "name": "金融科技视野",
+          "url": "https://www.finextra.com/",
+          "count": 2
+        }
+      ],
+      "sentiment_distribution": {
+        "positive": 3,
+        "neutral": 1,
+        "negative": 2
+      },
+      "centroid": {
+        "x": 0.0872,
+        "y": 0.3971
+      },
+      "quality_score": 0.716,
+      "matching_threshold": 0.598,
+      "representative_title": "资金管理应用把即时结算与发票融资打包提供",
+      "representative_article": {
+        "id": "seed-finance-006",
+        "title": "资金管理应用把即时结算与发票融资打包提供",
+        "url": "",
+        "source": "支付产业线",
+        "source_id": "payments-wire"
+      },
+      "latest_article": {
+        "id": "seed-finance-006",
+        "title": "资金管理应用把即时结算与发票融资打包提供",
+        "url": "",
+        "source": "支付产业线",
+        "source_id": "payments-wire",
+        "published_at": "2026-04-13"
+      },
+      "summary": "金融科技主要围绕“结算、金融科技、信贷”展开，当前整体舆情为偏正面，代表文章是《资金管理应用把即时结算与发票融资打包提供》。",
+      "articles": [
+        {
+          "id": "seed-finance-006",
+          "source_id": "payments-wire",
+          "title": "资金管理应用把即时结算与发票融资打包提供",
+          "summary": "金融科技平台表示，中小外贸企业希望缩短结算与短期融资之间的流程链路。",
+          "source": "支付产业线",
+          "source_url": "https://thepaypers.com/",
+          "url": "",
+          "published_at": "2026-04-13",
+          "sentiment": {
+            "label": "neutral",
+            "score": 0.0,
+            "positive_hits": [],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.789,
+          "cluster_relevance_norm": 1.0,
+          "x": 0.0911,
+          "y": 0.4076
+        },
+        {
+          "id": "seed-finance-004",
+          "source_id": "fintech-scope",
+          "title": "代币化债券结算试点吸引区域交易所关注",
+          "summary": "市场运营方正在测试可编程结算流程，以提升透明度并缩短后台处理周期。",
+          "source": "金融科技视野",
+          "source_url": "https://www.finextra.com/",
+          "url": "",
+          "published_at": "2026-04-11",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.177,
+            "positive_hits": [
+              "improve"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.749,
+          "cluster_relevance_norm": 0.726,
+          "x": 0.0822,
+          "y": 0.3946
+        },
+        {
+          "id": "seed-finance-002",
+          "source_id": "fintech-scope",
+          "title": "支付机构上线更快的跨境结算通道",
+          "summary": "新的清结算网络有望降低出口商与区域服务平台的跨境收款摩擦。",
+          "source": "金融科技视野",
+          "source_url": "https://www.finextra.com/",
+          "url": "",
+          "published_at": "2026-04-09",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.365,
+            "positive_hits": [
+              "faster",
+              "lower",
+              "promising"
+            ],
+            "negative_hits": [
+              "friction"
+            ]
+          },
+          "cluster_relevance": 0.744,
+          "cluster_relevance_norm": 0.696,
+          "x": 0.0966,
+          "y": 0.3973
+        },
+        {
+          "id": "seed-finance-001",
+          "source_id": "capital-pulse",
+          "title": "数字银行缩短中小企业授信审批时间",
+          "summary": "放贷机构表示，更成熟的风控模型让审批速度提升，同时没有明显放大违约风险。",
+          "source": "资本脉冲",
+          "source_url": "https://www.bloomberg.com/markets",
+          "url": "",
+          "published_at": "2026-04-08",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.174,
+            "positive_hits": [
+              "faster"
+            ],
+            "negative_hits": [
+              "cut",
+              "risk"
+            ]
+          },
+          "cluster_relevance": 0.715,
+          "cluster_relevance_norm": 0.496,
+          "x": 0.106,
+          "y": 0.4035
+        },
+        {
+          "id": "seed-finance-003",
+          "source_id": "capital-pulse",
+          "title": "AI 合规助手帮助券商处理大规模政策更新",
+          "summary": "券商团队表示，自动比对工具正在降低监管规则变动周期中的人工审阅压力。",
+          "source": "资本脉冲",
+          "source_url": "https://www.bloomberg.com/markets",
+          "url": "",
+          "published_at": "2026-04-10",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.174,
+            "positive_hits": [
+              "help"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.66,
+          "cluster_relevance_norm": 0.124,
+          "x": 0.0902,
+          "y": 0.3924
+        },
+        {
+          "id": "seed-finance-005",
+          "source_id": "payments-wire",
+          "title": "收单机构利用 AI 风险评分压降拒付损失",
+          "summary": "支付团队表示，更好的欺诈评分正在帮助商户在不放大风险的前提下维持较高通过率。",
+          "source": "支付产业线",
+          "source_url": "https://thepaypers.com/",
+          "url": "",
+          "published_at": "2026-04-12",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.333,
+            "positive_hits": [],
+            "negative_hits": [
+              "cut",
+              "risk"
+            ]
+          },
+          "cluster_relevance": 0.642,
+          "cluster_relevance_norm": 0.0,
+          "x": 0.0572,
+          "y": 0.3873
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "label": "体育资讯",
+      "topic_name": "体育资讯",
+      "topic_keyword": "场馆",
+      "keywords": [
+        "场馆",
+        "赛事",
+        "前锋",
+        "足球 / 联赛",
+        "联赛"
+      ],
+      "raw_keywords": [
+        "stadium",
+        "tournament",
+        "striker",
+        "football league",
+        "league",
+        "coach stadium",
+        "tournament striker",
+        "match coach",
+        "match",
+        "stadium tournament"
+      ],
+      "size": 6,
+      "mood": "positive",
+      "mood_label": "偏正面",
+      "sources": [
+        {
+          "id": "stadium-wire",
+          "name": "场馆脉冲",
+          "url": "https://www.stadiumdb.com/",
+          "count": 2
+        },
+        {
+          "id": "pitch-report",
+          "name": "球场观察",
+          "url": "https://www.goal.com/",
+          "count": 2
+        },
+        {
+          "id": "fan-route",
+          "name": "赛事商业内参",
+          "url": "https://www.sportbusiness.com/",
+          "count": 2
+        }
+      ],
+      "sentiment_distribution": {
+        "positive": 5,
+        "neutral": 0,
+        "negative": 1
+      },
+      "centroid": {
+        "x": 0.0786,
+        "y": 0.2891
+      },
+      "quality_score": 0.682,
+      "matching_threshold": 0.561,
+      "representative_title": "青年前锋梅开二度后获得一线队征召",
+      "representative_article": {
+        "id": "seed-sport-003",
+        "title": "青年前锋梅开二度后获得一线队征召",
+        "url": "",
+        "source": "球场观察",
+        "source_id": "pitch-report"
+      },
+      "latest_article": {
+        "id": "seed-sport-006",
+        "title": "移动票务试点缓解大型赛事场馆外排队压力",
+        "url": "",
+        "source": "赛事商业内参",
+        "source_id": "fan-route",
+        "published_at": "2026-04-13"
+      },
+      "summary": "体育资讯主要围绕“场馆、赛事、前锋”展开，当前整体舆情为偏正面，代表文章是《青年前锋梅开二度后获得一线队征召》。",
+      "articles": [
+        {
+          "id": "seed-sport-003",
+          "source_id": "pitch-report",
+          "title": "青年前锋梅开二度后获得一线队征召",
+          "summary": "青训教练评价这名球员在关键比赛中更加自信，终结效率也明显提升。",
+          "source": "球场观察",
+          "source_url": "https://www.goal.com/",
+          "url": "",
+          "published_at": "2026-04-10",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.189,
+            "positive_hits": [
+              "confident"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.719,
+          "cluster_relevance_norm": 1.0,
+          "x": 0.0554,
+          "y": 0.2798
+        },
+        {
+          "id": "seed-sport-002",
+          "source_id": "stadium-wire",
+          "title": "夏季赛事前，场馆轨道接驳升级提速",
+          "summary": "城市规划部门表示，更顺畅的接驳系统将改善球迷集散效率并降低入场拥堵。",
+          "source": "场馆脉冲",
+          "source_url": "https://www.stadiumdb.com/",
+          "url": "",
+          "published_at": "2026-04-09",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.348,
+            "positive_hits": [
+              "improve",
+              "reduce"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.706,
+          "cluster_relevance_norm": 0.851,
+          "x": 0.0797,
+          "y": 0.3084
+        },
+        {
+          "id": "seed-sport-006",
+          "source_id": "fan-route",
+          "title": "移动票务试点缓解大型赛事场馆外排队压力",
+          "summary": "赛事团队表示，将更多观众导入移动验票通道后，入场速度明显提升。",
+          "source": "赛事商业内参",
+          "source_url": "https://www.sportbusiness.com/",
+          "url": "",
+          "published_at": "2026-04-13",
+          "sentiment": {
+            "label": "negative",
+            "score": -0.167,
+            "positive_hits": [
+              "faster"
+            ],
+            "negative_hits": [
+              "cut",
+              "pressure"
+            ]
+          },
+          "cluster_relevance": 0.686,
+          "cluster_relevance_norm": 0.611,
+          "x": 0.0858,
+          "y": 0.3119
+        },
+        {
+          "id": "seed-sport-005",
+          "source_id": "fan-route",
+          "title": "俱乐部在德比赛事周末扩展高端观赛接待服务",
+          "summary": "运营方表示，打包式接待产品正在带来更强的比赛日收入增长势头。",
+          "source": "赛事商业内参",
+          "source_url": "https://www.sportbusiness.com/",
+          "url": "",
+          "published_at": "2026-04-12",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.539,
+            "positive_hits": [
+              "expand",
+              "momentum",
+              "stronger"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.682,
+          "cluster_relevance_norm": 0.562,
+          "x": 0.086,
+          "y": 0.2886
+        },
+        {
+          "id": "seed-sport-004",
+          "source_id": "stadium-wire",
+          "title": "杯赛半决赛轮换计划考验阵容厚度与恢复节奏",
+          "summary": "教练组认为，合理轮换能在保护核心球员的同时维持全队比赛状态。",
+          "source": "场馆脉冲",
+          "source_url": "https://www.stadiumdb.com/",
+          "url": "",
+          "published_at": "2026-04-11",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.177,
+            "positive_hits": [
+              "recovery"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.664,
+          "cluster_relevance_norm": 0.352,
+          "x": 0.0905,
+          "y": 0.2694
+        },
+        {
+          "id": "seed-sport-001",
+          "source_id": "pitch-report",
+          "title": "补时绝杀让联赛争冠悬念继续延续",
+          "summary": "主队上演逆转后，争冠走势再度拉满，球迷情绪明显升温。",
+          "source": "球场观察",
+          "source_url": "https://www.goal.com/",
+          "url": "",
+          "published_at": "2026-04-08",
+          "sentiment": {
+            "label": "positive",
+            "score": 0.365,
+            "positive_hits": [
+              "celebrated",
+              "momentum"
+            ],
+            "negative_hits": []
+          },
+          "cluster_relevance": 0.634,
+          "cluster_relevance_norm": 0.0,
+          "x": 0.0742,
+          "y": 0.2767
+        }
+      ]
+    }
+  ],
+  "articles": [
+    {
+      "id": "seed-ai-001",
+      "source_id": "compute-frontier",
+      "title": "AI 芯片厂商面向企业客户扩建推理集群",
+      "summary": "供应商表示，新一代加速卡和更高效的机架设计，正在带动企业级推理算力需求上升。",
+      "source": "算力前沿网",
+      "source_url": "https://www.tomshardware.com/",
+      "url": "",
+      "published_at": "2026-04-08",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.359,
+        "positive_hits": [
+          "efficient",
+          "expand"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.614,
+      "cluster_relevance_norm": 0.92,
+      "x": 0.92,
+      "y": 0.0328
+    },
+    {
+      "id": "seed-ai-002",
+      "source_id": "ai-systems-weekly",
+      "title": "区域数据中心加速推进液冷改造",
+      "summary": "运营方称，大模型训练机房的液冷改造周期更短、机柜密度也更高。",
+      "source": "智算周报",
+      "source_url": "https://www.datacenterdynamics.com/en/",
+      "url": "",
+      "published_at": "2026-04-09",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.365,
+        "positive_hits": [
+          "faster",
+          "stronger"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.566,
+      "cluster_relevance_norm": 0.768,
+      "x": 0.84,
+      "y": 0.0526
+    },
+    {
+      "id": "seed-ai-003",
+      "source_id": "compute-frontier",
+      "title": "主权算力基金加码先进封装与光互连",
+      "summary": "公共资本正集中投向先进封装、光子互连与本土 AI 基础设施供应链。",
+      "source": "算力前沿网",
+      "source_url": "https://www.tomshardware.com/",
+      "url": "",
+      "published_at": "2026-04-10",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.186,
+        "positive_hits": [
+          "resilient"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.578,
+      "cluster_relevance_norm": 0.804,
+      "x": 0.893,
+      "y": 0.0276
+    },
+    {
+      "id": "seed-ai-004",
+      "source_id": "ai-systems-weekly",
+      "title": "云服务商为多模态负载签下长期高速网络合同",
+      "summary": "由于多模态业务流量预期提升，低时延交换与高带宽内存升级需求同步增长。",
+      "source": "智算周报",
+      "source_url": "https://www.datacenterdynamics.com/en/",
+      "url": "",
+      "published_at": "2026-04-11",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.18,
+        "positive_hits": [
+          "stronger"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.579,
+      "cluster_relevance_norm": 0.808,
+      "x": 0.8847,
+      "y": 0.0423
+    },
+    {
+      "id": "seed-ev-001",
+      "source_id": "ev-insight",
+      "title": "换电站模式在城市配送车队中走热",
+      "summary": "车队运营方表示，换电可缩短停运时间，并提升高频配送线路的车辆利用率。",
+      "source": "电驱观察",
+      "source_url": "https://electrek.co/",
+      "url": "",
+      "published_at": "2026-04-08",
+      "cluster_id": 3,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.183,
+        "positive_hits": [
+          "gain"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.233,
+      "cluster_relevance_norm": 0.0,
+      "x": 0.0669,
+      "y": 0.3284
+    },
+    {
+      "id": "seed-ev-002",
+      "source_id": "charge-network",
+      "title": "随着回收能力提升，磷酸铁锂电池包价格回落",
+      "summary": "锂回收效率提升与良率改善，正在帮助主流电动车型获得更稳定的电池成本。",
+      "source": "充电产业网",
+      "source_url": "https://insideevs.com/",
+      "url": "",
+      "published_at": "2026-04-09",
+      "cluster_id": 4,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.348,
+        "positive_hits": [
+          "recovery",
+          "supporting"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.285,
+      "cluster_relevance_norm": 0.0,
+      "x": 0.0679,
+      "y": 0.3193
+    },
+    {
+      "id": "seed-ev-003",
+      "source_id": "ev-insight",
+      "title": "高速充电走廊新增面向电卡的兆瓦级站点",
+      "summary": "开发方认为，面向电动卡车的兆瓦级站点将缓解长途电动化过程中的续航焦虑。",
+      "source": "电驱观察",
+      "source_url": "https://electrek.co/",
+      "url": "",
+      "published_at": "2026-04-10",
+      "cluster_id": 2,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.192,
+        "positive_hits": [
+          "reduce"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.278,
+      "cluster_relevance_norm": 0.0,
+      "x": 0.0437,
+      "y": 0.3386
+    },
+    {
+      "id": "seed-ev-004",
+      "source_id": "charge-network",
+      "title": "经销商在促销压力下收缩电动车库存",
+      "summary": "零售端警告称，客流偏弱与促销压力可能推迟部分车型的上市节奏。",
+      "source": "充电产业网",
+      "source_url": "https://insideevs.com/",
+      "url": "",
+      "published_at": "2026-04-11",
+      "cluster_id": 2,
+      "sentiment": {
+        "label": "negative",
+        "score": -1.078,
+        "positive_hits": [],
+        "negative_hits": [
+          "delay",
+          "discount",
+          "pressure",
+          "slower",
+          "soft",
+          "warned"
+        ]
+      },
+      "cluster_relevance": 0.289,
+      "cluster_relevance_norm": 0.026,
+      "x": 0.062,
+      "y": 0.3132
+    },
+    {
+      "id": "seed-sport-001",
+      "source_id": "pitch-report",
+      "title": "补时绝杀让联赛争冠悬念继续延续",
+      "summary": "主队上演逆转后，争冠走势再度拉满，球迷情绪明显升温。",
+      "source": "球场观察",
+      "source_url": "https://www.goal.com/",
+      "url": "",
+      "published_at": "2026-04-08",
+      "cluster_id": 7,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.365,
+        "positive_hits": [
+          "celebrated",
+          "momentum"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.634,
+      "cluster_relevance_norm": 0.0,
+      "x": 0.0742,
+      "y": 0.2767
+    },
+    {
+      "id": "seed-sport-002",
+      "source_id": "stadium-wire",
+      "title": "夏季赛事前，场馆轨道接驳升级提速",
+      "summary": "城市规划部门表示，更顺畅的接驳系统将改善球迷集散效率并降低入场拥堵。",
+      "source": "场馆脉冲",
+      "source_url": "https://www.stadiumdb.com/",
+      "url": "",
+      "published_at": "2026-04-09",
+      "cluster_id": 7,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.348,
+        "positive_hits": [
+          "improve",
+          "reduce"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.706,
+      "cluster_relevance_norm": 0.851,
+      "x": 0.0797,
+      "y": 0.3084
+    },
+    {
+      "id": "seed-sport-003",
+      "source_id": "pitch-report",
+      "title": "青年前锋梅开二度后获得一线队征召",
+      "summary": "青训教练评价这名球员在关键比赛中更加自信，终结效率也明显提升。",
+      "source": "球场观察",
+      "source_url": "https://www.goal.com/",
+      "url": "",
+      "published_at": "2026-04-10",
+      "cluster_id": 7,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.189,
+        "positive_hits": [
+          "confident"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.719,
+      "cluster_relevance_norm": 1.0,
+      "x": 0.0554,
+      "y": 0.2798
+    },
+    {
+      "id": "seed-sport-004",
+      "source_id": "stadium-wire",
+      "title": "杯赛半决赛轮换计划考验阵容厚度与恢复节奏",
+      "summary": "教练组认为，合理轮换能在保护核心球员的同时维持全队比赛状态。",
+      "source": "场馆脉冲",
+      "source_url": "https://www.stadiumdb.com/",
+      "url": "",
+      "published_at": "2026-04-11",
+      "cluster_id": 7,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.177,
+        "positive_hits": [
+          "recovery"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.664,
+      "cluster_relevance_norm": 0.352,
+      "x": 0.0905,
+      "y": 0.2694
+    },
+    {
+      "id": "seed-energy-001",
+      "source_id": "climate-desk",
+      "title": "高温高压地区加快部署光储微电网",
+      "summary": "多个社区项目通过屋顶光伏与储能结合，提高极端高温期间的供电韧性。",
+      "source": "气候瞭望",
+      "source_url": "https://www.canarymedia.com/",
+      "url": "",
+      "published_at": "2026-04-08",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.371,
+        "positive_hits": [
+          "expand",
+          "improve"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.54,
+      "cluster_relevance_norm": 1.0,
+      "x": 0.2174,
+      "y": 0.7659
+    },
+    {
+      "id": "seed-energy-002",
+      "source_id": "grid-watch",
+      "title": "海上风电开发商因成本上涨寻求合同缓冲",
+      "summary": "开发商表示，通胀与供应延迟正在给新海上风电项目带来更大压力。",
+      "source": "电网观察",
+      "source_url": "https://www.utilitydive.com/",
+      "url": "",
+      "published_at": "2026-04-09",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.707,
+        "positive_hits": [],
+        "negative_hits": [
+          "delays",
+          "inflation",
+          "strain",
+          "warned"
+        ]
+      },
+      "cluster_relevance": 0.519,
+      "cluster_relevance_norm": 0.944,
+      "x": 0.2005,
+      "y": 0.7297
+    },
+    {
+      "id": "seed-energy-003",
+      "source_id": "climate-desk",
+      "title": "干旱与热浪让多地水电出力承压",
+      "summary": "库容下降正在推高夏季用电高峰来临前的电力市场风险。",
+      "source": "气候瞭望",
+      "source_url": "https://www.canarymedia.com/",
+      "url": "",
+      "published_at": "2026-04-10",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.354,
+        "positive_hits": [
+          "lower"
+        ],
+        "negative_hits": [
+          "drought",
+          "risk",
+          "strain"
+        ]
+      },
+      "cluster_relevance": 0.5,
+      "cluster_relevance_norm": 0.893,
+      "x": 0.2047,
+      "y": 0.7196
+    },
+    {
+      "id": "seed-energy-004",
+      "source_id": "grid-watch",
+      "title": "电网侧储能为大规模风电走廊削峰填谷",
+      "summary": "公用事业方表示，储能系统正在帮助降低弃风率并稳定晚高峰供电。",
+      "source": "电网观察",
+      "source_url": "https://www.utilitydive.com/",
+      "url": "",
+      "published_at": "2026-04-11",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.359,
+        "positive_hits": [
+          "reduce",
+          "smooth"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.538,
+      "cluster_relevance_norm": 0.995,
+      "x": 0.2415,
+      "y": 0.8029
+    },
+    {
+      "id": "seed-security-001",
+      "source_id": "cyber-brief",
+      "title": "零信任身份治理在金融与通信行业加速落地",
+      "summary": "安全团队表示，统一身份治理正在降低大型企业中的横向移动风险。",
+      "source": "安全内参",
+      "source_url": "https://www.darkreading.com/",
+      "url": "",
+      "published_at": "2026-04-08",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.18,
+        "positive_hits": [],
+        "negative_hits": [
+          "risk"
+        ]
+      },
+      "cluster_relevance": 0.496,
+      "cluster_relevance_norm": 0.882,
+      "x": 0.1034,
+      "y": 0.3564
+    },
+    {
+      "id": "seed-security-002",
+      "source_id": "security-post",
+      "title": "勒索团伙开始集中攻击医院外包软件供应商",
+      "summary": "研究人员警告称，分区隔离不足的医疗软件供应商仍是高风险攻击入口。",
+      "source": "网安邮报",
+      "source_url": "https://www.bleepingcomputer.com/",
+      "url": "",
+      "published_at": "2026-04-09",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.371,
+        "positive_hits": [],
+        "negative_hits": [
+          "warned",
+          "weak"
+        ]
+      },
+      "cluster_relevance": 0.48,
+      "cluster_relevance_norm": 0.838,
+      "x": 0.1202,
+      "y": 0.3308
+    },
+    {
+      "id": "seed-security-003",
+      "source_id": "cyber-brief",
+      "title": "浏览器隔离试点帮助混合办公场景降低钓鱼风险",
+      "summary": "多家公司表示，将高风险访问迁入远程隔离环境后，凭证被盗事件明显减少。",
+      "source": "安全内参",
+      "source_url": "https://www.darkreading.com/",
+      "url": "",
+      "published_at": "2026-04-10",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.354,
+        "positive_hits": [
+          "help",
+          "reduce"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.491,
+      "cluster_relevance_norm": 0.868,
+      "x": 0.0864,
+      "y": 0.354
+    },
+    {
+      "id": "seed-security-004",
+      "source_id": "security-post",
+      "title": "监管机构收紧云服务承包商的数据泄露披露时限",
+      "summary": "合规团队指出，更短的披露窗口正在倒逼企业升级事件分级与上报流程。",
+      "source": "网安邮报",
+      "source_url": "https://www.bleepingcomputer.com/",
+      "url": "",
+      "published_at": "2026-04-11",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.177,
+        "positive_hits": [
+          "faster"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.479,
+      "cluster_relevance_norm": 0.835,
+      "x": 0.1358,
+      "y": 0.3292
+    },
+    {
+      "id": "seed-health-001",
+      "source_id": "health-next",
+      "title": "AI 影像辅助系统缩短公立医院阅片时间",
+      "summary": "放射科表示，AI 预分诊工具有助于优先处理急重症影像并提升整体通量。",
+      "source": "健康科技参考",
+      "source_url": "https://www.mobihealthnews.com/",
+      "url": "",
+      "published_at": "2026-04-08",
+      "cluster_id": 5,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.186,
+        "positive_hits": [
+          "improve"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.618,
+      "cluster_relevance_norm": 0.844,
+      "x": 0.0209,
+      "y": 0.3248
+    },
+    {
+      "id": "seed-health-002",
+      "source_id": "bio-innovation",
+      "title": "mRNA 产线扩容以支持个性化疫苗试验",
+      "summary": "多家生物技术企业正在投资更灵活的生产模块，以满足更小批量、更快节奏的临床试验需求。",
+      "source": "生物创新日报",
+      "source_url": "https://www.biospace.com/",
+      "url": "",
+      "published_at": "2026-04-09",
+      "cluster_id": 5,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.539,
+        "positive_hits": [
+          "expand",
+          "faster",
+          "support"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.644,
+      "cluster_relevance_norm": 0.907,
+      "x": 0.0614,
+      "y": 0.2889
+    },
+    {
+      "id": "seed-health-003",
+      "source_id": "health-next",
+      "title": "可穿戴葡萄糖传感器提升慢病患者依从性",
+      "summary": "门诊反馈显示，连续监测结合移动提醒后，患者复诊率与管理依从性有所改善。",
+      "source": "健康科技参考",
+      "source_url": "https://www.mobihealthnews.com/",
+      "url": "",
+      "published_at": "2026-04-10",
+      "cluster_id": 5,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.186,
+        "positive_hits": [
+          "improve"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.683,
+      "cluster_relevance_norm": 1.0,
+      "x": 0.0058,
+      "y": 0.2963
+    },
+    {
+      "id": "seed-health-004",
+      "source_id": "bio-innovation",
+      "title": "远程医疗支付谈判影响数字医疗下一阶段扩张",
+      "summary": "服务提供方认为，支付政策的不确定性仍是远程医疗投资计划中的最大变量。",
+      "source": "生物创新日报",
+      "source_url": "https://www.biospace.com/",
+      "url": "",
+      "published_at": "2026-04-11",
+      "cluster_id": 5,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.18,
+        "positive_hits": [],
+        "negative_hits": [
+          "uncertainty"
+        ]
+      },
+      "cluster_relevance": 0.611,
+      "cluster_relevance_norm": 0.825,
+      "x": 0.0025,
+      "y": 0.2818
+    },
+    {
+      "id": "seed-finance-001",
+      "source_id": "capital-pulse",
+      "title": "数字银行缩短中小企业授信审批时间",
+      "summary": "放贷机构表示，更成熟的风控模型让审批速度提升，同时没有明显放大违约风险。",
+      "source": "资本脉冲",
+      "source_url": "https://www.bloomberg.com/markets",
+      "url": "",
+      "published_at": "2026-04-08",
+      "cluster_id": 6,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.174,
+        "positive_hits": [
+          "faster"
+        ],
+        "negative_hits": [
+          "cut",
+          "risk"
+        ]
+      },
+      "cluster_relevance": 0.715,
+      "cluster_relevance_norm": 0.496,
+      "x": 0.106,
+      "y": 0.4035
+    },
+    {
+      "id": "seed-finance-002",
+      "source_id": "fintech-scope",
+      "title": "支付机构上线更快的跨境结算通道",
+      "summary": "新的清结算网络有望降低出口商与区域服务平台的跨境收款摩擦。",
+      "source": "金融科技视野",
+      "source_url": "https://www.finextra.com/",
+      "url": "",
+      "published_at": "2026-04-09",
+      "cluster_id": 6,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.365,
+        "positive_hits": [
+          "faster",
+          "lower",
+          "promising"
+        ],
+        "negative_hits": [
+          "friction"
+        ]
+      },
+      "cluster_relevance": 0.744,
+      "cluster_relevance_norm": 0.696,
+      "x": 0.0966,
+      "y": 0.3973
+    },
+    {
+      "id": "seed-finance-003",
+      "source_id": "capital-pulse",
+      "title": "AI 合规助手帮助券商处理大规模政策更新",
+      "summary": "券商团队表示，自动比对工具正在降低监管规则变动周期中的人工审阅压力。",
+      "source": "资本脉冲",
+      "source_url": "https://www.bloomberg.com/markets",
+      "url": "",
+      "published_at": "2026-04-10",
+      "cluster_id": 6,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.174,
+        "positive_hits": [
+          "help"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.66,
+      "cluster_relevance_norm": 0.124,
+      "x": 0.0902,
+      "y": 0.3924
+    },
+    {
+      "id": "seed-finance-004",
+      "source_id": "fintech-scope",
+      "title": "代币化债券结算试点吸引区域交易所关注",
+      "summary": "市场运营方正在测试可编程结算流程，以提升透明度并缩短后台处理周期。",
+      "source": "金融科技视野",
+      "source_url": "https://www.finextra.com/",
+      "url": "",
+      "published_at": "2026-04-11",
+      "cluster_id": 6,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.177,
+        "positive_hits": [
+          "improve"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.749,
+      "cluster_relevance_norm": 0.726,
+      "x": 0.0822,
+      "y": 0.3946
+    },
+    {
+      "id": "seed-culture-001",
+      "source_id": "travel-loop",
+      "title": "演唱会旅游带动二线城市酒店预订增长",
+      "summary": "旅行机构表示，音乐活动正在拉长周末停留时间，并带动本地消费提升。",
+      "source": "文旅环线",
+      "source_url": "https://www.travelweekly.com/",
+      "url": "",
+      "published_at": "2026-04-08",
+      "cluster_id": 3,
+      "sentiment": {
+        "label": "neutral",
+        "score": 0.0,
+        "positive_hits": [],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.753,
+      "cluster_relevance_norm": 0.997,
+      "x": 0.091,
+      "y": 0.9751
+    },
+    {
+      "id": "seed-culture-002",
+      "source_id": "culture-grid",
+      "title": "博物馆上线 AR 导览吸引亲子客群",
+      "summary": "文化场馆称，增强现实导览提升了亲子用户的停留时长与复访意愿。",
+      "source": "城市文化网",
+      "source_url": "https://www.theartnewspaper.com/",
+      "url": "",
+      "published_at": "2026-04-09",
+      "cluster_id": 3,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.18,
+        "positive_hits": [
+          "improving"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.755,
+      "cluster_relevance_norm": 1.0,
+      "x": 0.1029,
+      "y": 1.0
+    },
+    {
+      "id": "seed-culture-003",
+      "source_id": "travel-loop",
+      "title": "短视频创作者带动小城春季旅游热度",
+      "summary": "多地文旅部门正与创作者合作，组合线路、美食与活动日历，提升目的地传播效率。",
+      "source": "文旅环线",
+      "source_url": "https://www.travelweekly.com/",
+      "url": "",
+      "published_at": "2026-04-10",
+      "cluster_id": 3,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.174,
+        "positive_hits": [
+          "help"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.727,
+      "cluster_relevance_norm": 0.947,
+      "x": 0.083,
+      "y": 0.9404
+    },
+    {
+      "id": "seed-culture-004",
+      "source_id": "culture-grid",
+      "title": "主题乐园试行节假日动态票价机制",
+      "summary": "运营方表示，动态票价有助于调节客流，但也可能引发游客对价格波动的敏感反应。",
+      "source": "城市文化网",
+      "source_url": "https://www.theartnewspaper.com/",
+      "url": "",
+      "published_at": "2026-04-11",
+      "cluster_id": 3,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.174,
+        "positive_hits": [
+          "improve"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.631,
+      "cluster_relevance_norm": 0.764,
+      "x": 0.1007,
+      "y": 0.8594
+    },
+    {
+      "id": "seed-ai-005",
+      "source_id": "silicon-dispatch",
+      "title": "先进封装供应商为 AI 加速模块扩充产能",
+      "summary": "先进封装与互连升级正在提升 AI 加速机柜的交付把握。",
+      "source": "芯片产业快讯",
+      "source_url": "https://www.semiconductor-digest.com/",
+      "url": "",
+      "published_at": "2026-04-12",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.359,
+        "positive_hits": [
+          "stronger",
+          "supporting"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.621,
+      "cluster_relevance_norm": 0.945,
+      "x": 0.9829,
+      "y": 0.0003
+    },
+    {
+      "id": "seed-ai-006",
+      "source_id": "silicon-dispatch",
+      "title": "私有推理一体机获得制造业客户试点订单",
+      "summary": "厂商表示，制造业客户更看重低时延、数据本地留存的紧凑型 AI 系统。",
+      "source": "芯片产业快讯",
+      "source_url": "https://www.semiconductor-digest.com/",
+      "url": "",
+      "published_at": "2026-04-13",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.171,
+        "positive_hits": [
+          "win"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.638,
+      "cluster_relevance_norm": 1.0,
+      "x": 1.0,
+      "y": 0.0
+    },
+    {
+      "id": "seed-ev-005",
+      "source_id": "mobility-journal",
+      "title": "居民社区加快共享电动车路侧充电桩铺设",
+      "summary": "多地试点显示，夜间路侧充电正在改善高密度社区共享车辆的周转效率。",
+      "source": "智能出行观察",
+      "source_url": "https://www.smartcitiesdive.com/",
+      "url": "",
+      "published_at": "2026-04-12",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "neutral",
+        "score": 0.0,
+        "positive_hits": [],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.173,
+      "cluster_relevance_norm": 0.0,
+      "x": 0.0295,
+      "y": 0.3126
+    },
+    {
+      "id": "seed-ev-006",
+      "source_id": "mobility-journal",
+      "title": "电池健康分析帮助出租车车队规划换包周期",
+      "summary": "车队管理方表示，更准确的诊断可以减少突发停运，并让维护安排更高效。",
+      "source": "智能出行观察",
+      "source_url": "https://www.smartcitiesdive.com/",
+      "url": "",
+      "published_at": "2026-04-13",
+      "cluster_id": 5,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.507,
+        "positive_hits": [
+          "efficient",
+          "help",
+          "reduce"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.27,
+      "cluster_relevance_norm": 0.0,
+      "x": 0.0525,
+      "y": 0.3215
+    },
+    {
+      "id": "seed-sport-005",
+      "source_id": "fan-route",
+      "title": "俱乐部在德比赛事周末扩展高端观赛接待服务",
+      "summary": "运营方表示，打包式接待产品正在带来更强的比赛日收入增长势头。",
+      "source": "赛事商业内参",
+      "source_url": "https://www.sportbusiness.com/",
+      "url": "",
+      "published_at": "2026-04-12",
+      "cluster_id": 7,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.539,
+        "positive_hits": [
+          "expand",
+          "momentum",
+          "stronger"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.682,
+      "cluster_relevance_norm": 0.562,
+      "x": 0.086,
+      "y": 0.2886
+    },
+    {
+      "id": "seed-sport-006",
+      "source_id": "fan-route",
+      "title": "移动票务试点缓解大型赛事场馆外排队压力",
+      "summary": "赛事团队表示，将更多观众导入移动验票通道后，入场速度明显提升。",
+      "source": "赛事商业内参",
+      "source_url": "https://www.sportbusiness.com/",
+      "url": "",
+      "published_at": "2026-04-13",
+      "cluster_id": 7,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.167,
+        "positive_hits": [
+          "faster"
+        ],
+        "negative_hits": [
+          "cut",
+          "pressure"
+        ]
+      },
+      "cluster_relevance": 0.686,
+      "cluster_relevance_norm": 0.611,
+      "x": 0.0858,
+      "y": 0.3119
+    },
+    {
+      "id": "seed-energy-005",
+      "source_id": "power-market",
+      "title": "需求响应聚合商缓解城市电网晚高峰压力",
+      "summary": "公用事业方表示，灵活工业负荷正在以更低成本帮助平滑晚高峰负载。",
+      "source": "电力市场通",
+      "source_url": "https://www.powermag.com/",
+      "url": "",
+      "published_at": "2026-04-12",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.348,
+        "positive_hits": [
+          "lower",
+          "smooth"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.53,
+      "cluster_relevance_norm": 0.974,
+      "x": 0.223,
+      "y": 0.7743
+    },
+    {
+      "id": "seed-energy-006",
+      "source_id": "power-market",
+      "title": "输电瓶颈拖慢西部能源基地光伏外送",
+      "summary": "开发商警告称，线路拥堵与检修窗口正在给光伏外送计划带来压力。",
+      "source": "电力市场通",
+      "source_url": "https://www.powermag.com/",
+      "url": "",
+      "published_at": "2026-04-13",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.5,
+        "positive_hits": [],
+        "negative_hits": [
+          "delay",
+          "pressure",
+          "warned"
+        ]
+      },
+      "cluster_relevance": 0.496,
+      "cluster_relevance_norm": 0.881,
+      "x": 0.2245,
+      "y": 0.6913
+    },
+    {
+      "id": "seed-security-005",
+      "source_id": "threat-monitor",
+      "title": "银行启动通行密钥登录计划以减少凭证盗用",
+      "summary": "安全团队表示，通行密钥推广有助于降低零售银行入口的钓鱼风险暴露。",
+      "source": "威胁监测站",
+      "source_url": "https://www.securityweek.com/",
+      "url": "",
+      "published_at": "2026-04-12",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.522,
+        "positive_hits": [
+          "help",
+          "lower",
+          "reduce"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.478,
+      "cluster_relevance_norm": 0.832,
+      "x": 0.0875,
+      "y": 0.3517
+    },
+    {
+      "id": "seed-security-006",
+      "source_id": "threat-monitor",
+      "title": "托管检测团队警惕供应商门户入侵演练升级",
+      "summary": "研究人员指出，供应商访问审查不足仍是企业协同系统面临的严重风险。",
+      "source": "威胁监测站",
+      "source_url": "https://www.securityweek.com/",
+      "url": "",
+      "published_at": "2026-04-13",
+      "cluster_id": 0,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.522,
+        "positive_hits": [],
+        "negative_hits": [
+          "risk",
+          "serious",
+          "weak"
+        ]
+      },
+      "cluster_relevance": 0.478,
+      "cluster_relevance_norm": 0.832,
+      "x": 0.1216,
+      "y": 0.339
+    },
+    {
+      "id": "seed-health-005",
+      "source_id": "med-device",
+      "title": "县域医院将手术机器人招标纳入设备预算",
+      "summary": "采购团队表示，手术机器人平台正从展示性项目走向常规预算周期。",
+      "source": "医疗器械观察",
+      "source_url": "https://www.medtechdive.com/",
+      "url": "",
+      "published_at": "2026-04-12",
+      "cluster_id": 5,
+      "sentiment": {
+        "label": "neutral",
+        "score": 0.0,
+        "positive_hits": [],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.626,
+      "cluster_relevance_norm": 0.861,
+      "x": 0.0173,
+      "y": 0.2928
+    },
+    {
+      "id": "seed-health-006",
+      "source_id": "med-device",
+      "title": "居家护理套件把远程生命体征设备与护士随访结合",
+      "summary": "服务机构反馈，将家庭监测设备与护士协同随访结合后，慢病跟进效果更稳定。",
+      "source": "医疗器械观察",
+      "source_url": "https://www.medtechdive.com/",
+      "url": "",
+      "published_at": "2026-04-13",
+      "cluster_id": 5,
+      "sentiment": {
+        "label": "neutral",
+        "score": 0.0,
+        "positive_hits": [],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.662,
+      "cluster_relevance_norm": 0.951,
+      "x": 0.0,
+      "y": 0.2917
+    },
+    {
+      "id": "seed-finance-005",
+      "source_id": "payments-wire",
+      "title": "收单机构利用 AI 风险评分压降拒付损失",
+      "summary": "支付团队表示，更好的欺诈评分正在帮助商户在不放大风险的前提下维持较高通过率。",
+      "source": "支付产业线",
+      "source_url": "https://thepaypers.com/",
+      "url": "",
+      "published_at": "2026-04-12",
+      "cluster_id": 6,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.333,
+        "positive_hits": [],
+        "negative_hits": [
+          "cut",
+          "risk"
+        ]
+      },
+      "cluster_relevance": 0.642,
+      "cluster_relevance_norm": 0.0,
+      "x": 0.0572,
+      "y": 0.3873
+    },
+    {
+      "id": "seed-finance-006",
+      "source_id": "payments-wire",
+      "title": "资金管理应用把即时结算与发票融资打包提供",
+      "summary": "金融科技平台表示，中小外贸企业希望缩短结算与短期融资之间的流程链路。",
+      "source": "支付产业线",
+      "source_url": "https://thepaypers.com/",
+      "url": "",
+      "published_at": "2026-04-13",
+      "cluster_id": 6,
+      "sentiment": {
+        "label": "neutral",
+        "score": 0.0,
+        "positive_hits": [],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.789,
+      "cluster_relevance_norm": 1.0,
+      "x": 0.0911,
+      "y": 0.4076
+    },
+    {
+      "id": "seed-culture-005",
+      "source_id": "exhibit-lab",
+      "title": "沉浸式展陈延长博物馆夜场停留时间",
+      "summary": "策展团队表示，以投影互动为核心的展陈正在吸引更多夜场客流，并提高复访意愿。",
+      "source": "展陈体验实验室",
+      "source_url": "https://blooloop.com/",
+      "url": "",
+      "published_at": "2026-04-12",
+      "cluster_id": 3,
+      "sentiment": {
+        "label": "neutral",
+        "score": 0.0,
+        "positive_hits": [],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.701,
+      "cluster_relevance_norm": 0.897,
+      "x": 0.0877,
+      "y": 0.9457
+    },
+    {
+      "id": "seed-culture-006",
+      "source_id": "exhibit-lab",
+      "title": "县域文旅线路把演出、集市与住宿打包联动",
+      "summary": "地方策划方表示，一体化线路套餐正在帮助游客停留更久，并带动更广泛消费。",
+      "source": "展陈体验实验室",
+      "source_url": "https://blooloop.com/",
+      "url": "",
+      "published_at": "2026-04-13",
+      "cluster_id": 3,
+      "sentiment": {
+        "label": "neutral",
+        "score": 0.0,
+        "positive_hits": [],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.725,
+      "cluster_relevance_norm": 0.943,
+      "x": 0.0939,
+      "y": 0.9482
+    },
+    {
+      "id": "seed-sport-007",
+      "source_id": "hupu-nba",
+      "title": "虎扑关注强势第四节胜利让球队继续保有季后赛希望",
+      "summary": "球队靠末节发力和后卫线的自信表现拿下胜利，在紧张客场之旅后重新提振士气。",
+      "source": "虎扑篮球",
+      "source_url": "https://nba.hupu.com/",
+      "url": "",
+      "published_at": "2026-03-18",
+      "cluster_id": 2,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.781,
+        "positive_hits": [
+          "confident",
+          "momentum",
+          "strong",
+          "victory",
+          "win"
+        ],
+        "negative_hits": [
+          "injury",
+          "tense"
+        ]
+      },
+      "cluster_relevance": 0.677,
+      "cluster_relevance_norm": 0.895,
+      "x": 0.3808,
+      "y": 0.1646
+    },
+    {
+      "id": "seed-sport-008",
+      "source_id": "nba-official",
+      "title": "NBA官网通报首发后卫因脚踝伤势缺席两周",
+      "summary": "医疗团队表示，这次脚踝伤病会让球队在连续比赛前面临更大的轮换压力。",
+      "source": "NBA官网",
+      "source_url": "https://www.nba.com/news",
+      "url": "",
+      "published_at": "2026-03-22",
+      "cluster_id": 2,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.801,
+        "positive_hits": [
+          "victory"
+        ],
+        "negative_hits": [
+          "injury",
+          "out",
+          "pressure",
+          "warned"
+        ]
+      },
+      "cluster_relevance": 0.724,
+      "cluster_relevance_norm": 1.0,
+      "x": 0.4076,
+      "y": 0.1675
+    },
+    {
+      "id": "seed-sport-009",
+      "source_id": "hupu-nba",
+      "title": "替补阵容反弹帮助西部劲旅止住两连败",
+      "summary": "替补得分点带来的精彩胜利引发球迷庆祝，也让球队重新找回积极势头。",
+      "source": "虎扑篮球",
+      "source_url": "https://nba.hupu.com/",
+      "url": "",
+      "published_at": "2026-03-27",
+      "cluster_id": 2,
+      "sentiment": {
+        "label": "positive",
+        "score": 1.0,
+        "positive_hits": [
+          "celebrated",
+          "healthy",
+          "momentum",
+          "rebound",
+          "thrilling",
+          "victory",
+          "win"
+        ],
+        "negative_hits": [
+          "injury",
+          "loss"
+        ]
+      },
+      "cluster_relevance": 0.675,
+      "cluster_relevance_norm": 0.89,
+      "x": 0.3857,
+      "y": 0.1682
+    },
+    {
+      "id": "seed-sport-010",
+      "source_id": "nba-official",
+      "title": "老将中锋从小腿拉伤中复出并帮助球队取胜",
+      "summary": "教练组表示，这位老将以良好状态复出，他的恢复明显提升了球队在胜利中的护框质量。",
+      "source": "NBA官网",
+      "source_url": "https://www.nba.com/news",
+      "url": "",
+      "published_at": "2026-04-01",
+      "cluster_id": 2,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.961,
+        "positive_hits": [
+          "improved",
+          "recovery",
+          "returned",
+          "strong",
+          "victory"
+        ],
+        "negative_hits": [
+          "injury",
+          "strain"
+        ]
+      },
+      "cluster_relevance": 0.675,
+      "cluster_relevance_norm": 0.891,
+      "x": 0.4061,
+      "y": 0.167
+    },
+    {
+      "id": "seed-sport-011",
+      "source_id": "hupu-nba",
+      "title": "末节崩盘让争冠球队再吞失利并加剧压力",
+      "summary": "最后时刻表现疲软把原本接近到手的胜利变成失利，球迷态度转为谨慎，主教练压力也继续上升。",
+      "source": "虎扑篮球",
+      "source_url": "https://nba.hupu.com/",
+      "url": "",
+      "published_at": "2026-04-04",
+      "cluster_id": 2,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.781,
+        "positive_hits": [
+          "victory",
+          "win"
+        ],
+        "negative_hits": [
+          "cautious",
+          "injury",
+          "loss",
+          "pressure",
+          "weak"
+        ]
+      },
+      "cluster_relevance": 0.712,
+      "cluster_relevance_norm": 0.973,
+      "x": 0.4122,
+      "y": 0.1676
+    },
+    {
+      "id": "seed-sport-012",
+      "source_id": "nba-official",
+      "title": "前锋恢复进度正常有望在四月复出",
+      "summary": "球队表示这名前锋恢复情况良好，不过本周对抗训练安排仍会保持谨慎。",
+      "source": "NBA官网",
+      "source_url": "https://www.nba.com/news",
+      "url": "",
+      "published_at": "2026-04-07",
+      "cluster_id": 2,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.324,
+        "positive_hits": [
+          "recovery",
+          "strong",
+          "victory"
+        ],
+        "negative_hits": [
+          "cautious",
+          "injury"
+        ]
+      },
+      "cluster_relevance": 0.678,
+      "cluster_relevance_norm": 0.898,
+      "x": 0.3818,
+      "y": 0.1795
+    },
+    {
+      "id": "seed-ai-007",
+      "source_id": "openai-watch",
+      "title": "智能体试点在客服团队中展现出强劲采用势头",
+      "summary": "管理者表示，智能体上线改善了回复质量、降低了排队压力，并带来了满意度回升。",
+      "source": "AI技术前线",
+      "source_url": "https://openai.com/news/",
+      "url": "",
+      "published_at": "2026-03-19",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.857,
+        "positive_hits": [
+          "adoption",
+          "healthy",
+          "improved",
+          "rebound",
+          "strong",
+          "support"
+        ],
+        "negative_hits": [
+          "pressure"
+        ]
+      },
+      "cluster_relevance": 0.335,
+      "cluster_relevance_norm": 0.024,
+      "x": 0.146,
+      "y": 0.2353
+    },
+    {
+      "id": "seed-ai-008",
+      "source_id": "model-wire",
+      "title": "GPU短缺拖慢多家云厂商多模态模型上线节奏",
+      "summary": "高管警告称，GPU短缺和交付延迟正在给春季模型上线带来不确定性。",
+      "source": "模型情报站",
+      "source_url": "https://huggingface.co/blog",
+      "url": "",
+      "published_at": "2026-03-24",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.845,
+        "positive_hits": [],
+        "negative_hits": [
+          "delays",
+          "shortage",
+          "uncertainty",
+          "warned"
+        ]
+      },
+      "cluster_relevance": 0.358,
+      "cluster_relevance_norm": 0.101,
+      "x": 0.1994,
+      "y": 0.2251
+    },
+    {
+      "id": "seed-ai-009",
+      "source_id": "infra-radar",
+      "title": "推理基准成绩提升同时推理成本继续走低",
+      "summary": "基础设施团队表示，新推理栈提升了代码任务准确率，并带来了更快、更低成本的服务表现。",
+      "source": "算力基础设施雷达",
+      "source_url": "https://www.datacenterdynamics.com/en/",
+      "url": "",
+      "published_at": "2026-03-29",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.686,
+        "positive_hits": [
+          "faster",
+          "improved",
+          "lower"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.613,
+      "cluster_relevance_norm": 0.918,
+      "x": 0.9152,
+      "y": 0.024
+    },
+    {
+      "id": "seed-ai-010",
+      "source_id": "openai-watch",
+      "title": "安全审查推迟语音智能体在欧洲的上线",
+      "summary": "产品负责人表示，这次延期已经对合作方排期造成明显压力，但安全与可信要求依然重要。",
+      "source": "AI技术前线",
+      "source_url": "https://openai.com/news/",
+      "url": "",
+      "published_at": "2026-04-02",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.522,
+        "positive_hits": [
+          "important"
+        ],
+        "negative_hits": [
+          "delay",
+          "delays",
+          "pressure",
+          "serious"
+        ]
+      },
+      "cluster_relevance": 0.327,
+      "cluster_relevance_norm": 0.0,
+      "x": 0.1309,
+      "y": 0.2623
+    },
+    {
+      "id": "seed-ai-011",
+      "source_id": "model-wire",
+      "title": "企业客户在一轮强势演示后扩大AI一体机订单",
+      "summary": "厂商表示，试点反馈积极，加上部署工具更可靠，正在支撑新一轮一体机需求增长。",
+      "source": "模型情报站",
+      "source_url": "https://huggingface.co/blog",
+      "url": "",
+      "published_at": "2026-04-05",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "positive",
+        "score": 1.029,
+        "positive_hits": [
+          "expand",
+          "growth",
+          "reliable",
+          "strong",
+          "supporting"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.365,
+      "cluster_relevance_norm": 0.12,
+      "x": 0.2307,
+      "y": 0.2099
+    },
+    {
+      "id": "seed-ai-012",
+      "source_id": "infra-radar",
+      "title": "芯片封装瓶颈让四月加速卡交付出现不确定性",
+      "summary": "系统集成商警告称，封装瓶颈可能拖慢加速卡交付，并让采购团队继续保持谨慎。",
+      "source": "算力基础设施雷达",
+      "source_url": "https://www.datacenterdynamics.com/en/",
+      "url": "",
+      "published_at": "2026-04-07",
+      "cluster_id": 1,
+      "sentiment": {
+        "label": "negative",
+        "score": -1.014,
+        "positive_hits": [],
+        "negative_hits": [
+          "bottleneck",
+          "cautious",
+          "slow",
+          "uncertainty",
+          "warned"
+        ]
+      },
+      "cluster_relevance": 0.557,
+      "cluster_relevance_norm": 0.738,
+      "x": 0.8658,
+      "y": 0.0358
+    },
+    {
+      "id": "seed-finance-007",
+      "source_id": "market-expectations",
+      "title": "分析师预计银行业绩超预期将推动金融股延续三月反弹",
+      "summary": "券商研究团队表示，乐观的业绩预期与更强的资本回报可能再次提振大型银行股。",
+      "source": "市场预期观察",
+      "source_url": "https://www.reuters.com/markets/",
+      "url": "",
+      "published_at": "2026-03-17",
+      "cluster_id": 4,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.801,
+        "positive_hits": [
+          "beat",
+          "boost",
+          "optimistic",
+          "rebound",
+          "stronger"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.673,
+      "cluster_relevance_norm": 1.0,
+      "x": 0.0574,
+      "y": 0.2482
+    },
+    {
+      "id": "seed-finance-008",
+      "source_id": "forex-flash",
+      "title": "美元走强叠加套保成本上升令亚洲进口商承压",
+      "summary": "外汇交易台表示，汇率压力与更高的套保成本正使买方在下次利率会议前保持谨慎。",
+      "source": "汇率快报",
+      "source_url": "https://www.investing.com/currencies/",
+      "url": "",
+      "published_at": "2026-03-23",
+      "cluster_id": 4,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.469,
+        "positive_hits": [],
+        "negative_hits": [
+          "cautious",
+          "pressure"
+        ]
+      },
+      "cluster_relevance": 0.484,
+      "cluster_relevance_norm": 0.514,
+      "x": 0.0081,
+      "y": 0.2497
+    },
+    {
+      "id": "seed-finance-009",
+      "source_id": "equity-sentiment",
+      "title": "分析师上调需求预期后芯片股反弹获得更多支撑",
+      "summary": "基金经理表示，在多份上调评级与更健康的二季度订单展望推动下，这轮反弹显得更强。",
+      "source": "股票情绪追踪",
+      "source_url": "https://www.marketwatch.com/investing",
+      "url": "",
+      "published_at": "2026-03-28",
+      "cluster_id": 4,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.973,
+        "positive_hits": [
+          "gains",
+          "rally",
+          "stronger",
+          "support",
+          "upgrade"
+        ],
+        "negative_hits": []
+      },
+      "cluster_relevance": 0.631,
+      "cluster_relevance_norm": 0.892,
+      "x": 0.1328,
+      "y": 0.2318
+    },
+    {
+      "id": "seed-finance-010",
+      "source_id": "market-expectations",
+      "title": "零售股因谨慎指引和门店客流放缓而走弱",
+      "summary": "投资者表示，谨慎的业绩指引、放缓的客流与利润压力让板块预期持续偏弱。",
+      "source": "市场预期观察",
+      "source_url": "https://www.reuters.com/markets/",
+      "url": "",
+      "published_at": "2026-04-01",
+      "cluster_id": 4,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.973,
+        "positive_hits": [],
+        "negative_hits": [
+          "cautious",
+          "pressure",
+          "slower",
+          "soft"
+        ]
+      },
+      "cluster_relevance": 0.621,
+      "cluster_relevance_norm": 0.866,
+      "x": 0.0563,
+      "y": 0.2446
+    },
+    {
+      "id": "seed-finance-011",
+      "source_id": "forex-flash",
+      "title": "日元波动收敛并降低套保成本令出口商情绪改善",
+      "summary": "外汇策略师表示，更低的波动率和改善的套保报价正在支撑更乐观的出口前景。",
+      "source": "汇率快报",
+      "source_url": "https://www.investing.com/currencies/",
+      "url": "",
+      "published_at": "2026-04-04",
+      "cluster_id": 4,
+      "sentiment": {
+        "label": "positive",
+        "score": 0.658,
+        "positive_hits": [
+          "improve",
+          "improved",
+          "lower",
+          "optimistic",
+          "supporting"
+        ],
+        "negative_hits": [
+          "volatility"
+        ]
+      },
+      "cluster_relevance": 0.484,
+      "cluster_relevance_norm": 0.513,
+      "x": 0.0105,
+      "y": 0.2633
+    },
+    {
+      "id": "seed-finance-012",
+      "source_id": "equity-sentiment",
+      "title": "地产股因再融资风险升温再遭抛售",
+      "summary": "投资组合经理警告称，新一轮抛售与再融资风险升温可能让地产板块在四月继续承压。",
+      "source": "股票情绪追踪",
+      "source_url": "https://www.marketwatch.com/investing",
+      "url": "",
+      "published_at": "2026-04-07",
+      "cluster_id": 4,
+      "sentiment": {
+        "label": "negative",
+        "score": -0.973,
+        "positive_hits": [],
+        "negative_hits": [
+          "pressure",
+          "risk",
+          "selloff",
+          "warned"
+        ]
+      },
+      "cluster_relevance": 0.594,
+      "cluster_relevance_norm": 0.797,
+      "x": 0.0445,
+      "y": 0.2615
+    }
+  ],
+  "tracked_topic": {
+    "cluster_id": 0,
+    "label": "能源电力",
+    "topic_name": "能源电力",
+    "topic_keyword": "光伏",
+    "keywords": [
+      "光伏",
+      "电网",
+      "气候",
+      "身份治理",
+      "风电"
+    ],
+    "raw_keywords": [
+      "solar",
+      "grid",
+      "climate",
+      "identity",
+      "wind",
+      "disclosure",
+      "phishing",
+      "resilience",
+      "ransomware",
+      "storage"
+    ],
+    "theme_statement": "当前关注主题为“能源电力”，系统会结合簇中心相似度与“光伏、电网、气候、身份治理”等关键词持续筛选后续文章。",
+    "dominant_sentiment": "negative",
+    "dominant_sentiment_label": "偏负面",
+    "sentiment_distribution": {
+      "positive": 2,
+      "neutral": 2,
+      "negative": 4
+    },
+    "timeline": [
+      {
+        "date": "2026-04-14",
+        "positive": 2,
+        "neutral": 1,
+        "negative": 0
+      },
+      {
+        "date": "2026-04-15",
+        "positive": 0,
+        "neutral": 0,
+        "negative": 3
+      },
+      {
+        "date": "2026-04-16",
+        "positive": 0,
+        "neutral": 1,
+        "negative": 1
+      }
+    ],
+    "sources": [
+      {
+        "id": "cyber-brief",
+        "name": "安全内参",
+        "url": "https://www.darkreading.com/",
+        "count": 2
+      },
+      {
+        "id": "climate-desk",
+        "name": "气候瞭望",
+        "url": "https://www.canarymedia.com/",
+        "count": 2
+      },
+      {
+        "id": "power-market",
+        "name": "电力市场通",
+        "url": "https://www.powermag.com/",
+        "count": 2
+      },
+      {
+        "id": "grid-watch",
+        "name": "电网观察",
+        "url": "https://www.utilitydive.com/",
+        "count": 1
+      },
+      {
+        "id": "security-post",
+        "name": "网安邮报",
+        "url": "https://www.bleepingcomputer.com/",
+        "count": 1
+      }
+    ],
+    "articles": [
+      {
+        "id": "follow-energy-001",
+        "source_id": "climate-desk",
+        "title": "城市高温韧性计划带动新一轮光储项目招标",
+        "summary": "多地政府正在加速推进面向制冷与备用电源的分布式能源项目。",
+        "source": "气候瞭望",
+        "source_url": "https://www.canarymedia.com/",
+        "url": "",
+        "published_at": "2026-04-14",
+        "sentiment": {
+          "label": "neutral",
+          "score": 0.0,
+          "positive_hits": [],
+          "negative_hits": []
+        },
+        "relevance": 0.555
+      },
+      {
+        "id": "follow-energy-004",
+        "source_id": "power-market",
+        "title": "需求响应合约帮助电力公司避开高成本晚高峰波动",
+        "summary": "电力公司表示，灵活负荷合约正在平滑峰值需求并增强电网韧性。",
+        "source": "电力市场通",
+        "source_url": "https://www.powermag.com/",
+        "url": "",
+        "published_at": "2026-04-14",
+        "sentiment": {
+          "label": "positive",
+          "score": 0.343,
+          "positive_hits": [
+            "help",
+            "improving"
+          ],
+          "negative_hits": []
+        },
+        "relevance": 0.543
+      },
+      {
+        "id": "follow-energy-002",
+        "source_id": "grid-watch",
+        "title": "风电开发商在审批拖延下重新谈判项目时程",
+        "summary": "开发商警告称，审批文书拖延正在给融资时间表带来新的不确定性。",
+        "source": "电网观察",
+        "source_url": "https://www.utilitydive.com/",
+        "url": "",
+        "published_at": "2026-04-15",
+        "sentiment": {
+          "label": "negative",
+          "score": -0.756,
+          "positive_hits": [],
+          "negative_hits": [
+            "delays",
+            "drag",
+            "uncertainty",
+            "warned"
+          ]
+        },
+        "relevance": 0.535
+      },
+      {
+        "id": "follow-energy-003",
+        "source_id": "climate-desk",
+        "title": "水电缺口让交易员在夏季需求来临前保持谨慎",
+        "summary": "持续偏干天气正加剧市场对未来数周电力供应偏紧的担忧。",
+        "source": "气候瞭望",
+        "source_url": "https://www.canarymedia.com/",
+        "url": "",
+        "published_at": "2026-04-16",
+        "sentiment": {
+          "label": "negative",
+          "score": -0.359,
+          "positive_hits": [],
+          "negative_hits": [
+            "cautious",
+            "shortfall"
+          ]
+        },
+        "relevance": 0.533
+      },
+      {
+        "id": "follow-energy-005",
+        "source_id": "power-market",
+        "title": "输电检修延误继续限制部分光伏出力释放",
+        "summary": "开发商警告称，输电线路检修延误正在给光伏外送计划带来新的不确定性。",
+        "source": "电力市场通",
+        "source_url": "https://www.powermag.com/",
+        "url": "",
+        "published_at": "2026-04-15",
+        "sentiment": {
+          "label": "negative",
+          "score": -0.686,
+          "positive_hits": [],
+          "negative_hits": [
+            "delays",
+            "uncertainty",
+            "warned"
+          ]
+        },
+        "relevance": 0.516
+      },
+      {
+        "id": "follow-security-001",
+        "source_id": "cyber-brief",
+        "title": "近期审计失分后，身份治理平台预算优先级上升",
+        "summary": "董事会正在要求安全团队强化权限审查与高权限账号可视化能力。",
+        "source": "安全内参",
+        "source_url": "https://www.darkreading.com/",
+        "url": "",
+        "published_at": "2026-04-14",
+        "sentiment": {
+          "label": "positive",
+          "score": 0.177,
+          "positive_hits": [
+            "gain"
+          ],
+          "negative_hits": []
+        },
+        "relevance": 0.5
+      },
+      {
+        "id": "follow-security-003",
+        "source_id": "cyber-brief",
+        "title": "披露时限收紧倒逼企业自动化留痕取证流程",
+        "summary": "合规团队正在部署更快的证据收集流程，以满足监管方更高的时效要求。",
+        "source": "安全内参",
+        "source_url": "https://www.darkreading.com/",
+        "url": "",
+        "published_at": "2026-04-16",
+        "sentiment": {
+          "label": "neutral",
+          "score": 0.0,
+          "positive_hits": [
+            "faster"
+          ],
+          "negative_hits": [
+            "pressure"
+          ]
+        },
+        "relevance": 0.496
+      },
+      {
+        "id": "follow-security-002",
+        "source_id": "security-post",
+        "title": "医疗软件供应商紧急修补暴露的远程运维入口",
+        "summary": "研究人员指出，隔离不足与共享管理员账号仍是主要风险因素。",
+        "source": "网安邮报",
+        "source_url": "https://www.bleepingcomputer.com/",
+        "url": "",
+        "published_at": "2026-04-15",
+        "sentiment": {
+          "label": "negative",
+          "score": -0.365,
+          "positive_hits": [],
+          "negative_hits": [
+            "risk",
+            "weak"
+          ]
+        },
+        "relevance": 0.483
+      }
+    ]
+  }
+}

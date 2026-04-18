@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网页主题聚类专题观察台</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero-panel reveal" data-ghost="专题" data-reveal-style="hero">
+      <div class="hero-copy">
+        <div class="hero-topline">
+          <p class="eyebrow">
+            <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-pulse"></use></svg>
+            网页聚类 · 主题追踪 · 情感分析
+          </p>
+          <div class="hero-pill-row">
+            <span class="hero-pill">主题聚类总览</span>
+            <span class="hero-pill secondary">节点支持详情跳转</span>
+          </div>
+        </div>
+        <h1>网页主题聚类专题观察台</h1>
+        <p class="hero-text">
+          把分散网页内容压缩成可以解释的主题簇，再把一个簇升级为持续跟踪的专题。页面同时呈现聚类网络、来源覆盖、关键词线索和情感动态，便于快速理解主题结构与情绪变化。
+        </p>
+        <div class="hero-marquee" aria-hidden="true">
+          <div class="hero-marquee-track">
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-cluster"></use></svg>网页聚类结果</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-article"></use></svg>文章节点详情</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-source"></use></svg>来源网站跳转</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-sentiment"></use></svg>情感趋势追踪</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-radar"></use></svg>缩放与拖拽交互</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-cluster"></use></svg>网页聚类结果</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-article"></use></svg>文章节点详情</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-source"></use></svg>来源网站跳转</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-sentiment"></use></svg>情感趋势追踪</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-radar"></use></svg>缩放与拖拽交互</span>
+          </div>
+        </div>
+        <div id="headlineStats" class="headline-stats"></div>
+        <div class="hero-signal-grid">
+          <article class="hero-signal-card">
+            <div class="hero-signal-icon">
+              <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-cluster"></use></svg>
+            </div>
+            <div>
+              <h3>主题簇可解释</h3>
+              <p>把 TF-IDF 聚类结果翻译成中文主题、关键词与代表文章，避免只看到抽象编号。</p>
+            </div>
+          </article>
+          <article class="hero-signal-card">
+            <div class="hero-signal-icon">
+              <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-radar"></use></svg>
+            </div>
+            <div>
+              <h3>图谱强交互</h3>
+              <p>支持悬停放大、滚轮缩放、拖拽平移、节点高亮与页面跳转，方便查看簇间关系和文章细节。</p>
+            </div>
+          </article>
+          <article class="hero-signal-card">
+            <div class="hero-signal-icon">
+              <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-sentiment"></use></svg>
+            </div>
+            <div>
+              <h3>后续情感追踪</h3>
+              <p>用户设定关注主题后，系统自动提炼关键词并展示该主题相关文章的情感动态。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <aside class="control-panel">
+        <div class="control-header">
+          <p class="section-tag">参数面板</p>
+          <h2>更新当前分析结果</h2>
+          <p class="control-text">
+            可以切换内置样例数据或实时 RSS，调整簇数量后重新聚类，快速比较不同主题划分结果。
+          </p>
+        </div>
+
+        <label class="field">
+          <span>数据模式</span>
+          <select id="sourceMode">
+            <option value="auto">自动优先在线</option>
+            <option value="demo">内置样例</option>
+            <option value="live">实时 RSS</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>聚类簇数量</span>
+          <select id="clusterCount">
+            <option value="4">4 个簇</option>
+            <option value="5">5 个簇</option>
+            <option value="6" selected>6 个簇</option>
+            <option value="7">7 个簇</option>
+            <option value="8">8 个簇</option>
+          </select>
+        </label>
+
+        <button id="rebuildButton" class="action-button">重新聚类并刷新看板</button>
+
+        <div class="control-grid">
+          <article class="control-note-card">
+            <div class="control-note-top">
+              <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-filter"></use></svg>
+              <span>模式说明</span>
+            </div>
+            <p>内置样例响应更稳定；实时 RSS 更适合查看最新抓取结果。</p>
+          </article>
+          <article class="control-note-card">
+            <div class="control-note-top">
+              <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-article"></use></svg>
+              <span>浏览路径</span>
+            </div>
+            <p>先从主图点击一个主题，再进入主题页展示文章样本、后续跟踪和情感趋势。</p>
+          </article>
+          <article class="control-note-card">
+            <div class="control-note-top">
+              <svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-open"></use></svg>
+              <span>跳转说明</span>
+            </div>
+            <p>来源网站、文章样本、主题簇都可跳转，可快速串联完整信息链路。</p>
+          </article>
+        </div>
+
+        <div class="control-foot">
+          <span>主图支持点击主题、文章与来源网站节点</span>
+          <span>点击文章进入文章页，点击来源网站进入对应网站页</span>
+        </div>
+      </aside>
+    </header>
+
+    <main class="board-grid">
+      <section id="map-section" class="panel map-panel reveal" data-reveal-style="stage">
+        <div class="panel-head">
+          <div>
+            <p class="section-tag">聚类主图</p>
+            <h2>主题簇、网页文章与来源网站关系网</h2>
+          </div>
+          <div id="statusMeta" class="status-meta"></div>
+        </div>
+
+        <div class="canvas-shell">
+          <div class="canvas-legend">
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-cluster"></use></svg><i class="legend-dot legend-center"></i>主题簇</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-article"></use></svg><i class="legend-dot legend-article"></i>网页文章</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-source"></use></svg><i class="legend-dot legend-source"></i>来源网站</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="/icons.svg#icon-radar"></use></svg><i class="legend-line"></i>关系连线</span>
+          </div>
+          <div id="graphStage" class="graph-stage">
+            <div class="graph-chrome">
+              <span id="graphScaleBadge" class="graph-badge">缩放 100%</span>
+              <span id="graphFocusBadge" class="graph-badge soft">悬停节点查看完整中文名称</span>
+            </div>
+
+            <div class="graph-tools">
+              <button id="graphZoomOut" class="graph-tool" type="button" aria-label="缩小主图">−</button>
+              <button id="graphReset" class="graph-tool accent" type="button" aria-label="重置主图视角">重置</button>
+              <button id="graphZoomIn" class="graph-tool" type="button" aria-label="放大主图">+</button>
+            </div>
+
+            <div id="graphFocusCard" class="graph-focus-card" aria-live="polite">
+              <p id="graphFocusKicker" class="graph-focus-kicker">当前焦点</p>
+              <h3 id="graphFocusTitle" class="graph-focus-title">把鼠标移到主题簇附近</h3>
+              <p id="graphFocusDesc" class="graph-focus-desc">系统会自动放大邻近的主题簇，并在这里展开完整中文名称、关键词与交互说明。</p>
+              <div id="graphFocusMeta" class="graph-focus-meta chip-row"></div>
+            </div>
+
+            <div id="constellationCanvas" class="constellation-canvas">
+              <svg id="constellationSvg" viewBox="0 0 980 560" preserveAspectRatio="none">
+                <g id="constellationViewport"></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel insight-panel">
+        <section class="insight-block reveal" data-reveal-style="metrics">
+          <div class="panel-head compact">
+            <div>
+              <p class="section-tag">系统指标</p>
+              <h2>本轮统计</h2>
+            </div>
+          </div>
+          <div id="metricGrid" class="metric-grid"></div>
+        </section>
+
+        <section class="insight-block source-block reveal" data-reveal-style="source">
+          <div class="panel-head compact">
+            <div>
+              <p class="section-tag">站点样本</p>
+              <h2>来源覆盖</h2>
+            </div>
+          </div>
+          <div class="source-library-shell">
+            <div id="sourceLibrary" class="source-library"></div>
+          </div>
+        </section>
+
+        <section class="insight-block reveal" data-reveal-style="notes">
+          <div class="panel-head compact">
+            <div>
+              <p class="section-tag">系统提示</p>
+              <h2>运行说明</h2>
+            </div>
+          </div>
+          <ul id="noteList" class="note-list"></ul>
+        </section>
+      </aside>
+
+      <section id="cluster-section" class="panel cluster-panel reveal" data-reveal-style="grid">
+        <div class="panel-head">
+          <div>
+            <p class="section-tag">聚类结果</p>
+            <h2>可选择关注的主题簇</h2>
+          </div>
+        </div>
+        <div id="clusterCards" class="cluster-cards"></div>
+      </section>
+
+      <section id="tracked-section" class="panel tracked-panel reveal" data-reveal-style="story">
+        <div class="panel-head">
+          <div>
+            <p class="section-tag">关注主题</p>
+            <h2>主题线索、来源和情感动态</h2>
+          </div>
+          <div id="focusMood" class="focus-mood"></div>
+        </div>
+
+        <div class="tracked-layout">
+          <div class="tracked-main">
+            <div class="topic-intro reveal" data-reveal-style="headline">
+              <h3 id="trackedTitle">正在加载主题...</h3>
+              <p id="trackedStatement" class="tracked-statement"></p>
+            </div>
+
+            <div class="dual-block">
+              <section class="subpanel reveal" data-reveal-style="sweep">
+                <div class="mini-head">
+                  <span>主题关键词</span>
+                  <span>来自当前关注簇</span>
+                </div>
+                <div id="keywordChips" class="chip-row"></div>
+              </section>
+
+              <section class="subpanel reveal" data-reveal-style="sweep-alt">
+                <div class="mini-head">
+                  <span>关联来源</span>
+                  <span>当前专题覆盖的网站样本</span>
+                </div>
+                <div id="trackedSources" class="chip-row"></div>
+              </section>
+            </div>
+
+            <section class="subpanel reveal" data-reveal-style="lift">
+              <div class="mini-head">
+                <span>情感结构</span>
+                <span>正面 / 中性 / 负面</span>
+              </div>
+              <div id="sentimentBars" class="sentiment-bars"></div>
+            </section>
+
+            <section class="subpanel timeline-panel reveal" data-reveal-style="trace">
+              <div class="mini-head">
+                <span>情感时间线</span>
+                <span>按日期汇总最新跟踪文章</span>
+              </div>
+              <svg id="timelineSvg" viewBox="0 0 780 240" preserveAspectRatio="none"></svg>
+            </section>
+          </div>
+
+          <div class="tracked-feed reveal" data-reveal-style="feed">
+            <div class="mini-head">
+              <span>最新跟踪文章</span>
+              <span>按主题相关度排序</span>
+            </div>
+            <div id="trackedArticles" class="article-list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="clusterCardTemplate">
+    <article class="cluster-card">
+      <div class="cluster-topline">
+        <span class="cluster-index"></span>
+        <span class="cluster-size"></span>
+      </div>
+      <h3 class="cluster-title"></h3>
+      <p class="cluster-summary"></p>
+      <div class="cluster-keywords chip-row"></div>
+      <div class="cluster-sentiment sentiment-row"></div>
+      <div class="cluster-sources chip-row"></div>
+      <p class="cluster-representative"></p>
+      <button class="follow-button">设为关注</button>
+    </article>
+  </template>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { PrismaClient } from "@prisma/client";
 import * as XLSX from "xlsx";
 import { bulkUpsertRuntimeDemoSpots, listRuntimeDemoSpots } from "@/lib/demo-spot-store";
 import { buildAmapNavigationUrl, buildGenericHotelUrl, buildGenericTicketUrl } from "@/lib/utils";
 import type { RuralSpotSeed } from "@/types";
+import { createPrismaClient } from "@/lib/prisma";
 
 type ProvinceItem = {
   code: string;
@@ -578,7 +578,7 @@ async function importIntoDemo(rows: ImportRow[]) {
 }
 
 async function importIntoDatabase(rows: ImportRow[]) {
-  const prisma = new PrismaClient();
+  const prisma = createPrismaClient();
   let created = 0;
   let updated = 0;
 

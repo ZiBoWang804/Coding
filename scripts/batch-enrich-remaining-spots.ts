@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { PrismaClient } from "@prisma/client";
 import { loadRowsFromFile } from "@/lib/importer";
+import { createPrismaClient } from "@/lib/prisma";
 
 type DictRow = Record<string, unknown>;
 
@@ -20,7 +20,7 @@ type ParsedTripDetail = {
   longitude: number | null;
 };
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 const ROOT = process.cwd();
 const PROFILE_CSV = path.join(ROOT, "data", "全国旅游数据整合_2026-03-24", "景点画像汇总_含平台照片.csv");
 const REPORT_PATH = path.join(ROOT, "data", "import-ready", "remaining-spots-enrich.report.json");

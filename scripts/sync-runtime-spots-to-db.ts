@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "@/lib/prisma";
 
 type RuntimeSpot = {
   id?: string;
@@ -36,7 +36,7 @@ type RuntimeState = {
   deletedIds?: string[];
 };
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 const RUNTIME_FILE = path.join(process.cwd(), "data", "demo-spots.runtime.json");
 
 function buildUniqueKey(spot: Pick<RuntimeSpot, "name" | "province" | "city" | "district">) {

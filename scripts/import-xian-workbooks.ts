@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import * as XLSX from "xlsx";
-import { PrismaClient } from "@prisma/client";
 import { buildGenericHotelUrl, buildGenericTicketUrl, isLikelyImageUrl, normalizePipeList, parseNumber } from "@/lib/utils";
+import { createPrismaClient } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const SPOT_BATCH = "xian-rural-import-2026-03";
 const SPOT_SOURCE = "xian_public_spot_workbook";

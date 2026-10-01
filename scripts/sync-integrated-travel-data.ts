@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { PrismaClient, type Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { loadRowsFromFile } from "@/lib/importer";
 import { bulkUpsertRuntimeDemoSpots } from "@/lib/demo-spot-store";
 import {
@@ -12,6 +12,7 @@ import {
   parseNumber
 } from "@/lib/utils";
 import type { RuralSpotSeed } from "@/types";
+import { createPrismaClient } from "@/lib/prisma";
 
 type DictRow = Record<string, unknown>;
 
@@ -63,7 +64,7 @@ const XHS_CSV = path.join(ROOT, "data", "小红书旅游数据整合_2026-03-25"
 const PUBLIC_MEDIA_DIR = path.join(ROOT, "public", "media", "integrated-spots");
 const REPORT_PATH = path.join(ROOT, "data", "import-ready", "integrated-sync.report.json");
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 function getArg(flag: string) {
   const hit = process.argv.find((item) => item.startsWith(`${flag}=`));

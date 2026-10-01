@@ -298,9 +298,9 @@ export function buildAlternativeOptions(destinations: PlannerDestination[]): Alt
     destinationId: destination.id,
     destinationName: destination.name,
     reason: destination.tags.includes("family_interaction")
-      ? "如果更看重亲子互动体验，这个备选会更合适。"
+      ? "如果更看重亲子互动或陪伴型体验，这个备选更合适。"
       : destination.tags.includes("local_food")
-        ? "如果更看重餐饮和成熟配套，这个备选更稳妥。"
+        ? "如果更看重餐饮和成熟配套，这个备选会更稳妥。"
         : "如果更想要人少一点、节奏更轻一点，可以把它作为备选。"
   }));
 }

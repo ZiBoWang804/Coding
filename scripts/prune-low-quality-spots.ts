@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { PrismaClient, type Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
+import { createPrismaClient } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 const ROOT = process.cwd();
 const REPORT_PATH = path.join(ROOT, "data", "import-ready", "spot-prune.report.json");
 

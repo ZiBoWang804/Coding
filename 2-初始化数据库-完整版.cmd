@@ -26,8 +26,8 @@ call "%~dp0node-v24.14.0-win-x64\npm.cmd" run prisma:generate
 if errorlevel 1 goto :failed
 
 echo.
-echo [2/3] Pushing schema to PostgreSQL...
-call "%~dp0node-v24.14.0-win-x64\npm.cmd" run prisma:push
+echo [2/3] Applying migrations to PostgreSQL...
+call "%~dp0node-v24.14.0-win-x64\npm.cmd" run prisma:deploy
 if errorlevel 1 goto :failed
 
 echo.

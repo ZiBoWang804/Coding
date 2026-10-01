@@ -6,7 +6,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { RECOMMENDED_ROUTES } from "@/lib/constants";
 import { getHomeData } from "@/lib/repository";
 import { isStableSpotImage, resolveSpotImage } from "@/lib/spot-image";
-import { isLikelyImageUrl, isRemoteHttpUrl } from "@/lib/utils";
+import { isRemoteHttpUrl } from "@/lib/utils";
 import { getXianFeaturedSpots } from "@/lib/xian-topic";
 import type { RuralSpotSeed, SearchHistoryItem } from "@/types";
 
@@ -46,51 +46,6 @@ function uniqueSpots(spots: RuralSpotSeed[]) {
 
 function hasStableShowcaseImage(spot?: RuralSpotSeed | null) {
   return isStableSpotImage(spot, HERO_FALLBACK_IMAGE);
-}
-
-function isHomeShowcaseSpot(spot: RuralSpotSeed) {
-  return spot.province === "陕西省" && hasStableShowcaseImage(spot);
-}
-
-function sortShowcaseSpots(spots: RuralSpotSeed[]) {
-  return [...spots].sort((left, right) => {
-    const leftPriority = SHOWCASE_PRIORITY.indexOf(left.name);
-    const rightPriority = SHOWCASE_PRIORITY.indexOf(right.name);
-    const normalizedLeft = leftPriority === -1 ? Number.MAX_SAFE_INTEGER : leftPriority;
-    const normalizedRight = rightPriority === -1 ? Number.MAX_SAFE_INTEGER : rightPriority;
-    if (normalizedLeft !== normalizedRight) return normalizedLeft - normalizedRight;
-
-    const leftHasLocalImage = resolveSpotImage(left).startsWith("/spot-assets/xian/");
-    const rightHasLocalImage = resolveSpotImage(right).startsWith("/spot-assets/xian/");
-    if (leftHasLocalImage !== rightHasLocalImage) return leftHasLocalImage ? -1 : 1;
-
-    return left.name.localeCompare(right.name, "zh-CN");
-  });
-}
-
-function pickSpotWindow(spots: RuralSpotSeed[], start: number, count: number) {
-  const primary = spots.slice(start, start + count);
-  if (primary.length >= count) return primary;
-  return uniqueSpots([...primary, ...spots]).slice(0, count);
-}
-
-function pickPreferredSpot(spots: RuralSpotSeed[], preferredNames: string[]) {
-  const matched = preferredNames
-    .map((name) => spots.find((spot) => spot.name === name))
-    .find((spot): spot is RuralSpotSeed => Boolean(spot));
-
-  return matched ?? spots[0] ?? null;
-}
-
-function hasStableShowcaseImage(spot?: RuralSpotSeed | null) {
-  if (!spot) return false;
-  const image = resolveSpotImage(spot);
-  if (!image || image === HERO_FALLBACK_IMAGE) return false;
-  if (image.startsWith("/spot-assets/xian/")) return true;
-  if (image.includes("dimg04.c-ctrip.com")) return true;
-  if (image.includes("images.unsplash.com")) return false;
-  if (image.includes("sxhm.com")) return false;
-  return !isRemoteHttpUrl(image) || image.startsWith("/");
 }
 
 function isHomeShowcaseSpot(spot: RuralSpotSeed) {

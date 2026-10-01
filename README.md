@@ -72,7 +72,7 @@ copy .env.example .env
 
 ```bash
 npm run prisma:generate
-npm run prisma:push
+npm run prisma:deploy
 npm run seed
 npm run db:check
 npm run build

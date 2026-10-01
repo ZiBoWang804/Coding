@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import * as XLSX from "xlsx";
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const WORKBOOK_KEYWORD = "重发版";
 const IMAGE_FOLDER_KEYWORD = "图片素材包";

@@ -12,7 +12,7 @@ if not exist "%~dp0node-v24.14.0-win-x64\node.exe" (
 if not exist "%~dp0.env" (
   copy "%~dp0.env.example" "%~dp0.env" >nul
   echo A new .env file has been created.
-  echo Please edit DATABASE_URL and USE_DEMO_DATA first, then run this script again.
+  echo Fill DATABASE_URL and DIRECT_URL with your cloud PostgreSQL strings, set USE_DEMO_DATA=false, then run this script again.
   start "" notepad "%~dp0.env"
   pause
   exit /b 1
@@ -45,6 +45,6 @@ exit /b 0
 :failed
 echo.
 echo Database initialization failed.
-echo Please check PostgreSQL, DATABASE_URL in .env, and whether the database already exists.
+echo Please check DATABASE_URL, DIRECT_URL, SSL, the cloud database allowlist, and whether the database already exists.
 pause
 exit /b 1

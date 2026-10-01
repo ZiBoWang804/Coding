@@ -1,8 +1,8 @@
 ﻿import path from "node:path";
-import { PrismaClient } from "@prisma/client";
 import { buildImportPreview, commitImportRows, defaultFieldMapping, loadRowsFromFile } from "@/lib/importer";
+import { createPrismaClient } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 function getArg(flag: string) {
   const hit = process.argv.find((item) => item.startsWith(`${flag}=`));

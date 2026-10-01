@@ -57,21 +57,35 @@
 
 ## 本地启动
 
+数据库已经改成任意托管 PostgreSQL，不再默认连接本机 `localhost:5432`。Supabase、Neon、阿里云 RDS 或其他云厂商都可以，只要给出 PostgreSQL 连接串。
+
 ```bash
 npm install
 copy .env.example .env
+```
+
+然后编辑 `.env`：
+
+- `DATABASE_URL`：应用运行时使用。有连接池时填池化地址。
+- `DIRECT_URL`：迁移和导入使用的直连地址。没有连接池时与 `DATABASE_URL` 相同。
+- `USE_DEMO_DATA="false"`：真正读写云数据库。
+
+```bash
 npm run prisma:generate
+npm run prisma:push
+npm run seed
+npm run db:check
 npm run build
 npm run start
 ```
 
-默认访问：`http://localhost:3000`
+`npm run db:check` 成功时会打印 `连接成功`，以及景点和用户数量。
 
-如果你只想本地演示规划引擎，不依赖远程数据库，请在 `.env` 中保留：
+默认访问：`http://localhost:3000`。这里的 localhost 只是网站地址，数据库在云上。
 
-```env
-USE_DEMO_DATA="true"
-```
+如果你只想看页面、不连接数据库，把 `USE_DEMO_DATA` 改成 `"true"`，或者双击 `1-启动项目-演示模式.cmd`。演示模式不会读取 `DATABASE_URL`。
+
+更完整的云数据库步骤、三种厂商的连接串示例、白名单和把本机旧数据迁过去的方法，写在 [docs/数据库完整版启动教程.md](docs/数据库完整版启动教程.md)。
 
 ## AI 规划引擎目录
 
@@ -309,8 +323,9 @@ npm run final-refine:spots
 
 ## 环境变量
 
-- `DATABASE_URL`
-- `USE_DEMO_DATA`
+- `DATABASE_URL`：应用连接串。云数据库需要 `sslmode=require`；连接池地址还要 `pgbouncer=true`。无服务器部署再加 `connection_limit=1`。
+- `DIRECT_URL`：迁移直连串。`prisma db push`、`prisma migrate` 和种子导入都走它。
+- `USE_DEMO_DATA`：`true` 时忽略数据库，只用内置演示数据。
 - `AI_PROVIDER`
 - `ARK_API_KEY`
 - `ARK_MODEL`
@@ -324,7 +339,8 @@ npm run final-refine:spots
 
 在 Vercel 中至少配置：
 
-- `DATABASE_URL`
+- `DATABASE_URL`：使用连接池地址，并带上 `pgbouncer=true&connection_limit=1&sslmode=require`
+- `DIRECT_URL`：使用不经过连接池的直连地址，迁移时需要它
 - `USE_DEMO_DATA=false`
 - `AI_PROVIDER=ark`
 - `ARK_API_KEY`

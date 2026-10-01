@@ -3,11 +3,11 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 import * as XLSX from "xlsx";
-import { PrismaClient } from "@prisma/client";
 import { bulkUpsertRuntimeDemoSpots } from "@/lib/demo-spot-store";
 import { loadSeedSpots } from "@/lib/demo-data";
 import { buildSpotImageKey, type SpotImageOverride } from "@/lib/spot-image";
 import type { RuralSpotSeed } from "@/types";
+import { createPrismaClient } from "@/lib/prisma";
 
 type PhotoIndexRow = {
   景点名称?: string;
@@ -47,7 +47,7 @@ type AuditReport = {
   };
 };
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 const ROOT = process.cwd();
 const DATA_DIR = path.join(ROOT, "data");
 const PUBLIC_DIR = path.join(ROOT, "public", "media", "curated-spots");

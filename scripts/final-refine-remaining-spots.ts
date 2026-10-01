@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "@/lib/prisma";
 
 type SpotFix = {
   name: string;
@@ -16,7 +16,7 @@ type DeleteTarget = {
   city: string;
 };
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 const ROOT = process.cwd();
 const REPORT_PATH = path.join(ROOT, "data", "import-ready", "remaining-spots-final-refine.report.json");
 

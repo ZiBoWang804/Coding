@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
-import { PrismaClient, PostType, SpotActionType, UserRole } from "@prisma/client";
+import { PostType, SpotActionType, UserRole } from "@prisma/client";
 import { buildImportPreview, commitImportRows, defaultFieldMapping, loadRowsFromFile } from "@/lib/importer";
+import { createPrismaClient } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 async function upsertDemoUsers() {
   const adminPasswordHash = await bcrypt.hash("admin123456", 10);

@@ -1,7 +1,7 @@
-﻿import { PrismaClient } from "@prisma/client";
-import fs from "node:fs";
+import { createPrismaClient } from "@/lib/prisma";
+﻿import fs from "node:fs";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 async function main() {
   const rows = JSON.parse(fs.readFileSync("./data/xian-rural-spots.cleaned.json", "utf8"));

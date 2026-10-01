@@ -39,6 +39,9 @@ if not exist ".env.local" if exist ".env.example" (
 )
 
 echo Starting the project in development mode...
+echo The site still opens on this computer. The database comes from DATABASE_URL in .env or .env.local.
+echo For a cloud database, fill DATABASE_URL and DIRECT_URL, then set USE_DEMO_DATA=false.
+echo For a demo without any database, set USE_DEMO_DATA=true.
 echo Browser URL: http://localhost:3000
 echo Use stop-dev.cmd or Ctrl+C in the server window to stop it.
 echo.

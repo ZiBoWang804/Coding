@@ -22,6 +22,8 @@ set "PORT=3000"
 set "PATH=%~dp0node-v24.14.0-win-x64;%PATH%"
 
 echo Starting full database mode...
+echo This window still opens the site on this computer.
+echo Spot, user and community data come from DATABASE_URL in .env.
 echo Open in browser: http://localhost:3000
 echo Do not close this window while the project is running.
 echo.

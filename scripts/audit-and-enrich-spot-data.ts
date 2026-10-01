@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "@/lib/prisma";
 
 type CuratedEnrichment = {
   name: string;
@@ -13,7 +13,7 @@ type CuratedEnrichment = {
   notes?: string;
 };
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 const ROOT = process.cwd();
 const REPORT_PATH = path.join(ROOT, "data", "import-ready", "spot-audit.report.json");
 

@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { PrismaClient } from "@prisma/client";
 import { buildAmapNavigationUrl, buildGenericHotelUrl, buildGenericTicketUrl, isLikelyImageUrl } from "@/lib/utils";
+import { createPrismaClient } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const DATA_ROOT = path.join(process.cwd(), "data");
 const DATA_FOLDER_NAME = "西安旅游资料_2026-03-23";

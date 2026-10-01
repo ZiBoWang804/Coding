@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx --tsconfig tsconfig.scripts.json scripts/run-prisma.ts generate && next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx --tsconfig tsconfig.scripts.json scripts/seed.ts",
@@ -20,9 +20,11 @@
     "prune:spots": "tsx --tsconfig tsconfig.scripts.json scripts/prune-low-quality-spots.ts",
     "enrich:remaining-spots": "tsx --tsconfig tsconfig.scripts.json scripts/batch-enrich-remaining-spots.ts",
     "final-refine:spots": "tsx --tsconfig tsconfig.scripts.json scripts/final-refine-remaining-spots.ts",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:push": "prisma db push",
+    "prisma:generate": "tsx --tsconfig tsconfig.scripts.json scripts/run-prisma.ts generate",
+    "prisma:migrate": "tsx --tsconfig tsconfig.scripts.json scripts/run-prisma.ts migrate dev",
+    "prisma:deploy": "tsx --tsconfig tsconfig.scripts.json scripts/run-prisma.ts migrate deploy",
+    "prisma:push": "tsx --tsconfig tsconfig.scripts.json scripts/run-prisma.ts db push",
+    "db:check": "tsx --tsconfig tsconfig.scripts.json scripts/check-database.ts",
     "test:planner": "tsx --tsconfig tsconfig.scripts.json scripts/test-planner.ts"
   },
   "dependencies": {

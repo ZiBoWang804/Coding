@@ -1,17 +1,27 @@
-@echo off
-setlocal
-cd /d "%~dp0"
-
-if not exist "%~dp0node-v24.14.0-win-x64\node.exe" (
-  echo Node runtime was not found in this folder.
-  echo Please keep the whole project folder together and try again.
+﻿@echo off
+setlocal EnableExtensions
+chcp 65001 >nul
+for %%I in ("%~dp0.") do set "ROOT=%%~fI"
+cd /d "%ROOT%"
+if errorlevel 1 (
+  echo 无法进入项目目录：%ROOT%
+  pause
+  exit /b 1
+)
+call :resolve_node
+if errorlevel 1 (
   pause
   exit /b 1
 )
 
-if not exist "%~dp0.env" (
-  echo .env was not found.
-  echo Please run 2-初始化数据库-完整版.cmd first.
+if not exist "%ROOT%\.env" (
+  echo 未找到 .env。
+  echo 请先运行 2-初始化数据库-完整版.cmd。
+  pause
+  exit /b 1
+)
+if not exist "%ROOT%\node_modules\next\dist\bin\next" (
+  echo 未找到 Next.js。请先在项目根目录执行 npm install。
   pause
   exit /b 1
 )
@@ -19,18 +29,55 @@ if not exist "%~dp0.env" (
 set "USE_DEMO_DATA=false"
 set "APP_URL=http://localhost:3000"
 set "PORT=3000"
-set "PATH=%~dp0node-v24.14.0-win-x64;%PATH%"
 
-echo Starting full database mode...
-echo This window still opens the site on this computer.
-echo Spot, user and community data come from DATABASE_URL in .env.
-echo Open in browser: http://localhost:3000
-echo Do not close this window while the project is running.
+echo 正在以数据库模式启动：%ROOT%
+echo 网站在本机打开，数据来自该目录 .env 中的 DATABASE_URL。
+echo 浏览器地址：http://localhost:3000
+echo 运行期间请不要关闭此窗口。
 echo.
 
 start "" powershell -NoProfile -WindowStyle Hidden -Command "Start-Sleep -Seconds 8; Start-Process 'http://localhost:3000'"
-call "%~dp0node-v24.14.0-win-x64\npm.cmd" run dev
-
+call "%NPM_CMD%" run dev
+if errorlevel 1 (
+  echo.
+  echo 项目已停止，退出码不为 0。
+  pause
+  exit /b 1
+)
 echo.
-echo The project has stopped.
+echo 项目已停止。
 pause
+exit /b 0
+
+:resolve_node
+set "NODE_EXE="
+set "NPM_CMD="
+if exist "%ROOT%\node-v24.14.0-win-x64\node.exe" (
+  set "NODE_EXE=%ROOT%\node-v24.14.0-win-x64\node.exe"
+  set "NPM_CMD=%ROOT%\node-v24.14.0-win-x64\npm.cmd"
+  set "PATH=%ROOT%\node-v24.14.0-win-x64;%PATH%"
+  exit /b 0
+)
+if exist "%ROOT%\..\node-v24.14.0-win-x64\node.exe" (
+  for %%I in ("%ROOT%\..\node-v24.14.0-win-x64") do (
+    set "NODE_EXE=%%~fI\node.exe"
+    set "NPM_CMD=%%~fI\npm.cmd"
+    set "PATH=%%~fI;%PATH%"
+  )
+  exit /b 0
+)
+where node >nul 2>nul
+if errorlevel 1 (
+  echo 未找到 Node.js。
+  echo 请把 node-v24.14.0-win-x64 放在项目根目录，或安装 Node.js 并加入 PATH。
+  exit /b 1
+)
+where npm >nul 2>nul
+if errorlevel 1 (
+  echo 已找到 node，但没有找到 npm。
+  echo 请安装完整的 Node.js，或把 node-v24.14.0-win-x64 放在项目根目录。
+  exit /b 1
+)
+set "NODE_EXE=node"
+set "NPM_CMD=npm.cmd"
+exit /b 0

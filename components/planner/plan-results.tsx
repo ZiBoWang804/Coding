@@ -64,6 +64,22 @@ function buildTravelResourceSpot(plan: RankedPlan) {
   };
 }
 
+function groupItineraryByDay(plan: RankedPlan) {
+  const dayMap = new Map<number, typeof plan.itinerary>();
+  for (const item of plan.itinerary) {
+    const bucket = dayMap.get(item.day) || [];
+    bucket.push(item);
+    dayMap.set(item.day, bucket);
+  }
+
+  return Array.from(dayMap.entries())
+    .sort(([left], [right]) => left - right)
+    .map(([day, items]) => ({
+      day,
+      items: [...items].sort((left, right) => left.startTime.localeCompare(right.startTime))
+    }));
+}
+
 export function PlanResults({
   result,
   origin,
@@ -93,6 +109,8 @@ export function PlanResults({
       </div>
     );
   }
+
+  const itineraryByDay = groupItineraryByDay(best);
 
   return (
     <div className="mt-4 space-y-6 text-sm text-slate-700">
@@ -260,7 +278,34 @@ export function PlanResults({
 
           <div className="mt-5">
             <div className="font-medium text-brand-800">建议行程</div>
-            <ul className="mt-3 space-y-3">
+            <div className="mt-3 space-y-4">
+              {itineraryByDay.map(({ day, items }) => (
+                <div key={`${best.destinationId}-day-${day}`} className="rounded-[1.6rem] border border-brand-100 bg-sand/40 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="font-medium text-brand-900">{`第 ${day} 天`}</div>
+                    <div className="text-xs text-slate-500">{`${items[0]?.startTime ?? "09:00"} - ${items[items.length - 1]?.endTime ?? "18:00"}`}</div>
+                  </div>
+                  <div className="mt-3 space-y-3">
+                    {items.map((item) => (
+                      <div key={`${best.destinationId}-${item.day}-${item.startTime}-${item.title}`} className="rounded-2xl bg-white/85 p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="font-medium text-brand-900">{item.title}</div>
+                          <div className="text-xs text-slate-500">
+                            {item.startTime} - {item.endTime}
+                          </div>
+                        </div>
+                        <div className="mt-2 text-sm leading-6 text-slate-600">{item.description}</div>
+                        {item.location ? <div className="mt-2 text-xs text-slate-500">地点：{item.location}</div> : null}
+                        {item.transportTip ? <div className="mt-1 text-xs text-slate-500">交通：{item.transportTip}</div> : null}
+                        {item.mealTip ? <div className="mt-1 text-xs text-slate-500">餐饮：{item.mealTip}</div> : null}
+                        {item.stayTip ? <div className="mt-1 text-xs text-slate-500">住宿：{item.stayTip}</div> : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <ul className="hidden mt-3 space-y-3">
               {best.itinerary.map((item) => (
                 <li key={`${best.destinationId}-${item.day}-${item.title}`} className="rounded-2xl bg-sand/70 p-4">
                   <div className="flex items-start justify-between gap-3">

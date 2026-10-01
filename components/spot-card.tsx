@@ -1,17 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { TagBadge } from "@/components/tag-badge";
+import { resolveSpotImage } from "@/lib/spot-image";
 import { getSpotHotelSummary } from "@/lib/travel-resources";
-import { formatCrowdLevel, formatCurrency, isLikelyImageUrl, isRemoteHttpUrl } from "@/lib/utils";
+import { formatCrowdLevel, formatCurrency, isRemoteHttpUrl } from "@/lib/utils";
 import type { RuralSpotSeed } from "@/types";
 
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee";
-
-function resolveImageSrc(spot: RuralSpotSeed) {
-  if (spot.imageUrl && isLikelyImageUrl(spot.imageUrl)) return spot.imageUrl;
-  if (spot.photoUrls?.[0] && isLikelyImageUrl(spot.photoUrls[0])) return spot.photoUrls[0];
-  return FALLBACK_IMAGE;
-}
 
 function formatRating(value?: number | null) {
   if (value == null) return "待补充";
@@ -19,7 +14,7 @@ function formatRating(value?: number | null) {
 }
 
 export function SpotCard({ spot }: { spot: RuralSpotSeed }) {
-  const imageSrc = resolveImageSrc(spot);
+  const imageSrc = resolveSpotImage(spot, FALLBACK_IMAGE);
   const hotelSummary = getSpotHotelSummary(spot);
   const location = [spot.city, spot.district].filter(Boolean).join(" / ");
   const isRemoteImage = isRemoteHttpUrl(imageSrc);

@@ -70,9 +70,21 @@ type TravelPlanStructuredResponse = {
     day: number;
     destination_id: string;
     destination_name: string;
+    day_summary: string;
     activities: string[];
     transport_plan: string;
     meal_recommendations: string[];
+    stay_recommendation?: string;
+    segments: Array<{
+      start_time: string;
+      end_time: string;
+      title: string;
+      description: string;
+      location?: string;
+      transport_tip?: string;
+      meal_tip?: string;
+      stay_tip?: string;
+    }>;
     estimated_cost: number;
   }>;
   dynamic_suggestions: string[];
@@ -162,9 +174,25 @@ const TRAVEL_PLAN_RESPONSE_SCHEMA = z.object({
         day: z.coerce.number().int().min(1),
         destination_id: z.string().min(1),
         destination_name: z.string().min(1),
+        day_summary: z.string().min(1),
         activities: z.array(z.string().min(1)).min(1),
         transport_plan: z.string().min(1),
         meal_recommendations: z.array(z.string().min(1)).default([]),
+        stay_recommendation: z.string().optional(),
+        segments: z
+          .array(
+            z.object({
+              start_time: z.string().min(1),
+              end_time: z.string().min(1),
+              title: z.string().min(1),
+              description: z.string().min(1),
+              location: z.string().optional(),
+              transport_tip: z.string().optional(),
+              meal_tip: z.string().optional(),
+              stay_tip: z.string().optional()
+            })
+          )
+          .min(2),
         estimated_cost: z.coerce.number().nonnegative()
       })
     )
@@ -192,9 +220,23 @@ const OUTPUT_SCHEMA_HINT = {
       day: "number",
       destination_id: "string",
       destination_name: "string",
+      day_summary: "string",
       activities: ["string"],
       transport_plan: "string",
       meal_recommendations: ["string"],
+      stay_recommendation: "string",
+      segments: [
+        {
+          start_time: "string",
+          end_time: "string",
+          title: "string",
+          description: "string",
+          location: "string",
+          transport_tip: "string",
+          meal_tip: "string",
+          stay_tip: "string"
+        }
+      ],
       estimated_cost: "number"
     }
   ],
@@ -363,6 +405,110 @@ function toCompatDecision(
       dynamicImpact: structured.dynamic_suggestions.slice(0, 3),
       cautions: [...structured.cautions.slice(0, 3), ...structured.missing_data_notes.slice(0, 2)].slice(0, 4),
       alternatives,
+      recommendations
+    }
+  };
+}
+
+function buildCompatItineraryItemsV2(structured: TravelPlanStructuredResponse): ItineraryItem[] {
+  return structured.itinerary.flatMap((dayPlan) => {
+    const segments =
+      Array.isArray(dayPlan.segments) && dayPlan.segments.length > 0
+        ? dayPlan.segments
+        : [
+            {
+              start_time: "09:00",
+              end_time: "18:00",
+              title: `${dayPlan.destination_name}行程`,
+              description: dayPlan.day_summary || dayPlan.activities.join("；"),
+              transport_tip: dayPlan.transport_plan,
+              meal_tip: dayPlan.meal_recommendations.join("；"),
+              stay_tip: dayPlan.stay_recommendation
+            }
+          ];
+
+    return segments.map((segment) => ({
+      day: dayPlan.day,
+      title: segment.title,
+      startTime: segment.start_time,
+      endTime: segment.end_time,
+      description: truncateText(segment.description, 180),
+      location: segment.location,
+      transportTip: segment.transport_tip || truncateText(dayPlan.transport_plan, 80),
+      mealTip: segment.meal_tip || truncateText(dayPlan.meal_recommendations.join("；"), 80) || undefined,
+      stayTip: segment.stay_tip || dayPlan.stay_recommendation || undefined
+    }));
+  });
+}
+
+function toCompatDecisionV2(
+  provider: string,
+  structured: TravelPlanStructuredResponse,
+  prepared: PreparedRequest
+): PlannerDecisionCompat {
+  const candidateMap = new Map(prepared.candidateRefs.map((item) => [item.refId, item.destination]));
+  const destinationFrequency = new Map<string, number>();
+
+  for (const dayPlan of structured.itinerary) {
+    destinationFrequency.set(dayPlan.destination_id, (destinationFrequency.get(dayPlan.destination_id) || 0) + 1);
+  }
+
+  const primaryStructuredDay =
+    [...structured.itinerary].sort((left, right) => {
+      const frequencyGap = (destinationFrequency.get(right.destination_id) || 0) - (destinationFrequency.get(left.destination_id) || 0);
+      if (frequencyGap !== 0) return frequencyGap;
+      return left.day - right.day;
+    })[0] || structured.itinerary[0];
+
+  const primaryDestination =
+    candidateMap.get(primaryStructuredDay.destination_id) ||
+    prepared.candidates.find((item) => item.id === primaryStructuredDay.destination_id) ||
+    prepared.candidates[0];
+
+  const recommendations = [
+    {
+      destinationId: primaryDestination?.id || primaryStructuredDay.destination_id,
+      score: 92,
+      matchReasons: structured.itinerary.flatMap((item) => item.activities).slice(0, 3),
+      fitReasons: structured.dynamic_suggestions.slice(0, 2),
+      dynamicFactors: structured.dynamic_suggestions.slice(0, 3),
+      cautions: structured.cautions.slice(0, 3),
+      transportSummary: truncateText(structured.itinerary.map((item) => `第${item.day}天：${item.transport_plan}`).join("；"), 160),
+      lodgingSummary: truncateText(
+        structured.itinerary.map((item) => item.stay_recommendation).filter(Boolean).join("；") || "如需过夜，优先选择交通便利、退改灵活的住宿。",
+        120
+      ),
+      diningSummary: truncateText(
+        structured.itinerary.flatMap((item) => item.meal_recommendations).filter(Boolean).join("；") || "优先选择评价稳定、便于衔接行程的本地餐饮。",
+        120
+      ),
+      budgetEstimate: {
+        transport: structured.budget_distribution.transport,
+        lodging: structured.budget_distribution.lodging,
+        dining: structured.budget_distribution.dining,
+        activities: structured.budget_distribution.activities,
+        totalMin: structured.budget_distribution.total_min,
+        totalMax: structured.budget_distribution.total_max
+      },
+      itinerary: buildCompatItineraryItemsV2(structured),
+      openStatus: "unknown" as const,
+      openingHoursText: "开放信息请以景区官方公告为准。"
+    }
+  ];
+
+  return {
+    provider,
+    response: {
+      headline: truncateText(structured.summary, 48),
+      weatherSummary: truncateText(structured.weather_summary, 120),
+      trafficSummary: truncateText(structured.traffic_summary, 120),
+      recommendation: structured.itinerary.map((item) => `第${item.day}天：${truncateText(item.day_summary, 72)}`).slice(0, prepared.input.days),
+      dynamicImpact: structured.dynamic_suggestions.slice(0, 3),
+      cautions: [...structured.cautions.slice(0, 3), ...structured.missing_data_notes.slice(0, 2)].slice(0, 4),
+      alternatives: prepared.candidates
+        .filter((item) => item.id !== (primaryDestination?.id || primaryStructuredDay.destination_id))
+        .slice(0, 2)
+        .map((item) => `${item.name}：可作为天气或交通波动时的备选方案。`),
       recommendations
     }
   };
@@ -630,6 +776,9 @@ export function createTravelPlanPrompt(
 ): ServiceEnvelope<PromptPayload> {
   const priority = computePriority(weatherInfo, trafficInfo);
   const strictGuard = [
+    "输出的 itinerary 必须严格按用户填写的 days 生成，不能少天数，也不能把多天合并成一天。",
+    "每一天都必须包含 2-4 个 segments，明确 start_time、end_time、title、description。",
+    "segments 必须写成游客可直接执行的具体安排，覆盖上午、中午、下午，适合时可补充夜间安排。",
     "你是“智能旅游规划师 + 数据解释器”。",
     "只能基于给定数据输出，不得编造或夸大事实。",
     "无法确认的信息必须明确标注“请以官方数据为准”。",
@@ -684,6 +833,11 @@ export function createTravelPlanPrompt(
         ? "当前动态风险中等：需给出风险提示与时间缓冲。"
         : "当前动态风险较低：按用户偏好优先安排。",
     "【输出 Schema】",
+    "【行程输出要求】",
+    "1. itinerary 数组长度必须等于 days。",
+    "2. 每个 day 必须包含 day_summary、activities、transport_plan、meal_recommendations、segments。",
+    "3. segments.title 要写成具体旅游项目，例如“古镇主街漫游”“午餐与休整”“溪谷徒步拍照”“夜游演出”。",
+    "4. segments.description 要写清楚这一时段的执行安排，不要只写泛泛建议。",
     JSON.stringify(OUTPUT_SCHEMA_HINT, null, 2)
   ].join("\n\n");
 
@@ -700,6 +854,7 @@ function buildFallbackStructured(prepared: PreparedRequest, weather: DynamicInfo
     day: index + 1,
     destination_id: base.refId,
     destination_name: base.destination.name,
+    day_summary: index === 0 ? `抵达 ${base.destination.name} 并完成核心游览。` : `围绕 ${base.destination.name} 安排第 ${index + 1} 天的延展体验。`,
     activities: [
       `上午抵达${base.destination.name}并进行核心游览`,
       "中午在景区周边就餐并休整",
@@ -707,6 +862,32 @@ function buildFallbackStructured(prepared: PreparedRequest, weather: DynamicInfo
     ],
     transport_plan: prepared.input.transportMode === "self_drive" ? "自驾优先，避开高峰拥堵时段" : "公共交通优先，预留换乘时间",
     meal_recommendations: ["优先本地口碑餐厅", "高峰期提前错峰就餐"],
+    stay_recommendation: dayCount > 1 ? "濡傞渶杩炰綇锛屼紭鍏堜綇鍦ㄦ鏃ュ嚭琛岃》鎺ユ洿椤虹殑鍖哄煙銆?" : undefined,
+    segments: [
+      {
+        start_time: index === 0 ? "09:00" : "08:30",
+        end_time: "11:00",
+        title: `绗?${index + 1} 澶╀笂鍗?路 鎶佃揪涓庨娈垫父瑙?`,
+        description: `浠?${prepared.input.origin} 鍑哄彂锛屾姷杈?${base.destination.name} 鍚庡厛瀹屾垚褰撳ぉ鏈€鏍稿績鐨勪竴娈垫父瑙堬紝灏介噺閬垮紑涓崍鍓嶅悗鐨勪汉娴侀珮宄般€?`,
+        location: base.destination.address || `${base.destination.city}${base.destination.district ?? ""}`,
+        transport_tip: prepared.input.transportMode === "self_drive" ? "浼樺厛鑷┚瀵艰埅锛屾彁鍓嶇‘璁ゅ仠杞︾偣銆?" : "浼樺厛鍏叡浜ら€氾紝棰勭暀鎹箻鏃堕棿銆?"
+      },
+      {
+        start_time: "11:30",
+        end_time: "13:30",
+        title: `绗?${index + 1} 澶╀腑鍗?路 鍗堥涓庝紤鏁?`,
+        description: "鍦ㄦ櫙鍖烘垨鐩殑鍦板懆杈瑰畨鎺掑崍椁愬拰鐭殏浼戞暣锛屽噺灏戝線杩旀姌杩旓紝涓轰笅鍗堜繚鐣欎綋鍔涖€?",
+        meal_tip: "浼樺厛鏈湴鍙ｇ椁愬巺锛岄珮宄版湡灏介噺閿欏嘲灏遍銆?"
+      },
+      {
+        start_time: "14:00",
+        end_time: dayCount > 1 ? "17:30" : "18:00",
+        title: `绗?${index + 1} 澶╀笅鍗?路 寤跺睍浣撻獙`,
+        description: index === 0 ? "涓嬪崍瀹夋帓琛ュ厖鐪嬬偣銆佹媿鐓х偣浣嶆垨杞绘澗婕父锛屽舰鎴愬畬鏁寸殑涓€鏃ヤ綋楠屻€?" : "涓嬪崍鐢ㄤ簬琛ュ厖娣卞害浣撻獙銆佸懆杈硅交娓告垨杩旂▼鍓嶆敹灏惧畨鎺掋€?",
+        transport_tip: "鏍规嵁浣撳姏鍜岀幇鍦烘儏鍐电伒娲昏皟鏁达紝涓嶅缓璁啀鍔犲叆杩囪繙鐐逛綅銆?",
+        stay_tip: dayCount > 1 ? "濡傚綋澶╀笉杩旂▼锛屽缓璁偍鏅氬墠瀹屾垚鍏ヤ綇銆?" : "鑻ュ綋澶╄繑绋嬶紝寤鸿澶╅粦鍓嶇寮€銆?"
+      }
+    ],
     estimated_cost: Math.round((budgetMin + budgetMax) / 2 / dayCount)
   }));
 
@@ -839,7 +1020,7 @@ export async function generateTravelPlan(
     structured = buildFallbackStructured(prepared, weather, traffic);
   }
 
-  const plannerDecision = toCompatDecision(provider, structured, prepared);
+  const plannerDecision = toCompatDecisionV2(provider, structured, prepared);
   return success(
     {
       request: prepared,

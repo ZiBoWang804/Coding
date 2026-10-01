@@ -5,6 +5,7 @@ import { ScrollReveal } from "@/components/scroll-reveal";
 import { getCurrentUser } from "@/lib/auth";
 import { RECOMMENDED_ROUTES } from "@/lib/constants";
 import { getHomeData } from "@/lib/repository";
+import { isStableSpotImage, resolveSpotImage } from "@/lib/spot-image";
 import { isLikelyImageUrl, isRemoteHttpUrl } from "@/lib/utils";
 import { getXianFeaturedSpots } from "@/lib/xian-topic";
 import type { RuralSpotSeed, SearchHistoryItem } from "@/types";
@@ -43,22 +44,8 @@ function uniqueSpots(spots: RuralSpotSeed[]) {
   return spots.filter((spot, index, source) => source.findIndex((item) => item.id === spot.id) === index);
 }
 
-function resolveSpotImage(spot?: RuralSpotSeed | null) {
-  if (!spot) return HERO_FALLBACK_IMAGE;
-  if (spot.imageUrl && isLikelyImageUrl(spot.imageUrl)) return spot.imageUrl;
-  if (spot.photoUrls?.[0] && isLikelyImageUrl(spot.photoUrls[0])) return spot.photoUrls[0];
-  return HERO_FALLBACK_IMAGE;
-}
-
 function hasStableShowcaseImage(spot?: RuralSpotSeed | null) {
-  if (!spot) return false;
-  const image = resolveSpotImage(spot);
-  if (!image || image === HERO_FALLBACK_IMAGE) return false;
-  if (image.startsWith("/spot-assets/xian/")) return true;
-  if (image.includes("dimg04.c-ctrip.com")) return true;
-  if (image.includes("images.unsplash.com")) return false;
-  if (image.includes("sxhm.com")) return false;
-  return !isRemoteHttpUrl(image) || image.startsWith("/");
+  return isStableSpotImage(spot, HERO_FALLBACK_IMAGE);
 }
 
 function isHomeShowcaseSpot(spot: RuralSpotSeed) {
@@ -156,7 +143,7 @@ export default async function HomePage() {
               loop
               playsInline
               preload="metadata"
-              poster={resolveSpotImage(heroSpots[0])}
+              poster={resolveSpotImage(heroSpots[0], HERO_FALLBACK_IMAGE)}
             >
               <source src={HERO_VIDEO_SRC} type="video/mp4" />
             </video>
@@ -248,12 +235,12 @@ export default async function HomePage() {
                   <Link href={`/spots/${heroSpots[0].id}`} className="block">
                     <div className="relative h-[260px] sm:h-[320px]">
                       <Image
-                        src={resolveSpotImage(heroSpots[0])}
+                        src={resolveSpotImage(heroSpots[0], HERO_FALLBACK_IMAGE)}
                         alt={heroSpots[0].name}
                         fill
                         priority
                         sizes="(max-width: 1024px) 100vw, 32vw"
-                        unoptimized={isRemoteHttpUrl(resolveSpotImage(heroSpots[0]))}
+                        unoptimized={isRemoteHttpUrl(resolveSpotImage(heroSpots[0], HERO_FALLBACK_IMAGE))}
                         className="object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />

@@ -16,6 +16,7 @@
     "import:national-profiles": "tsx --tsconfig tsconfig.scripts.json scripts/import-national-profiles.ts",
     "import:integrated-sync": "tsx --tsconfig tsconfig.scripts.json scripts/sync-integrated-travel-data.ts",
     "audit:spots": "tsx --tsconfig tsconfig.scripts.json scripts/audit-and-enrich-spot-data.ts",
+    "audit:spot-images": "tsx --tsconfig tsconfig.scripts.json scripts/curate-spot-images.ts",
     "prune:spots": "tsx --tsconfig tsconfig.scripts.json scripts/prune-low-quality-spots.ts",
     "enrich:remaining-spots": "tsx --tsconfig tsconfig.scripts.json scripts/batch-enrich-remaining-spots.ts",
     "final-refine:spots": "tsx --tsconfig tsconfig.scripts.json scripts/final-refine-remaining-spots.ts",

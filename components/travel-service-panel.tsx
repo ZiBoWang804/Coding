@@ -18,8 +18,8 @@ export function TravelServicePanel({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <div className="text-base font-semibold text-brand-900">景点附近酒店</div>
-            <span className="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] text-brand-700">新增功能</span>
+            <div className="text-base font-semibold text-brand-900">{"\u666f\u70b9\u9644\u8fd1\u9152\u5e97"}</div>
+            <span className="rounded-full bg-brand-50 px-2.5 py-1 text-[11px] text-brand-700">{"\u65b0\u589e\u529f\u80fd"}</span>
           </div>
           <div className="mt-1 text-sm text-slate-500">{resources.lodgingReferenceText}</div>
         </div>
@@ -36,7 +36,7 @@ export function TravelServicePanel({
       <div className="mt-4 rounded-2xl bg-brand-50 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <div className="text-sm font-medium text-brand-800">门票与官网入口</div>
+            <div className="text-sm font-medium text-brand-800">{"\u95e8\u7968\u4e0e\u666f\u70b9\u4fe1\u606f"}</div>
             <div className="mt-1 text-sm leading-7 text-slate-600">{resources.ticket.note}</div>
           </div>
           <Link
@@ -62,7 +62,11 @@ export function TravelServicePanel({
             className="flex h-full min-h-[220px] flex-col rounded-2xl bg-sand p-4"
           >
             <div className="text-xs tracking-wide text-slate-500">
-              {hotel.platform === "official" ? "官网直达" : hotel.platform === "huazhu" ? "华住会" : "携程"}
+              {hotel.platform === "official"
+                ? "\u5b98\u65b9\u76f4\u8fbe"
+                : hotel.platform === "huazhu"
+                  ? "\u534e\u4f4f\u4f1a"
+                  : "\u5e73\u53f0\u67e5\u8be2"}
             </div>
             <div className="mt-2 text-base font-semibold leading-7 text-brand-900">{hotel.name}</div>
             <div className="mt-2 line-clamp-4 text-sm leading-7 text-slate-600">{hotel.description}</div>

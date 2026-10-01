@@ -9,6 +9,7 @@ import {
   listRuntimeDemoSpots,
   updateRuntimeDemoSpot
 } from "@/lib/demo-spot-store";
+import { isSpotPlayStyleFilter, listSpotPlayStyleOptions, matchesSpotPlayStyle } from "@/lib/spot-play-styles";
 import { buildAmapNavigationUrl, buildGenericHotelUrl, buildGenericTicketUrl } from "@/lib/utils";
 import type { PlannerApiInput } from "@/lib/planner/types";
 import type {
@@ -267,29 +268,30 @@ function mapDbSpot(spot: any): RuralSpotSeed {
   };
 }
 
-function filterSeedSpots(filters?: SpotFilters) {
-  return loadSeedSpots().filter((spot) => {
+function matchesSpotQuery(spot: RuralSpotSeed, query?: string) {
+  if (!query) return true;
+  return [spot.name, spot.description, spot.city, spot.province, spot.district, spot.address].some((field) => textIncludes(field, query));
+}
+
+function applySpotFiltersInMemory(spots: RuralSpotSeed[], filters?: SpotFilters) {
+  return spots.filter((spot) => {
     if (filters?.ids && (!spot.id || !filters.ids.includes(spot.id))) return false;
     if (filters?.province && spot.province !== filters.province) return false;
     if (filters?.city && spot.city !== filters.city) return false;
-    if (filters?.tag && !spot.tags.includes(filters.tag)) return false;
-    if (filters?.q && !(spot.name.includes(filters.q) || spot.description.includes(filters.q))) return false;
+    if (filters?.tag && !matchesSpotPlayStyle(spot, filters.tag)) return false;
+    if (!matchesSpotQuery(spot, filters?.q)) return false;
     if (filters?.mapReadyOnly && (spot.latitude == null || spot.longitude == null)) return false;
     return true;
   });
 }
 
+function filterSeedSpots(filters?: SpotFilters) {
+  return applySpotFiltersInMemory(loadSeedSpots(), filters);
+}
+
 async function listDemoSpots(filters?: SpotFilters) {
   const spots = await listRuntimeDemoSpots();
-  const filtered = spots.filter((spot) => {
-    if (filters?.ids && (!spot.id || !filters.ids.includes(spot.id))) return false;
-    if (filters?.province && spot.province !== filters.province) return false;
-    if (filters?.city && spot.city !== filters.city) return false;
-    if (filters?.tag && !spot.tags.includes(filters.tag)) return false;
-    if (filters?.q && !(spot.name.includes(filters.q) || spot.description.includes(filters.q))) return false;
-    if (filters?.mapReadyOnly && (spot.latitude == null || spot.longitude == null)) return false;
-    return true;
-  });
+  const filtered = applySpotFiltersInMemory(spots, filters);
 
   return applySlice(filtered, filters?.skip, filters?.take);
 }
@@ -361,6 +363,15 @@ export async function listSpots(filters?: SpotFilters) {
   if (!hasDatabase()) return listDemoSpots(filters);
 
   try {
+    if (isSpotPlayStyleFilter(filters?.tag)) {
+      const rows = await prisma.spot.findMany({
+        where: buildSpotWhere({ ...filters, tag: undefined }),
+        orderBy: getSpotOrderBy()
+      });
+      const filtered = applySpotFiltersInMemory(rows.map(mapDbSpot), filters);
+      return applySlice(filtered, filters?.skip, filters?.take);
+    }
+
     const spots = await prisma.spot.findMany({
       where: buildSpotWhere(filters),
       orderBy: getSpotOrderBy(),
@@ -377,6 +388,14 @@ export async function countSpots(filters?: SpotFilters) {
   if (!hasDatabase()) return filterSeedSpots(filters).length;
 
   try {
+    if (isSpotPlayStyleFilter(filters?.tag)) {
+      const rows = await prisma.spot.findMany({
+        where: buildSpotWhere({ ...filters, tag: undefined }),
+        orderBy: getSpotOrderBy()
+      });
+      return applySpotFiltersInMemory(rows.map(mapDbSpot), filters).length;
+    }
+
     return await prisma.spot.count({ where: buildSpotWhere(filters) });
   } catch {
     return 0;
@@ -560,6 +579,21 @@ export async function getMapPageData(filters?: SpotFilters, take = MAP_SPOT_LIMI
     };
   }
 
+  if (isSpotPlayStyleFilter(mapFilters.tag)) {
+    const rows = await prisma.spot.findMany({
+      where: buildMapWhere({ ...mapFilters, tag: undefined }),
+      orderBy: getSpotOrderBy()
+    });
+    const filtered = applySpotFiltersInMemory(rows.map(mapDbSpot), mapFilters);
+    const spots = applySlice(filtered, 0, take);
+    return {
+      spots,
+      total: filtered.length,
+      displayed: spots.length,
+      truncated: filtered.length > take
+    };
+  }
+
   const [rows, total] = await Promise.all([
     prisma.spot.findMany({
       where: buildMapWhere(mapFilters),
@@ -680,42 +714,13 @@ export async function getHomeData(user?: UserSummary | null) {
 }
 
 export async function getFilterOptions() {
-  if (!hasDatabase()) {
-    const spots = await listSpots();
-    return {
-      provinces: [...new Set(spots.map((spot) => spot.province))],
-      cities: [...new Set(spots.map((spot) => spot.city))],
-      tags: [...new Set(spots.flatMap((spot) => spot.tags))]
-    };
-  }
-
   try {
-    const [provinces, cities, tags] = await Promise.all([
-      prisma.spot.findMany({
-        distinct: ["province"],
-        select: { province: true },
-        orderBy: { province: "asc" }
-      }),
-      prisma.spot.findMany({
-        distinct: ["city"],
-        select: { city: true },
-        orderBy: { city: "asc" }
-      }),
-      prisma.$queryRaw<Array<{ tag: string | null }>>(Prisma.sql`
-        SELECT DISTINCT tag
-        FROM (
-          SELECT unnest("tags") AS tag
-          FROM "Spot"
-        ) AS expanded_tags
-        WHERE tag IS NOT NULL AND tag <> ''
-        ORDER BY tag ASC
-      `)
-    ]);
+    const spots = await listSpots();
 
     return {
-      provinces: provinces.map((item) => item.province).filter(Boolean),
-      cities: cities.map((item) => item.city).filter(Boolean),
-      tags: tags.map((item) => item.tag).filter((item): item is string => Boolean(item))
+      provinces: [...new Set(spots.map((spot) => spot.province).filter(Boolean))].sort((left, right) => left.localeCompare(right, "zh-CN")),
+      cities: [...new Set(spots.map((spot) => spot.city).filter(Boolean))].sort((left, right) => left.localeCompare(right, "zh-CN")),
+      tags: listSpotPlayStyleOptions(spots)
     };
   } catch {
     return {

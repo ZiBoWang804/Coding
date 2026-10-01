@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
-import { buildAmapNavigationUrl, isLikelyImageUrl } from "@/lib/utils";
+import { buildAmapNavigationUrl, buildGenericHotelUrl, buildGenericTicketUrl, isLikelyImageUrl } from "@/lib/utils";
 
 const prisma = new PrismaClient();
 
@@ -255,9 +255,7 @@ function buildImportedSpotData(
 ) {
   const area = inferArea(record.地理位置, record.分类);
   const fallbackImageUrl = imageLinks.get(record.景点) ?? null;
-  const fallbackSourceUrl = pageLinks.get(record.景点) ?? sourceLinks.get(record.景点) ?? null;
   const imageUrl = isLikelyImageUrl(record.风景图链接) ? record.风景图链接 : fallbackImageUrl;
-  const ticketUrl = record.主要来源 || fallbackSourceUrl;
 
   return {
     name: record.景点,
@@ -276,8 +274,8 @@ function buildImportedSpotData(
     latitude: null,
     longitude: null,
     imageUrl,
-    ticketBookingUrl: ticketUrl || null,
-    hotelBookingUrl: null,
+    ticketBookingUrl: buildGenericTicketUrl(record.景点, area.city),
+    hotelBookingUrl: buildGenericHotelUrl(record.景点, area.city),
     gaodeNavigationUrl: buildAmapNavigationUrl(record.景点, area.city, area.address),
     isNationalKeyVillage: false,
     batch: IMPORT_BATCH,

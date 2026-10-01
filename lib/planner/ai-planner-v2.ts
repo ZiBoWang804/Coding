@@ -856,43 +856,46 @@ function buildFallbackStructured(prepared: PreparedRequest, weather: DynamicInfo
     destination_name: base.destination.name,
     day_summary: index === 0 ? `抵达 ${base.destination.name} 并完成核心游览。` : `围绕 ${base.destination.name} 安排第 ${index + 1} 天的延展体验。`,
     activities: [
-      `上午抵达${base.destination.name}并进行核心游览`,
+      `上午抵达 ${base.destination.name} 并进行核心游览`,
       "中午在景区周边就餐并休整",
       "下午根据体力安排补充点位或返程"
     ],
     transport_plan: prepared.input.transportMode === "self_drive" ? "自驾优先，避开高峰拥堵时段" : "公共交通优先，预留换乘时间",
     meal_recommendations: ["优先本地口碑餐厅", "高峰期提前错峰就餐"],
-    stay_recommendation: dayCount > 1 ? "濡傞渶杩炰綇锛屼紭鍏堜綇鍦ㄦ鏃ュ嚭琛岃》鎺ユ洿椤虹殑鍖哄煙銆?" : undefined,
+    stay_recommendation: dayCount > 1 ? "如需连住，优先住在次日出行衔接更顺的区域。" : undefined,
     segments: [
       {
         start_time: index === 0 ? "09:00" : "08:30",
         end_time: "11:00",
-        title: `绗?${index + 1} 澶╀笂鍗?路 鎶佃揪涓庨娈垫父瑙?`,
-        description: `浠?${prepared.input.origin} 鍑哄彂锛屾姷杈?${base.destination.name} 鍚庡厛瀹屾垚褰撳ぉ鏈€鏍稿績鐨勪竴娈垫父瑙堬紝灏介噺閬垮紑涓崍鍓嶅悗鐨勪汉娴侀珮宄般€?`,
+        title: `第${index + 1}天上午路线：抵达与首段游览`,
+        description: `从 ${prepared.input.origin} 出发前往 ${base.destination.name}，建议先完成核心景点或主线区域的游览，避开中午前后的人流高峰。`,
         location: base.destination.address || `${base.destination.city}${base.destination.district ?? ""}`,
-        transport_tip: prepared.input.transportMode === "self_drive" ? "浼樺厛鑷┚瀵艰埅锛屾彁鍓嶇‘璁ゅ仠杞︾偣銆?" : "浼樺厛鍏叡浜ら€氾紝棰勭暀鎹箻鏃堕棿銆?"
+        transport_tip: prepared.input.transportMode === "self_drive" ? "优先自驾导航，提前确认停车点。" : "优先公共交通，预留换乘时间。"
       },
       {
         start_time: "11:30",
         end_time: "13:30",
-        title: `绗?${index + 1} 澶╀腑鍗?路 鍗堥涓庝紤鏁?`,
-        description: "鍦ㄦ櫙鍖烘垨鐩殑鍦板懆杈瑰畨鎺掑崍椁愬拰鐭殏浼戞暣锛屽噺灏戝線杩旀姌杩旓紝涓轰笅鍗堜繚鐣欎綋鍔涖€?",
-        meal_tip: "浼樺厛鏈湴鍙ｇ椁愬巺锛岄珮宄版湡灏介噺閿欏嘲灏遍銆?"
+        title: `第${index + 1}天午间路线：午餐与休整`,
+        description: "建议在景区周边选择评价稳定、步行可达的餐厅用餐，避免高峰排队，顺带留出短暂休整时间。",
+        meal_tip: "优先本地口碑餐厅，高峰期提前错峰就餐。"
       },
       {
         start_time: "14:00",
         end_time: dayCount > 1 ? "17:30" : "18:00",
-        title: `绗?${index + 1} 澶╀笅鍗?路 寤跺睍浣撻獙`,
-        description: index === 0 ? "涓嬪崍瀹夋帓琛ュ厖鐪嬬偣銆佹媿鐓х偣浣嶆垨杞绘澗婕父锛屽舰鎴愬畬鏁寸殑涓€鏃ヤ綋楠屻€?" : "涓嬪崍鐢ㄤ簬琛ュ厖娣卞害浣撻獙銆佸懆杈硅交娓告垨杩旂▼鍓嶆敹灏惧畨鎺掋€?",
-        transport_tip: "鏍规嵁浣撳姏鍜岀幇鍦烘儏鍐电伒娲昏皟鏁达紝涓嶅缓璁啀鍔犲叆杩囪繙鐐逛綅銆?",
-        stay_tip: dayCount > 1 ? "濡傚綋澶╀笉杩旂▼锛屽缓璁偍鏅氬墠瀹屾垚鍏ヤ綇銆?" : "鑻ュ綋澶╄繑绋嬶紝寤鸿澶╅粦鍓嶇寮€銆?"
+        title: `第${index + 1}天下午路线：延展游览`,
+        description:
+          index === 0
+            ? "下午可以补充体验周边轻量景点、拍照点或休闲区域，让整体节奏更从容。"
+            : "下午适合安排更轻松的二刷点位、街区散步或返程前的收尾体验。",
+        transport_tip: "根据返程安排灵活调整，避免临近傍晚时段再增加远距离移动。",
+        stay_tip: dayCount > 1 ? "如果需要继续停留，建议尽早确认住宿与次日出发时间。" : "如当天返程，建议在天黑前离开或提前确认返程路况。"
       }
     ],
     estimated_cost: Math.round((budgetMin + budgetMax) / 2 / dayCount)
   }));
 
   return {
-    summary: `已基于当前数据生成${dayCount}天行程建议，优先推荐 ${base.destination.name}。`,
+    summary: `已基于当前数据生成 ${dayCount} 天行程建议，优先推荐 ${base.destination.name}。`,
     weather_summary: weather.summary,
     traffic_summary: traffic.summary,
     budget_distribution: {
@@ -905,15 +908,14 @@ function buildFallbackStructured(prepared: PreparedRequest, weather: DynamicInfo
     },
     itinerary,
     dynamic_suggestions: [
-      "若实时天气突变，优先调整为室内博物馆/展馆类点位。",
-      "如返程拥堵升高，建议提前30-60分钟离场。"
+      "若实时天气突变，优先调整为室内博物馆、展馆或休闲场景。",
+      "如返程拥堵升高，建议提前 30-60 分钟离场。"
     ],
     cautions: ["景区开放时间、临时管制与门票政策请以官方信息为准。"],
-    warm_tips: ["出行前一天再次确认天气、路况、停车与预约情况。"],
-    missing_data_notes: ["部分实时信息未能稳定获取，已使用平台静态数据回退。"]
+    warm_tips: ["出行前一天再确认天气、路况、停车与预约情况。"],
+    missing_data_notes: ["部分实时信息未能稳定获取，本次已使用平台静态数据回退。"]
   };
 }
-
 /**
  * generate_travel_plan
  * 总控函数：串联请求准备、动态信息、知识库、Prompt、模型生成与结构化校验。

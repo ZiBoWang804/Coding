@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: __dirname,
   images: {
     minimumCacheTTL: 60 * 60 * 24,
     formats: ["image/avif", "image/webp"],

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import * as XLSX from "xlsx";
 import { PrismaClient } from "@prisma/client";
-import { isLikelyImageUrl, normalizePipeList, parseNumber } from "@/lib/utils";
+import { buildGenericHotelUrl, buildGenericTicketUrl, isLikelyImageUrl, normalizePipeList, parseNumber } from "@/lib/utils";
 
 const prisma = new PrismaClient();
 
@@ -117,7 +117,6 @@ async function importSpots() {
     const typeTags = normalizePipeList(row["景点类型/等级"]);
     const crowdTags = normalizePipeList(row["适宜人群"]);
     const routeHighlights = normalizePipeList(scenicFeature);
-    const sourceLinks = [row["来源1"], row["来源2"], row["来源3"]].map((item) => String(item ?? "").trim()).filter(Boolean);
     const imageCandidate = String(row["风景照片参考链接"] ?? "").trim();
     const description = [scenicFeature, reviewSummary].filter(Boolean).join("。");
 
@@ -138,8 +137,8 @@ async function importSpots() {
       latitude: null,
       longitude: null,
       imageUrl: isLikelyImageUrl(imageCandidate) ? imageCandidate : null,
-      ticketBookingUrl: sourceLinks[0] ?? null,
-      hotelBookingUrl: sourceLinks[1] ?? null,
+      ticketBookingUrl: buildGenericTicketUrl(name, area.city),
+      hotelBookingUrl: buildGenericHotelUrl(name, area.city),
       gaodeNavigationUrl: null,
       isNationalKeyVillage: String(row["景点类型/等级"] ?? "").includes("全国乡村旅游重点村"),
       batch: SPOT_BATCH,
